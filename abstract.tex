@@ -1,0 +1,50 @@
+{
+	\prefacesection{Abstract}
+	
+	% Single line spacing for the abstract page
+	\setstretch{1.0}
+	
+	
+	\vfill
+	
+	% Standard thesis information
+	\begin{center}
+		\textsc{\large\thesistitle}
+		
+		\vspace{1em}
+		
+		\thesisauthor
+		
+		\vspace{1em}
+		
+		A thesis submitted to the University of Manchester\\
+		for the degree of Doctor of Philosophy, 2016
+	\end{center}
+	
+	\vfill
+	
+	% The abstract
+	Super computers consist of a large number of independent compute nodes
+	(commonly CPU cores) interconnected by a high performance network. SpiNNaker is
+	an unusual super computer designed for simulating large-scale neural models of
+	the brain in biological realtime. This project addresses a number of the key
+	practical challenges involved in the construction and operation of a full-sized
+	SpiNNaker machine with over one million CPU cores.
+	
+	Due to its unconventional hexagonal torus network topology, conventional
+	approaches to building large machine installations do not apply. We begin by
+	proposing a novel machine-room layout for SpiNNaker systems which enables
+	systems of arbitrary size to be constructed using only short cables, saving
+	money and energy while also improving network performance. We follow this with
+	a novel routing algorithm for hexagonal torus networks which is both more
+	concise and more evenly utilises available resources. Since any large-scale
+	system will inevetably have some faults we develop novel extensions to this
+	algorithm which take advantage of unique features of SpiNNaker's network to
+	tollerate arbitrary static network faults. Finally, in order to make the most
+	efficient use of SpiNNaker's network we adapt techniques from the field of chip
+	design to efficiently map applications across SpiNNakers million cores while
+	making effective use of the network.
+
+	% Required to ensure linespacing is set for this whole block
+	\par%
+}

@@ -1,0 +1,84 @@
+\documentclass[12pt,twoside]{report}
+
+\newcommand{\thesistitle}{Building and operating large-scale SpiNNaker machines}
+\newcommand{\thesisauthor}{Jonathan Heathcote}
+\newcommand{\thesisyear}{2016}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Used packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Nice printing of URLs
+\usepackage{url}
+
+% Adjust linespacing for localised parts of the paper (e.g. abstract)
+\usepackage{setspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Environment settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% 1.5 linespacing (as required by university)
+\renewcommand{\baselinestretch}{1.5}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Used in place of \chapter for preface sections
+\newcommand{\prefacesection}[1]{
+	\chapter*{#1}
+	\addcontentsline{toc}{chapter}{#1}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Document body
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+	
+	% The title page
+	\input{titlepage}
+	
+	% The table of contents which, per university regulations, is followed by a
+	% total wordcount.
+	\tableofcontents
+	\vfill
+	\noindent This thesis contains
+		\immediate\write18{texcount -1 -sum -inc thesis.tex > thesis.wordcount}%
+		\input{thesis.wordcount}words.
+	
+	\clearpage
+	\listoffigures
+	
+	\clearpage
+	\listoftables
+	
+	% Abstract
+	\input{abstract}
+	
+	% Declaration of non-submission elsewhere
+	\input{declaration}
+	
+	% University-prescribed copyright statement...
+	\input{copyright}
+	
+	% Acknowledgements
+	\chapter*{Acknowledgements}
+	\input{acknowledgements}
+	
+	% Main body
+	\input{introduction.tex}
+	\input{background.tex}
+	\input{building.tex}
+	\input{routing.tex}
+	\input{placement.tex}
+	\input{discussion.tex}
+	\input{future.tex}
+	\input{conclusions.tex}
+	
+	% Bibliography
+	\bibliography{references}
+	\bibliographystyle{alpha}
+	
+\end{document}

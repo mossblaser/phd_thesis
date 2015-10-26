@@ -1,0 +1,181 @@
+The following section-level outline gives the planned thesis structure
+for this project. Sections which are reliant on upcoming work are
+indicated with a dagger (\(\dagger\));
+
+\begin{enumerate}
+	
+	\item Introduction
+	
+	\item Background
+	\begin{enumerate}
+		\item Super computers
+		\begin{enumerate}
+			\item Applications and architecture
+			\item Network topology and construction
+			\item Routing
+		\end{enumerate}
+		
+		\item Neural modelling and simulation
+		\begin{enumerate}
+			\item Neural modelling
+			\item Spikes
+			\item High-level modelling tools
+		\end{enumerate}
+		
+		\item SpiNNaker
+		\begin{enumerate}
+			\item Architecture
+			\item Network topology
+			\item Router micro-architecture
+			\item Application work-flow
+		\end{enumerate}
+	\end{enumerate}
+	
+	\item Building large SpiNNaker machines
+	\begin{enumerate}
+		\item Related work
+		\begin{enumerate}
+			\item Folding regular toruses
+			\item Partitioning hexagonal toruses
+			\item Machine-room cabling
+		\end{enumerate}
+		\item Folding hexagonal toruses
+		\begin{enumerate}
+			\item Transformation
+			\item Uncrinkling
+			\item Folding
+		\end{enumerate}
+		\item Installation
+		\begin{enumerate}
+			\item Cable selection
+			\item Installation ordering
+			\item Interactive technician guidance
+			\item Validation
+		\end{enumerate}
+		\item Results
+		\begin{enumerate}
+			\item Cable length
+			\item Installation practicality
+		\end{enumerate}
+	\end{enumerate}
+	
+	\item Routing packets in large SpiNNaker machines
+	\begin{enumerate}
+		\item Related work
+		\begin{enumerate}
+			\item Multicast routing
+			\item Deadlock avoidance
+			\item Fault-tolerance
+		\end{enumerate}
+		
+		\item Dimension order routing in hexagonal torus topologies
+		\begin{enumerate}
+			\item Hexagonal meshes
+			\item Hexagonal toruses
+			\item Ensuring fairness
+			\item Generating spiralling routes
+		\end{enumerate}
+		
+		\item Fault-tolerant multicast routing
+		\begin{enumerate}
+			\item Graph search based repair
+			\item Alternative routing heuristics
+			\item Results
+			\begin{enumerate}
+				\item Heuristic performance
+				\item Runtime
+				\item Route congestion
+			\end{enumerate}
+		\end{enumerate}
+	\end{enumerate}
+	
+	\item Placing applications in large SpiNNaker machines
+	\begin{enumerate}
+		\item Related work
+		\begin{enumerate}
+			\item Super computer application placement algorithms
+			\item Chip placement algorithms
+		\end{enumerate}
+		
+		\item Using chip-placement algorithms for application placement
+		\begin{enumerate}
+			\item Topological restrictions
+			\item Constraint handling
+			\item Problem representation
+		\end{enumerate}
+		
+		\item Application placement by simulated annealing
+		\begin{enumerate}
+			\item Algorithm
+			\item Cost function
+			\item Annealing schedule
+			\item Constraint handling
+		\end{enumerate}
+		
+		\item Hierarchical placement
+		\begin{enumerate}
+			\item Clustering
+			\item Refinement
+			\item Parallelism
+		\end{enumerate}
+		
+		\item Evaluation
+		\begin{enumerate}
+			\item Benchmark networks
+			\item Experiments
+			\item Results
+		\end{enumerate}
+	\end{enumerate}
+	
+	\item Discussion
+	\begin{enumerate}
+		\item Suitability of the hexagonal torus topology
+		\begin{enumerate}
+			\item Physical scalability
+			\item Routability
+			\item Placeability
+		\end{enumerate}
+		
+		\item Suitability of the SpiNNaker router
+		\begin{enumerate}
+			\item Deadlock avoidance
+			\item Routing table size
+		\end{enumerate}
+		
+		\item Suitability of circuit placers for application placement
+		\begin{enumerate}
+			\item Quality
+			\item Runtime
+			\item Routing resources
+			\item Flexibility
+			\item Scalability
+		\end{enumerate}
+	\end{enumerate}
+	
+	\item Future research
+	\begin{enumerate}
+		\item Scaling up
+		\begin{enumerate}
+			\item Grid machine room layouts
+			\item Routing congestion control
+			\item Parallel place and route
+		\end{enumerate}
+		
+		\item Structural plasticity and dynamic fault-tolerance
+		\begin{enumerate}
+			\item Plasticity models
+			\item Incremental placement
+			\item Incremental routing
+			\item Hot-spare routes
+		\end{enumerate}
+		
+		\item Circuit placement for other applications
+		\begin{enumerate}
+			\item Well suited applications
+			\item Supporting alternative topologies
+		\end{enumerate}
+	\end{enumerate}
+	
+	\item Conclusions
+
+\end{enumerate}
