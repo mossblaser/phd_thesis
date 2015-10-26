@@ -26,7 +26,8 @@
 % Definitions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Used in place of \chapter for preface sections
+% Used in place of \chapter for preface sections. Prevents numbering but
+% includes the chapter in the ToC
 \newcommand{\prefacesection}[1]{
 	\chapter*{#1}
 	\addcontentsline{toc}{chapter}{#1}
@@ -64,7 +65,6 @@
 	\input{copyright}
 	
 	% Acknowledgements
-	\chapter*{Acknowledgements}
 	\input{acknowledgements}
 	
 	% Main body
