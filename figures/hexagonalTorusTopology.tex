@@ -1,0 +1,93 @@
+\begin{tikzpicture}[thick]
+	\def\size{10}
+	\def\scale{0.4}
+	
+	\begin{scope}[hexagonXYZ,scale=\scale]
+		% Chips
+		\foreach \y in {1,...,\size}{
+			\foreach \x in {1,...,\size}{
+				\node [draw, hexagon, inner sep=0,minimum size=\scale cm]
+				      at (\x,\y)
+				      (node\x\y)
+				      {}
+				      ;
+			}
+		}
+		
+		\coordinate (coordpos) at (-4.5,2.0,0);
+		\def\coordSep{0.1em}
+		\def\coordLen{1.5}
+		
+		\begin{scope}[font=\footnotesize, gray]
+			\draw [->] (coordpos) -- ++(\coordLen,0,0)
+			      node [hexagon,anchor=side west,inner sep=\coordSep] {X}
+			      ;
+			\draw [->] (coordpos) -- ++(0,\coordLen,0)
+			      node [hexagon,anchor=side south,inner sep=\coordSep] {Y}
+			      ;
+			\draw [->] (coordpos) -- ++(0,0,\coordLen)
+			      node [hexagon,anchor=side north east,inner sep=\coordSep] {Z}
+			      ;
+		\end{scope}
+	\end{scope}
+	
+	% Left
+	\draw [ decorate
+	      , decoration={ brace
+	                   , amplitude=0.5em
+	                   , raise=0.0em
+	                   }
+	      ]
+	      ([xshift=-0.2em]node11.corner 3)
+	   -- node [anchor=north east,yshift=0.25em,xshift=-0.5em,align=right]
+	           {$b$}
+	      ([xshift=-0.5em]node1\size.corner 2);
+	
+	% Right
+	\draw [ decorate
+	      , decoration={ brace
+	                   , amplitude=0.5em
+	                   , raise=0.0em
+	                   }
+	      ]
+	      ([xshift=0.2em]node\size\size.corner 6)
+	   -- node [anchor=south west,yshift=-0.25em,xshift=0.5em,align=left]
+	           {$b'$}
+	      ([xshift=0.5em]node\size1.corner 5);
+	
+	% Top
+	\draw [ decorate
+	      , decoration={ brace
+	                   , amplitude=0.5em
+	                   , raise=0.0em
+	                   }
+	      ]
+	      ([yshift=0.2em]node1\size.corner 2 |- node1\size.corner 1)
+	   -- node [anchor=south,yshift=0.5em,align=center]
+	           {$a$}
+	      ([yshift=0.2em]node\size\size.corner 1);
+	
+	% Bottom
+	\draw [ decorate
+	      , decoration={ brace
+	                   , amplitude=0.5em
+	                   , raise=0.0em
+	                   }
+	      ]
+	      ([yshift=-0.2em]node\size1.corner 5 |- node\size1.corner 4)
+	   -- node [anchor=north,yshift=-0.5em,align=center]
+	           {$a'$}
+	      ([yshift=-0.2em]node11.corner 4);
+	
+	% Top-right
+	\draw ([shift={(0,0,-0.15)}]node\size\size.side north east)
+	   -- ++([hexagonXYZ]0,0,-0.3)
+	      node [anchor=south west, xshift=-0.2em,inner sep=0.2em]
+	      {$c'$};
+	
+	% Bottom-left
+	\draw ([shift={(0,0,0.15)}]node11.side south west)
+	   -- ++([hexagonXYZ]0,0,0.3)
+	      node [anchor=north east, xshift=0.20em,inner sep=0.2em,align=right]
+	      {$c$};
+\end{tikzpicture}

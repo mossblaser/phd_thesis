@@ -1,0 +1,69 @@
+\begin{tikzpicture}
+	\def\size{4}
+	\def\scale{0.5}
+	
+	\pgfmathtruncatemacro{\sizee}{\size-1}
+	\pgfmathtruncatemacro{\spacing}{\size+1}
+	\pgfmathtruncatemacro{\sizeTotal}{(\size*3)-1}
+	
+	\begin{scope}[scale=\scale,hexagonXYZ]
+		% Set up coordinates
+		\foreach \px in {0,1,2}{
+			\foreach \py in {0,1,2}{
+				\foreach \x in {0,...,\sizee}{
+					\foreach \y in {0,...,\sizee}{
+						\pgfmathtruncatemacro{\xx}{\x + (\size*\px)}
+						\pgfmathtruncatemacro{\yy}{\y + (\size*\py)}
+						\coordinate (node x\xx y\yy)
+						            at ( \px*\spacing + \x
+						               , \py*\spacing + \y
+						               ) {};
+					}
+				}
+			}
+		}
+	\end{scope}
+	
+	% Clip the view
+	\pgfmathtruncatemacro{\x}{\size}
+	\pgfmathtruncatemacro{\y}{\size*2 - 1}
+	\pgfmathtruncatemacro{\xx}{\size*2 - 1}
+	\pgfmathtruncatemacro{\yy}{\size}
+	\clip ([shift={(-2*\scale cm, 2*\scale cm)}]node x\x y\y)
+	      rectangle
+	      ([shift={( 2*\scale cm,-2*\scale cm)}]node x\xx y\yy)
+	      ;
+	
+	% Draw the nodes
+	\foreach \thickness in {1.6pt, 0.6pt}{
+		\foreach \x in {0,...,\sizeTotal}{
+			\foreach \y in {0,...,\sizeTotal}{
+				\node [ draw=black
+				      , fill=white
+				      , hexagon
+				      , inner sep=0
+				      , minimum width=\scale * 1cm
+				      , line width=\thickness
+				      ]
+				      (node x\x y\y)
+				      at (node x\x y\y)
+				      {}
+				      ;
+			}
+		}
+	}
+	
+	% Draw interconnecting wires
+	\begin{scope}
+		\foreach \x in {1,...,\sizeTotal}{
+			\foreach \y in {1,...,\sizeTotal}{
+				\pgfmathtruncatemacro{\xx}{\x - 1}
+				\pgfmathtruncatemacro{\yy}{\y - 1}
+				\draw (node x\xx y\y.side east) -- (node x\x y\y.side west);
+				\draw (node x\x y\yy.side north) -- (node x\x y\y.side south);
+				\draw (node x\xx y\yy.side north east) -- (node x\x y\y.side south west);
+			}
+		}
+	\end{scope}
+\end{tikzpicture}
+
