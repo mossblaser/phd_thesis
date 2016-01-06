@@ -1,0 +1,83 @@
+\begin{tikzpicture}[thick, scale=0.7]
+	\def\width{8}
+	\def\height{6}
+	% Set node positions
+	\foreach \y in {1,...,\height}{
+		\foreach \x in {1,...,\width}{
+			\node [hexagonXYZ]
+			      at (\x, \y)
+			      (node\x\y)
+			      {}
+			      ;
+		}
+	}
+	\begin{scope}[help lines]
+		\foreach \y in {1,...,\height}{
+			\foreach \x in {1,...,\width}{
+				\pgfmathtruncatemacro{\xx}{\x-1}
+				\pgfmathtruncatemacro{\yy}{\y-1}
+				\ifthenelse{\xx > 0}{
+					\draw (node\x\y.center) -- (node\xx\y.center);
+				}{ }
+				\ifthenelse{\yy > 0}{
+					\draw (node\x\y.center) -- (node\x\yy.center);
+				}{ }
+				\ifthenelse{\xx > 0 \AND \yy > 0}{
+					\draw (node\x\y.center) -- (node\xx\yy.center);
+				}{ }
+			}
+		}
+		% Draw nodes
+		\foreach \y in {1,...,\height}{
+			\foreach \x in {1,...,\width}{
+				\node [draw, fill=white, circle, inner sep=0, minimum size=0.7em]
+				      at (node\x\y)
+				      {}
+				      ;
+			}
+		}
+	\end{scope}
+	
+	% Highlight a pair of nodes
+	\begin{scope}[font=\small]
+		\node [fill=white, draw,circle, inner sep=0.1em]
+		      (A)
+		      at (node22)
+		      {A}
+		      ;
+		\node [fill=white, draw,circle, inner sep=0.1em]
+		      (B)
+		      at (node75)
+		      {B}
+		      ;
+	\end{scope}
+	
+	\begin{scope}[ultra thick]
+		\draw [->,red] (A) -- (node55.center) -- (B);
+		\draw [->,blue] (A) -- (node42.center) -- (B);
+	\end{scope}
+	
+	
+	% Axes
+	\begin{scope}[ xshift=10cm
+	             , yshift=3.2cm
+	             , hexagonXYZ
+	             , scale=1.5
+	             , font=\footnotesize
+	             , inner sep=0.1em
+	             ]
+		\draw [->]
+		      (0,0,0) -- ++(1,0,0)
+		      node [hexagon,anchor=side west] {X}
+		      ;
+		\draw [->]
+		      (0,0,0) -- ++(0,1,0)
+		      node [hexagon,anchor=side south] {Y}
+		      ;
+		\draw [->]
+		      (0,0,0) -- ++(0,0,1)
+		      node [hexagon,anchor=side north east] {Z}
+		      ;
+	\end{scope}
+\end{tikzpicture}
+

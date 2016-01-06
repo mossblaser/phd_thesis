@@ -1,7 +1,99 @@
 \chapter{Routing packets in large SpiNNaker machines}
 	
+	% In large networks, faults are inevitable and routing algorithms are
+	% required to work around them. <Give some motivating fault numbers, e.g.
+	% from bluegene or SpiNNaker>. This work hopes to extend the state of the art
+	% by defining a new fault-tolerant routing algorithm for SpiNNaker which can
+	% route around arbitrary permanent link failures.
+	
+	% Routing packets is NP complete and a key factor in the efficiency of a
+	% super computer network. Numerous heuristic algorithms exist which target
+	% different network technologies but many techniques are not portable.
+	
+	% In this work we care about SpiNNaker which has a table-based router, packet
+	% dropping flow control, and applications which deal with multicast. So far
+	% all proposed routing algorithms for SpiNNaker have been fault-intolerant
+	% and in this chapter, a new fault-tolerant algorithm is proposed.
+	
+	% Various fault-intollerant multicast routing algorithms exist for many
+	% networks and a number have been proposed for SpiNNaker. In davies12, three
+	% routing strategies based on overlapping DOR, RTOR and LDFR routes are
+	% suggested which have no ability to avoid faults.
+	
+	% TODO describe DOR, RTOR and LDFR.
+	
+	% In navaridas14 ESPR and NER are introduced which are able to generate more
+	% efficient multicast routes but, again, do not have the ability to avoid
+	% faults.
+	
+	% TODO describe ESPR and NER.
+	
+	% Work on fault-tolerant routing in super computer networks often focuses
+	% heavily on the issue of deadlock avoidance. Super computers typically rely
+	% on router micro architecture and restricted routing rules (dally93). In
+	% addition to the costs imposed by this method of deadlock avoidance, such
+	% restrictions can be fatal to fault tolerance: e.g. enforced DOR or no-turn
+	% rules may prevent routing around a fault or non-optimal paths may be
+	% required.
+	
+	To make efficient use of SpiNNaker's interconnection network packets must be
+	routed reliably to their destinations such that network congestion is
+	minimised. Routing algorithms are tightly constrained by the network topology
+	and router micro-architecture on which they are used. As a result of this,
+	exploiting SpiNNaker's unconventional topology and router architecture
+	requires the development of new routing algorithms. The Neighbouhood
+	Exploring Routing (NER) algorithm proposed by Navaridas \emph{et al.}
+	\cite{navaridas14} is well suited to SpiNNaker's architecture and
+	applications but lacks the ability to cope with faults, an inevetability in
+	large machines. In addition, all known implementations of routing algorithms
+	for hexagonal toruses cannot generate all valid Dimension Order Routes which
+	in turn can result in increased network congestion.
+	
+	In this chapter an efficient algorithm for fair DOR on hexagonal toruses is
+	presented and integrated into the NER routing algorithm. Fault-tolerance
+	extensions to the NER algorithm are then described which ensure successful
+	routing in the presence of any static fault condition. These extensions
+	exploit the SpiNNaker router's timeout-based deadlock breaking behaviour
+	enabling greater flexibility over routing decisions and avoiding the need for
+	the complex routing strategies required by existing algorithms.
+	
 	\section{Related work}
-		\subsection{Multicast routing}
+		
+		Routing algorithms continue to be a hot topic in networks research however
+		many algorithms are tightly coupled with specific network technologies and
+		thus unsuitable for use with SpiNNaker. For example, algorithms designed
+		for non-torus topologies such as Internet routing and tree-like networks
+		do not readily apply to torus networks.
+		
+		\subsection{Dimension Order Rotuing (DOR)}
+			
+			Dimension Order Routing is a simple unicast routing algorithm which forms
+			the basis of many mesh and torus routing algorithms \cite{dally04}. In
+			DOR, packets are first routed along each network dimension in turn in
+			order to reach their destination. Figure \ref{fig:dimensionOrderRouting}
+			shows two possible routes between a pair of nodes, A and B. In the red
+			route, the Z dimension is used first followed by the X dimension. The
+			blue route uses X then Z.
+			
+			\begin{figure}
+				\center
+				\input{figures/dimensionOrderRouting}
+				
+				\caption{Two dimension order routes in a hexagonal mesh topology.}
+				\label{fig:dimensionOrderRouting}
+			\end{figure}
+			
+			The choice of dimension order does not impact the length of the routes
+			produced but can be important in many systems. For example, some deadlock
+			avoidance strategies rely on a fixed dimension ordering and will be
+			described later.
+			
+		\subsection{Multicast Routing}
+			
+			In Longest Dimension First Routing (LDFR), a common variant of DOR, the
+			dimension whose absolute value is greatest is used first which has a
+			number of favourable properties.
+		
 		\subsection{Deadlock avoidance}
 		\subsection{Fault-tolerance}
 	
