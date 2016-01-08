@@ -1,0 +1,98 @@
+\chapter{Finding shortest paths in SpiNNaker's network}
+	
+	TODO: INTRO MOTIVATING NEED FOR SHORTEST PATH CALCULATIONS
+	
+	\section{Related work}
+		
+		DOR routes follow a shortest-path from source to destination following one
+		dimensions then the next. For mesh topologies this requires computing a
+		vector from the source to the sink and is straightforward:
+		
+		TODO DESCRIBE MESH CALCULATION
+		
+		For hexagonal toruses, you have three dimensions but they aren't
+		orthogonal... \cite{patel15}
+		
+		TODO DESCRIBE HEX MESH CALCULATION
+		
+		For non-hexagonal toruses you just recenter everything and take the normal
+		mesh vector. For hexagonal toruses this doesn't work.
+		
+		TODO DESCRIBE HEX TORUS CALCULATION NOT WORKING WHEN RECENTERING
+		
+		All known existing solutions perform this calculation by trying 12-possible
+		DOR routes and picking the shortest. TODO: CITE SOME IMPLEMENTATIONS
+		
+		TODO DESCRIBE THE 12 ROUTES
+		
+		As we'll show later this mechanism is not very elegant/efficient and more
+		importantly does not reveal all possible routes, e.g. those that spiral.
+		
+		TODO DESCRIBE SPIRAL ROUTES.
+		
+		TODO DESCRIBE RTOR AND LDFR.
+		
+	\section{Dimension order routing in hexagonal torus topologies}
+		
+		So, existing solutions have two problems: trying 12 options and picking one
+		is a bit kludgey and there are actually more options than that.
+		
+		\subsection{Simpler minimal hexagonal torus vectors}
+			
+			If you redraw your route such that it is sourced from bottom left corner
+			(which we'll now call (0, 0)), there are four possible ways this route
+			could wrap.
+			
+			TODO: DESCRIBE WAYS OF WRAPPING
+			
+			For each of these wrappings, all the possible routes we can take are
+			strictly limited in terms of the dimensions used since we're stuck in a
+			corner.
+			
+			In each case, the function computing the minimal hex vector function
+			simplifies to a much simpler operation.
+			
+			TODO: DESCRIBE MINIMUM VECTOR LENGTH FUNCTIONS FOR EACH CASE
+			
+			This gives us a cheap way to compute which of the four possible wrappings
+			are shortest. Based on this we can pick one of at most two (is this
+			easily provable?) vectors in some fair manner to reduce load. This vector
+			can then be minimised in the usual way.
+			
+			This also leads to confirming a theoretical result giving the length of a
+			shortest path in a hexagonal torus topology.
+			
+			TODO: DESCRIBE HOW TO GET LENGTH FUNCTION AND COMPARE WITH \cite{xiao04}
+		
+		\subsection{Generating spiralling routes}
+			
+			In non-hexagonal torus topologies the previous technique would reveal all
+			possible shortest vectors (e.g. in cases where you can wrap more than one
+			way). Unfortunately, due to the addition of a non-orthogonal axes,
+			hexagonal toruses also have other cases when the width and height do not
+			match.
+			
+			TODO: TORUS SPIRALLING EXAMPLE
+			
+			It is possible to calculate the maximum number of spirals thus:
+			
+			TODO: DESCRIBE HOW MAX NUMBER OF SPIRALS IS COMPUTED
+			
+			Given a number of spirals, the vector can be updated this (note that the
+			change does not add a multiple of (1, 1, 1) but also does not result in
+			the vector changing length and thus becoming non-minimal!).
+			
+			TODO: DESCRIBE TRANSFORMATION
+			
+			TODO: PROVE THAT MINIMALITY IS MAINTAINED
+		
+		\subsection{Proof of completeness}
+		
+			TODO: PROOF OF COMPLETENESS BY EXHAUSTIVE SEARCH
+	
+		\subsection{Conclusions}
+			
+			This approach is simpler, smaller, has sounder theoretical basis, and
+			finds more routes than alternatives. This is good for load balancing and
+			fault avoidance and also good for completeness.
+

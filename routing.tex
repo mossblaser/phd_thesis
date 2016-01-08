@@ -1,113 +1,263 @@
 \chapter{Routing packets in large SpiNNaker machines}
 	
-	% In large networks, faults are inevitable and routing algorithms are
-	% required to work around them. <Give some motivating fault numbers, e.g.
-	% from bluegene or SpiNNaker>. This work hopes to extend the state of the art
-	% by defining a new fault-tolerant routing algorithm for SpiNNaker which can
-	% route around arbitrary permanent link failures.
+	In large networks, faults are inevitable and routing algorithms are required
+	to work around them. TODO: GIVE SOME MOTIVATING FAULT NUMBERS, E.G.  FROM
+	BLUEGENE OR SPINNAKER. This chapter hopes to extend the state of the art by
+	defining a new fault-tolerant routing algorithm for SpiNNaker which can route
+	around arbitrary permanent link failures.
 	
-	% Routing packets is NP complete and a key factor in the efficiency of a
-	% super computer network. Numerous heuristic algorithms exist which target
-	% different network technologies but many techniques are not portable.
+	Routing packets is NP complete and a key factor in the efficiency of a
+	super computer network. Numerous heuristic algorithms exist which target
+	different network technologies but many techniques are not portable.
 	
-	% In this work we care about SpiNNaker which has a table-based router, packet
-	% dropping flow control, and applications which deal with multicast. So far
-	% all proposed routing algorithms for SpiNNaker have been fault-intolerant
-	% and in this chapter, a new fault-tolerant algorithm is proposed.
-	
-	% Various fault-intollerant multicast routing algorithms exist for many
-	% networks and a number have been proposed for SpiNNaker. In davies12, three
-	% routing strategies based on overlapping DOR, RTOR and LDFR routes are
-	% suggested which have no ability to avoid faults.
-	
-	% TODO describe DOR, RTOR and LDFR.
-	
-	% In navaridas14 ESPR and NER are introduced which are able to generate more
-	% efficient multicast routes but, again, do not have the ability to avoid
-	% faults.
-	
-	% TODO describe ESPR and NER.
-	
-	% Work on fault-tolerant routing in super computer networks often focuses
-	% heavily on the issue of deadlock avoidance. Super computers typically rely
-	% on router micro architecture and restricted routing rules (dally93). In
-	% addition to the costs imposed by this method of deadlock avoidance, such
-	% restrictions can be fatal to fault tolerance: e.g. enforced DOR or no-turn
-	% rules may prevent routing around a fault or non-optimal paths may be
-	% required.
-	
-	To make efficient use of SpiNNaker's interconnection network packets must be
-	routed reliably to their destinations such that network congestion is
-	minimised. Routing algorithms are tightly constrained by the network topology
-	and router micro-architecture on which they are used. As a result of this,
-	exploiting SpiNNaker's unconventional topology and router architecture
-	requires the development of new routing algorithms. The Neighbouhood
-	Exploring Routing (NER) algorithm proposed by Navaridas \emph{et al.}
-	\cite{navaridas14} is well suited to SpiNNaker's architecture and
-	applications but lacks the ability to cope with faults, an inevetability in
-	large machines. In addition, all known implementations of routing algorithms
-	for hexagonal toruses cannot generate all valid Dimension Order Routes which
-	in turn can result in increased network congestion.
-	
-	In this chapter an efficient algorithm for fair DOR on hexagonal toruses is
-	presented and integrated into the NER routing algorithm. Fault-tolerance
-	extensions to the NER algorithm are then described which ensure successful
-	routing in the presence of any static fault condition. These extensions
-	exploit the SpiNNaker router's timeout-based deadlock breaking behaviour
-	enabling greater flexibility over routing decisions and avoiding the need for
-	the complex routing strategies required by existing algorithms.
+	In this work we care about SpiNNaker which has a table-based router, packet
+	dropping flow control, and applications which deal with multicast. So far
+	all proposed routing algorithms for SpiNNaker have been fault-intolerant
+	and in this chapter, a new fault-tolerant algorithm is proposed.
 	
 	\section{Related work}
 		
-		Routing algorithms continue to be a hot topic in networks research however
-		many algorithms are tightly coupled with specific network technologies and
-		thus unsuitable for use with SpiNNaker. For example, algorithms designed
-		for non-torus topologies such as Internet routing and tree-like networks
-		do not readily apply to torus networks.
+		Various fault-intolerant multicast routing algorithms exist for many
+		networks and a number have been proposed for SpiNNaker. In \cite{davies12},
+		three routing strategies based on overlapping DOR, RTOR and LDFR routes are
+		suggested which have no ability to avoid faults.
 		
-		\subsection{Dimension Order Rotuing (DOR)}
-			
-			Dimension Order Routing is a simple unicast routing algorithm which forms
-			the basis of many mesh and torus routing algorithms \cite{dally04}. In
-			DOR, packets are first routed along each network dimension in turn in
-			order to reach their destination. Figure \ref{fig:dimensionOrderRouting}
-			shows two possible routes between a pair of nodes, A and B. In the red
-			route, the Z dimension is used first followed by the X dimension. The
-			blue route uses X then Z.
-			
-			\begin{figure}
-				\center
-				\input{figures/dimensionOrderRouting}
-				
-				\caption{Two dimension order routes in a hexagonal mesh topology.}
-				\label{fig:dimensionOrderRouting}
-			\end{figure}
-			
-			The choice of dimension order does not impact the length of the routes
-			produced but can be important in many systems. For example, some deadlock
-			avoidance strategies rely on a fixed dimension ordering and will be
-			described later.
-			
-		\subsection{Multicast Routing}
-			
-			In Longest Dimension First Routing (LDFR), a common variant of DOR, the
-			dimension whose absolute value is greatest is used first which has a
-			number of favourable properties.
+		DOR routes follow a shortest-path from source to destination following one
+		dimensions then the next and can be computed in SpiNNaker as in previous
+		chapter.
 		
-		\subsection{Deadlock avoidance}
-		\subsection{Fault-tolerance}
-	
-	\section{Dimension order routing in hexagonal torus topologies}
-		\subsection{Hexagonal meshes}
-		\subsection{Hexagonal toruses}
-		\subsection{Ensuring fairness}
-		\subsection{Generating spiralling routes}
+		TODO DESCRIBE RTOR AND LDFR.
+		
+		In \cite{navaridas14} ESPR and NER are introduced which are able to
+		generate more efficient multicast routes but, again, do not have the
+		ability to avoid faults.
+		
+		TODO DESCRIBE ESPR AND NER.
+		
+		Work on fault-tolerant routing in super computer networks often focuses
+		heavily on the issue of deadlock avoidance. Super computers typically rely
+		on router micro architecture and restricted routing rules \cite{dally93}.
+		In addition to the costs imposed by this method of deadlock avoidance, such
+		restrictions can be fatal to fault tolerance: e.g. enforced DOR or no-turn
+		rules may prevent routing around a fault or non-optimal paths may be
+		required \cite{dally04}.
+		
+		TODO DIAGRAM OF EXAMPLE DEADLOCK SCENARIO AND AVOIDANCE VIA ROUTING RULES
+		AND AN AVOIDABLE-IF-NOT-FOR-DEADLOCKS FAULT
+		
+		Some techniques attempt to exploit diversity in the available routes to
+		avoid faults in the same way that congestion may be avoided
+		\cite{rodrigo08}. Alternatively, when the normal routing mechanism fails, a
+		simple but non-optimal technique may be used in place. For example,
+		\cite{puente07} uses an adaptive routing scheme but in the presence of
+		faults, falls back on a ring network. This guarantees delivery at the cost
+		of the ring network being a very inefficient.
+		
+		Other techniques involve identifying of regions of the system surrounding a
+		fault and enforcing the use of less-optimal routing procedures in these
+		areas, for example, \cite{boppana95,mejia06} find subregions with faults
+		and use ring-type networks within these.
+		
+		TODO FIGURE?
+		
+		The BlueGene/L supercomputer \cite{adiga02} takes another approach to fault
+		tolerant routing. Faults are avoided by disabling a number of otherwise
+		functional `lamb' nodes in the machine to and from which routes generated
+		by the underlying routing algorithms are blocked due to the presence of the
+		fault \cite{ho04}. This approach allows simpler fault-oblivious routing
+		logic to be used in the presence of faults at the expense of some wasted
+		resources. In this case, instead of using less optimal routing strategies,
+		working nodes are sacrificed in order to ensure fault tolerance. This type
+		of approach is most appropriate when algorithmic routing is used and
+		routing rules are inflexible. SpiNNaker is table based and thus we have far
+		more flexibility on offer.
+		
+		TODO: FIGURE SHOWING LAMB NODE SOLUTION WORKING
+		
+		Other algorithms proposed for the BlueGene architecture attempt to avoid
+		the need for lamb nodes by generating routes which reach their destination
+		via a `proxy' node \cite{gomez04}. By appropriately selecting the location
+		of such a proxy, the existing routing algorithm used by the system can be
+		guaranteed to select a route free of faults.
+		
+		TODO: EXAMPLE OF PROXY ROUTING TO AVOID FAULT
+		
+		Finally, many algorithms in in the field are distributed and use only local
+		information along with limited information from their peers to generate
+		routes \cite{fick09b}. In SpiNNaker, route generation is conventionally
+		carried out centrally since no special on-chip hardware facilities exist
+		for route generation. Centralised route generation also enables the routing
+		algorithm to consider all available routes. As a result, there is little
+		incentive for the use of distributed routing algorithms on SpiNNaker since
+		global system information could be compactly shared for one-off routing
+		passes.
+		
+		Algorithms for other architectures such as IP networks tend to be poor fits
+		for static, regular network topologies since they use expensive graph-based
+		algorithms for route discovery which aren't necessary here. They also tend
+		to heavily feature graph topology discovery etc. which aren't needed here.
+		
+		Work on fault-tolerance in data centre networks does exploit the regularity
+		of the network topology in routing algorithms \cite{guo08,liao12}.
+		Unfortunately, the approaches used are not general enough to be applied to
+		mesh-like topologies such as the one in SpiNNaker.
+		
+		Outside the field of computer networks, routing algorithms used to route
+		wires across the surfaces of chips are required to solve similar problems
+		to fault-tolerant network routing problems in mesh networks. Like mesh
+		networks, the routes must be defined within a regular Manhattan geometry
+		and congested areas, rather than faults must be avoided by the algorithms
+		\cite{kahng11}.  Unfortunately, these algorithms are designed for
+		occasional batch operation prior to the multi-month process of chip
+		manufacturing and so runtimes of hours or days are commonplace
+		\cite{nam08}. As such these algorithms would be inappropriate for use with
+		applications such as SpiNNaker where users' applications tend to be
+		short-lived and thus routing should not be allowed to dominate runtime.
 	
 	\section{Fault-tolerant multicast routing}
-		\subsection{Graph search based repair}
+		
+		Existing solutions bend over backwards to avoid deadlocks. We don't need to
+		do this on SpiNNaker since we already use timeout based deadlock
+		resolution. As a result we have great freedom over the routes we can chose
+		when avoiding faults. We first explore the effectiveness of a set of
+		heuristics which simply try other shortest-path routes. Though some
+		improvement is achieved, not all faults can be handled. I have developed a
+		post-processing process for fault-oblivious algorithms which uses a
+		graph-search procedure to route-around dead links.
+		
 		\subsection{Alternative routing heuristics}
-		\subsection{Results}
-			\subsubsection{Heuristic performance}
-			\subsubsection{Runtime}
-			\subsubsection{Route congestion}
-	
+			
+			Many routing algorithms, including ESPR and NER use LPFR or DOR to
+			generate point-to-point paths in a network. Such routes, though minimal,
+			are not always the *only* minimal path available. By exploiting the
+			diversity of equivalent-length paths provided by hexagonal torus
+			topologies, alternative routes may be generated which may be able to
+			avoid a fault.
+			
+			The most straight-forward technique involves using alternative dimension
+			orders.
+			
+			TODO: FIGURE SHOWING ALTERNATIVE DIMENSION ORDERS
+			
+			Only limited flexibility is afforded by such a technique (generally two
+			alternatives are available though sometimes 0 or sometimes many if
+			spiralling). An alternative is to follow a non-dimension-order but still
+			minimal route by 'zig-zagging'. We proceed according to LDFR until the
+			route hits a fault at which point we attempt to switch dimension.
+			
+			TODO: FIGURE SHOWING ZIGZAG ROUTES WORKING AND FAILING
+			
+			This can obviously still fail and, like alternative dimension orders,
+			this is more likely to fail the closer to the source or destination you
+			get since there is less and less route diversity. Additionally there are
+			fault patterns which can require non-shortest-path routes.
+		
+		\subsection{Graph search based repair}
+			
+			Graph search algorithms are expensive compared with DOR but are
+			guaranteed to find a minimal valid route if one exists. Unlike other
+			architectures, however, SpiNNaker could happily use such a routing
+			scheme! Using graph-search for the full routing process would make things
+			ridiculously slow so lets not do that. On the plus side, you can use BFS
+			rather than Dijkstras for most networks where all links are the same.
+			
+			TODO: FIGURE ILLUSTRATING COST OF GRAPH SEARCH FOR TORUS NET
+			
+			If we presume that errors are typically isolated, it is unlikely that
+			avoiding such an error would require a significantly different route. As
+			such I propose starting with an existing known-effective routing
+			algorithm such as NER and patching up the resulting routes if they
+			attempt to use a dead link. This technique is called Partial Graph Search
+			(PGS) repair and proceeds as follows:
+			
+			Route as normal and record the locations of all hops which use dead
+			links/nodes and thus need to be repaired. If no dead links/nodes are
+			used, the algorithm terminates. If dead links/nodes exist, colour the
+			routing tree such that all disconnected subtrees are a unique colour. For
+			each disconnection point, perform a graph-search starting from this point
+			looking for any node in a subtree of a different colour. Add the
+			discovered route and colour our subtree with that of the subtree we just
+			attached ourselves to.
+			
+			TODO: EXPLAIN THE FIDDLINESS HERE TO ENSURE WE DON'T CREATE LOOPS. 
+			
+			Proof of connectivity: A routing tree which was broken by N faults will
+			be partitioned into N+1 subtrees and thus will be coloured with N+1
+			colours. Each iteration over the N faults reduces the number of
+			disconnected subtrees (and thus colours) by exactly 1 (we stop the search
+			when we hit *any* other colour). After N iterations we thus have 1 tree
+			which is the fully connected routing tree.
+			
+			TODO: DIAGRAMS ILLUSTRATING PGS REPAIR EXAMPLE
+		
+	\section{Evaluation \& Results}
+		
+		We generated routes for two standard traffic distributions: uniform as a
+		worst-case and centroids as a "typical" case.
+		
+		TODO: EXAMPLE IMAGES OF TRAFFIC PATTERNS
+		
+		We generated faults based on the assumption that hardware failures are
+		likely uniform randomly distributed and can affect either chip-to-chip
+		links or HSS links. We do not consider faults which disconnect nodes we
+		plan to use since those nodes would never get booted in a real system and
+		so we never need to route to them. Faults thus look like this:
+		
+		TODO: FIGURE SHOWING TWO EXAMPLE FAULTS OF EACH TYPE
+		
+		We consider two representative general cases: one typical, one extreme in
+		terms of fan-out and fault rate.
+		
+		\subsection{Baseline}
+		
+			We discover how many faults you hit when doing DOR, LPFR, ESPR and NER
+			as a baseline. We find that as well as being better in other ways NER
+			also inherently avoids some faults due to the NE thing. As a result
+			we'll just look at NER from now-on.
+			
+			TODO: PLOTS
+		
+		\subsection{Heuristic performance}
+			
+			Not many faults remain but there are still some. Using DOR and zig-zag
+			heuristics helps mop up some of these but still some remain.
+			
+			TODO: PLOTS
+		
+		\subsection{Runtime}
+			
+			Using PGS guarantees connectivity (if actually possible) but obviously
+			uses graph search, at some expense, as overhead over existing
+			algorithm... FGS is inherently fault tolerant but awfully slow so we
+			quickly discount that. We can see that using a heuristic (and thus
+			reducing usage of PGS) is good for performance but although
+			statistically significant, the performance difference of [TODO: WORK OUT
+			TINY PERCENTAGE] is not likely worth the trade off of greater code
+			complexity on performance grounds alone.
+			
+			TODO: PLOTS
+		
+		\subsection{Route congestion}
+			
+			Unlike the heuristics above, PGS is guaranteed to increase the number
+			of hops in a route to ensure connectivity. This in turn can cause
+			congestion hot-spots. We generate a large number of random routes using
+			our algorithms and compare congestion before and after PGS to see how
+			it compares.
+			
+			TODO: COMPARE CONGESTION BEFORE AND AFTER PGS REPAIR
+		
+		\subsection{Routing table usage}
+			
+			No measured difference observed between approaches.
+			
+			TODO: MEASURE ROUTING TABLE USAGE
+		
+	\section{Conclusions}
+		
+		(PENDING CONGESTION RESULTS) As such, though the simple heuristics do
+		provide a measurable improvement it is so small as to suggest the
+		implementation effort is probably not worthwhile.
+		
+		Recommendation: use NEF and PGS repair since it is fast and works
+		reliably on SpiNNaker.
