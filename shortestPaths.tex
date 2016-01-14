@@ -8,29 +8,37 @@
 		dimensions then the next. For mesh topologies this requires computing a
 		vector from the source to the sink and is straightforward:
 		
-		TODO DESCRIBE MESH CALCULATION
+		\subsection{Mesh Networks}
+			
+			TODO DESCRIBE MESH CALCULATION
+			
+			For hexagonal toruses, you have three dimensions but they aren't
+			orthogonal... \cite{patel15}
 		
-		For hexagonal toruses, you have three dimensions but they aren't
-		orthogonal... \cite{patel15}
+		\subsection{Hexagonal Mesh Networks}
+			
+			TODO DESCRIBE HEX MESH CALCULATION
+			
+			For non-hexagonal toruses you just recenter everything and take the normal
+			mesh vector. For hexagonal toruses this doesn't work.
 		
-		TODO DESCRIBE HEX MESH CALCULATION
+		\subsection{Torus Networks}
+			
+			TODO DESCRIBE HEX TORUS CALCULATION NOT WORKING WHEN RECENTERING
 		
-		For non-hexagonal toruses you just recenter everything and take the normal
-		mesh vector. For hexagonal toruses this doesn't work.
+		\subsection{Hexagonal Torus Networks}
 		
-		TODO DESCRIBE HEX TORUS CALCULATION NOT WORKING WHEN RECENTERING
-		
-		All known existing solutions perform this calculation by trying 12-possible
-		DOR routes and picking the shortest. TODO: CITE SOME IMPLEMENTATIONS
-		
-		TODO DESCRIBE THE 12 ROUTES
-		
-		As we'll show later this mechanism is not very elegant/efficient and more
-		importantly does not reveal all possible routes, e.g. those that spiral.
-		
-		TODO DESCRIBE SPIRAL ROUTES.
-		
-		TODO DESCRIBE RTOR AND LDFR.
+			All known existing solutions perform this calculation by trying 12-possible
+			DOR routes and picking the shortest. TODO: CITE SOME IMPLEMENTATIONS
+			
+			TODO DESCRIBE THE 12 ROUTES
+			
+			As we'll show later this mechanism is not very elegant/efficient and more
+			importantly does not reveal all possible routes, e.g. those that spiral.
+			
+			TODO DESCRIBE SPIRAL ROUTES.
+			
+			TODO DESCRIBE RTOR AND LDFR.
 		
 	\section{Dimension order routing in hexagonal torus topologies}
 		
