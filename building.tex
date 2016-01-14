@@ -13,22 +13,12 @@
 	
 	\section{Related work}
 		
-		Conventionally, the design process for the physical arrangement of network
-		nodes in datacenter racks is broken into two steps:
-		
-		\begin{enumerate}
-			
-			\item Partitioning the network into easily manufacturered components
-			(e.g. circuit boards).
-			
-			\item Laying out the machine to avoid the need for (expensive) long
-			cables.
-		
-		\end{enumerate}
-		
-		Finally, once the physical layout is designed, a technician is required to
-		assemble the final machine. This process is often non-trivial and thus
-		various techniques exist which attempt to simplify the task.
+		The process can be broken into three steps: partitioning, layout and
+		installation. During partitioning the topology is broken up into pieces
+		which can easily be manufactured and handled. During layout, the
+		partitioned pieces of the topology are physically laid out in order to
+		control cable length. During installation a technician must physically
+		install cables connecting things together.
 		
 		\subsection{Partitioning hexagonal toruses}
 			
@@ -37,9 +27,12 @@
 			more practical. For example, a single circuit board may contain tens or
 			even hundreds of nodes \cite{gilge14,ajima12}. The majority of commercial
 			super computers use torus topologies partitioned into hypercubes
-			\cite{chen11,ajima12} for which the analogue in a hexagonal torus
-			topology is a parallelogram as illustrated in figure
-			\ref{fig:parallelogramPartitioning}.
+			\cite{chen11,ajima12}.
+			
+			TODO: FIGURE HYPERCUBE PARTITIONING
+			
+			One possible analogue in a hexagonal torus topology is a parallelogram as
+			illustrated in figure \ref{fig:parallelogramPartitioning}.
 			
 			\begin{figure}
 				\center
@@ -55,22 +48,294 @@
 			only one link each. The consequence is potentially a need for multiple
 			types of interconnect for connecting partitioned pieces of the system,
 			adding both to design complexity and cost.
+			
+			Another 'obvious' choice of partition is a hexagonal one like so:
+			
+			TODO: FIGURE SHOWING WRAPPED HEXAGON
+			
+			While this partition presents six equally-sized edges, it cannot be used
+			to build a hexagonal torus as described. A partition constructed from
+			pointy-topped hexagons tiles a hexagonal torus topology constructed from
+			pointy-topped hexagons iff the partition tiles with a translational
+			symmetry shared with a hexagonal torus. As we can see from the figure,
+			this is not the case. This tiles more like a twisted torus of some sort.
+			To prove this test is legit, see the figure below where we superimpose a
+			pointy-topped hexagon on a parallelogram.
+			
+			TODO: FIGURE POINTY TOP SUPERIMPOSED PARALLELOGRAM TILING
+			
+			Furber, Davison \emph{et al.} \cite{davidsonWiring} proposed an
+			alternative based on wrapped triples where you take three hexagons and
+			wrap more layers around them as required. This pattern tiles like
+			flat-topped hexagons, which isn't quite right. But since we know a
+			pointy-topped triple
+			tiles like a flat-topped hexagon, a flat-topped triple must tile like a
+			pointy-topped hexagon. Combining these facts gives that by tiling triads
+			of wrapped triples we can tile a hexagonal torus.
+			
+			TODO: FIGURES DEMONSTRATING TILING OF TRIADS OF WRAPPED TRIPLES
 		
 		\subsection{Folding regular toruses}
 			
+			Once partitioned, a na\"ive arrangements of torus topologies, including
+			hexagonal torus topologies, feature long `wrap-around' connections.
 			
+			TODO: FIGURE SHOWING LONG CABLES DUE TO WRAP-AROUND
+			
+			In conventional torus topologies these long connections are eliminated by
+			folding and interleaving nodes of the network. For example, for a 1D
+			torus network (a.k.a. a ring network), one long connection exists to
+			connect the two opposite sides of the system. To remove these long
+			connections, half the nodes are `folded' on top of the others and then
+			this arrangement of nodes is interleaved.
+			
+			TODO: FIGURE SHOWING RING NETWORK BEING FOLDED
+			
+			This approach substantially decreases the maximum wire length (in fact
+			does so regardless of network size) at the expense of approximately
+			doubling the average wire length. In practice, the maximum length is more
+			important and so this approach is widely used in practice.
+			
+			Unfortunately, the non-orthogonality of hexagonal torus topologies means
+			that folding does not work correctly. In this chapter I describe a few
+			transformations that fix this in various settings.
 		
 		\subsection{Cabling installation}
+			
+			Conventional machine room installations often feature very repetitive
+			cabling patterns which can easily be followed by a human technician.
+			Such cabling patterns are more practical in data-center networks where
+			cabling within a cabinet tends to concentrate on a small number of
+			high-port-count switches. Unfortunately, such patterns do not appear as
+			commonly in super computer cabling where point-to-point connections
+			between compute nodes are the norm.
+			
+			TODO: MORE BACKGROUND READING FOR DATACENTER ETC HOPEFULLY CAN FIND SOME
+			INFO ABOUT WIRE LENGTH SELECTION RATHER THAN MOSTLY CABLE MANAGEMENT. TIA
+			STANDARD SEEMS GOOD.
+			
+			In BlueGene architectures, the 5D torus network topology places some of
+			its torus wiring on fixed PCB backplanes which means no manual wiring is
+			required at all. The rest of the cabling uses optical interconnect which
+			must be manually installed. Groups of individual cables are custom-made
+			to match the exact lengths requirede and factory assembled into labeled
+			bundles of cables which connect pairs of cabinets. Technicians then use
+			the labels to guide installation order into pre-labeled sockets.
+			
+			TODO: IBM BLUEGENE ASSEMBLY PHOTOS
+			
+			Manufacturing custom cables is an expensive proposition and is not
+			practical for many applications. SpiNNaker's interconnect uses
+			off-the-shelf S-ATA cables to reduce costs. Such cables are widely
+			available in standardised lengths. SpiNNaker's packaging is also
+			significantly finer-grained than BlueGene which comes in pre-assembled
+			cabinets with most intra-cabinet connectivity provided by the backplane.
+			SpiNNaker has 120 PCBs with 6 sockets each in every cabinet, all of which
+			need connecting. The labelled approach does not scale.
+			
+			TODO: PHOTO OF SPINNAKER PCBS IN RACK.
 	
-	\section{Folding hexagonal toruses}
+	\section{Folding \& interleaving hexagonal toruses}
+		
+		In order to fold a hexagonal torus topology we must transform it into a
+		regular rectangular grid. In this section we break this process down into
+		two steps: transformation from a parallelogram to a rectangle and
+		uncrinkling. We propose two alternative transformations which can be
+		applied to hexagonal torus topologies constructed out of triads of triples
+		or to the basic torus topology.
+		
 		\subsection{Transformation}
+			
+			The hexagonal torus topology is most naturally drawn as a parallelogram
+			(see left of figures). As described earlier, folding this just doesn't
+			work since the ends don't meet. To make this foldable we must transform
+			the network into a rectangle. We present two transformations to do this.
+			
+			The first transformation we describe is shearing. When shearing you
+			distort the network to cause the X and Y axes to become orthogonal and
+			the whole shape to become a rectangle. The down-side of this approach is
+			that the Z dimension has been stretched and this distortion means that
+			cables going in the Z direction will need to be $\sqrt(2)$ times longer
+			than those going in the X and Y directions.
+			
+			The second transformation is slicing where we translate the left triangle
+			of the parallelogram onto the opposite side forming a generally
+			rectangular shape. This transformation has the advantage that it
+			maintains distances in hexagonal meshes without distortion but sadly with
+			wires criss-crossing which will cause some headaches later.
+			
+			TODO: FIGURE SHOWING NATIVE VS SLICING VS SHEARING FOR TRIADS AND CHIPS
+			
 		\subsection{Uncrinkling}
+			
+			At this point we have two ways of getting into a rectangular arrangement
+			but this still cannot be folded since the spacing of individual nodes
+			does not evenly fill a regular 2D grid. For sheared systems of triads and
+			for sliced systems of either kind, the arrays of hexagons contain
+			crinkled columns and rows as illustrated below.
+			
+			TODO: UNCRINKLING FIGURE
+			
+			By uncrinkling these columns or rows, a regular 2D grid arrangement is
+			formed. In the figure, the numbered hexagons enumerate the different
+			positions on the crinkle and those labelled alphabetically are those that
+			immediately surround them. From this we can observe that uncrinkling
+			largely preserves spatial locality but some distortion is introduced
+			separating previously neighbouring nodes. For example, in C, the wrapped
+			triples labelled `1' and `i' are neighbours before uncrinkling but are
+			separated by a (Euclidean) distance of $\sqrt{5}$ afterwards. Note that
+			the distortion introduced depends on what part of the crinkle is
+			considered, for example `2' and `a' have distance 2 but are logically
+			connected in the same way.
+		
 		\subsection{Folding}
+			
+			We now have a square, 2D grid with the usual patterns of connectivity:
+			all very local except for the connections crossing from side-to-side and
+			normal folding techniques can be used.
+			
+			TODO: FIGURE SHOWING FOLDING WORKING
+			
+			That is unless you used the slicing technique. If you've done this then
+			you get criss-crossing streams of cables which folding will not remove,
+			depending on the dimensions of the network.
+			
+			TODO: FIGURE SHOWING BAD SLICING PRODUCING BAD FOLDS
+			
+			If you have Nx2N then you actually get normal crossing patterns and thus
+			folding can be done as-per-normal.
+			
+			If you have NxN, though, it all goes wrong and you get criss-crossing.
+			Such systems can be folded by doing a double vertical fold.
+		
+		\subsection{Interleaving}
+			
+			Interleaving is performed as illustrated earlier.
+			
+			TODO: MORE FULLY SPECIFY
+		
+		\subsection{Mapping to Cabinets}
+			
+			A simple linear allocation to cabinet locations.
+			
+			TODO: DESCRIBE ALGORITHM
+			
+			The result is a connection list like so...
+		
 	\section{Installation}
+		
+		Installation will be performed by a (team of) technicians and requires that
+		all cables are connected correctly and connectivity tested.
+		
 		\subsection{Cable selection}
+			
+			The common length selection method of requiring a fixed slack is
+			insufficient in practice due to the wide variation in cable lengths
+			(centimetres to tens of centimetres): short cables become too tight and
+			long cables become too slack. Based on the observation that short and
+			medium length cables tend to form an arc between their endpoints we
+			propose a wire length selection heuristic based on enforcing a minimum
+			height of the arc. We then pick the available cable long enough to
+			achieve the specified arc height.
+			
+			TODO: PHOTOGRAPHS OF CABLES FORMING ARCS AND SHORT LOOPS
+			
+			TODO: DIAGRAM SHOWING ARC/LOOP HEIGHT CONSTRAINT.
+			
+			When the wire forms the arc, the following eqn must be solved. Sadly this
+			has no closed form solution so a simple numerical approximation is used
+			to compute it.
+			
+			TODO: FORMULAE FOR ARC HEIGHT COMPUTATION
+			
+			In the case where the wire is too small to form an arc they form a loop
+			whose height is calculated thus.
+			
+			TODO: FORMULAE FOR LOOP HEIGHT COMPUTATION
+		
+		\subsection{Interactive technician guidance and validation}
+			
+			By using diagnostic LEDs controlled via a low-bandwidth system-management
+			bus provided by the backplane before cabling it is possible to provide
+			interactive guidance to installing technicians. Rather than issuing paper
+			guides and using cable labelling, these LEDs, augmented with a visual
+			display and TTS can be used. This significantly reduces infrastructure
+			requirements.
+			
+			This infrastructure can also be used to configure the high-speed serial
+			links to enter a special diagnostic mode. In this mode unique IDs
+			assigned by a host to each link are sent instead of sending random data
+			during idle frames (used normally for EMC reasons). The unique IDs
+			received at the opposing end of the connection can be used to determine
+			cable correctness.
+		
 		\subsection{Installation ordering}
-		\subsection{Interactive technician guidance}
-		\subsection{Validation}
-	\section{Results}
+			
+			The order of installation can have a significant impact on
+			maintainability and installation effort. To make installation practical,
+			wiring congestion should be avoided when possible.
+			
+			Thanks the locality of all connections, it is practical to install both
+			ends at once (not often done in data centre installations) and doing so
+			enables real-time validation of connections. This also means that cables
+			need not be labelled.
+			
+			Based on the observation that cables tend to run in arcs, we want to
+			install things in an order such that later cables can easily fit over the
+			top of existing cables. Thanks to the arc model above, we order cable
+			installation by arc height, installing those with wider arc height later.
+			
+			Additionally, cables are grouped by direction since SpiNNaker's cable
+			sockets are also grouped by direction this means each direction does not
+			obstruct the next until connections begin to run between cabinets.
+			
+			We also group cables by intra and inter rack and cabinet. As well as
+			generally causing short cables are installed first, wires crossing
+			between cabinets and racks are inherently going to obstruct cables within
+			the rack so we want to do that second. Further since racks are
+			conveniently wide enough for a single technician to comfortably work,
+			saving intra-cabinet connections 'til last means that for most of the
+			installation the technicians run no risk of colliding.
+			
+			Finally, ordering runs top-to-bottom, left-to-right as the final
+			tie-breaker. Since hops with similar arc length etc. tend to follow
+			similar patterns, this means that wires tend to follow in repeating
+			patterns.
+	
+	\section{Results and Evaluation}
+		
 		\subsection{Cable length}
+			
+			TODO: CALCULATE AND DESCRIBE COSTS INTRODUCED AT EACH STAGE:
+			TRANSFORMATION, UNCRINKLING, FOLDING + INTERLEAVING AND MAPPING INTO REAL
+			HARDWARE FOR SPINNAKER.
+			
+			Given the approaches suggested, we find that in general shearing and 2x2
+			folding works the best unless you have a Nx2N system in which case
+			slicing and 2x2 folding works better if you have a triad-partitioned
+			network.
+			
+			TODO: FIGURE OF LARGE SPINNAKER MACHINE WIRING PLAN
+			
+			When mapped to real hardware the largest planned SpiNNaker machine
+			requires cables no longer than 70cm.
+			
 		\subsection{Installation practicality}
+			
+			TODO: LENGTH SUITABILITY (EXPERIMENTS?) ARE THE CABLES TOO TIGHT OR NOT.
+			PROBABLY LIMITED TO INFORMAL MEASUREMENTS
+			
+			TODO: ANALYSIS OF INSTALL TIME DEPENDING ON CABLE LENGTH AND CROSSING
+			TYPES
+			
+			TODO: GUIDANCE AND INSTALLATION. MAYBE INCLUDE TRIALS OF UNDERGRAD
+			VOLUNTEERS. COMPARE INSTALL WITH AND WITHOUT VALIDATION.
+			
+			With in-line verification, all connectors were correctly seated in the
+			correct sockets first time since everything is verified at build time.
+			
+		\subsection{Maintenance}
+			
+			TOOD: QUANTIFY CABLE REMOVALS REQUIRED. EXPERIMENT: REMOVE/REPLACE RANDOM
+			BOARDS AND MEASURE TIME TAKEN, CABLES REMOVED. COMPARE WITH STANDARD DATA
+			CENTER WIRING
