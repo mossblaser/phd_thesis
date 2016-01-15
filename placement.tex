@@ -1,27 +1,367 @@
 \chapter{Placing applications in large SpiNNaker machines}
 
-\section{Related work}
-	\subsection{Super computer application placement algorithms}
-	\subsection{Chip placement algorithms}
+We've now shown that we can build large super computers using hexagonal torus
+topologies, and sensibly route packets around such networks, avoiding faults
+and exploiting route diversity. However, the network is a limited resource and
+in the face of a pathological traffic pattern, no amount of clever routing will
+save you.
 
-\section{Using chip-placement algorithms for application placement}
-	\subsection{Topological restrictions}
-	\subsection{Constraint handling}
-	\subsection{Problem representation}
+In neural applications, communication patterns (though not necessarily rates)
+are generally fixed between the cores involved in the simulation. As a result
+selecting which cores become responsible for which parts of a model can be very
+important.
 
-\section{Application placement by simulated annealing}
-	\subsection{Algorithm}
-	\subsection{Cost function}
-	\subsection{Annealing schedule}
-	\subsection{Constraint handling}
-
-\section{Hierarchical placement}
-	\subsection{Clustering}
-	\subsection{Refinement}
-	\subsection{Parallelism}
-
-\section{Evaluation}
-	\subsection{Benchmark networks}
-	\subsection{Experiments}
-	\subsection{Results}
-
+	\section{Related work}
+		
+		Placement in super computers or high-performance computing systems is often
+		referred to as task scheduling since it involves dealing with temporal
+		issues and handling queues of independent jobs. In SpiNNaker this is not
+		done so instead we explore the subset of one-task placement algorithms
+		used.
+		
+		\subsection{Super computer application placement algorithms}
+			
+			A number of algorithms are used when placing super computer applications.
+			Indeed many researchers have indicated the significance of the impact of
+			this task on common super computer loads. Surprisingly little is done in
+			industry, despite efforts in academia.
+			
+			\subsubsection{Application-specific approaches (manual placement)}
+				
+				In the case of some applications, such as finite element modelling, the
+				computation proceeds by breaking a physical space into regular pieces
+				and simulating each piece on an individual compute node. The compute
+				nodes then communicate with nodes simulating neighbouring pieces to
+				allow the model to proceed as one. Such approaches have
+				straight-forward mappings onto popular super computer topologies such
+				as toruses which are essentially optimal.
+				
+				TODO: FIGURE SHOWING PLACEMENT FOR FINITE ELEMENT MODELLING
+				
+				This approach is ideal for applications with obvious mappings but for
+				many applications this simply isn't possible. Neural simulations are
+				especially non-obvious to place.
+			
+			\subsubsection{Sequential placement}
+				
+				Standard super computer software such as SLURM place applications
+				sequentially or even randomly within the super computer topology. When
+				network throughput requirements are low or when communication is random
+				or broadcast-based this is also sufficient (since no placement is
+				better than any other). When networks are small this is also probably
+				sufficient. Existing SpiNNaker software uses this approach.
+			
+			\subsubsection{Greedy Placement}
+				
+				Some manufacturers such as Cray supply extensions to SLURM which
+				allocate applications along a Hilbert curve and following a greedy
+				algorithm to decide the order in which applications are placed on the
+				curve.
+				
+				TODO: FIGURE SHOWING CONSTRUCTION OF HILBERT CURVE
+				
+				Hilbert curves map a 1D spaces into 2D spaces, attempting to preserve
+				the property that things which are close in 1D will also be close in
+				2D. As such this means that by iterating over the nodes in the graph in
+				a sensible (linear) order, a sensible 2D placement should arise. This
+				approach can work well but is easily misled and is essentially ignoring
+				the 2D nature of the network topology.
+			
+			\subsubsection{Optimisation-based Placement}
+				
+				In the academic community, a number of attempts have been made to use
+				various optimisation algorithms for the placement of applications.
+				Unfortunately, many of these simply aren't suited to the scale of
+				neural applications running on SpiNNaker (e.g. only cope with tens of
+				nodes while SpiNNaker may contain hundreds of thousands).
+				
+				Additionally, a number of algorithms have been developed which make
+				assumptions about the topologies of the problem or network. Tree match
+				for example attempts to map tree-shaped problems to tree-shaped
+				networks. Such algorithms can be highly effective but again do not
+				apply to SpiNNaker or its neural applications.
+		
+		\subsection{Chip placement algorithms}
+			
+			The chip-design industry has, for many years, dealt with problems
+			analogous to the task of placing super computer jobs in a way suited to
+			SpiNNaker. Modern CPUs have millions or billions of components with
+			strictly fixed connectivity. CPU designers must place each of these onto
+			a chip such that the connection lengths are controlled to reduce
+			congestion and increase performance. As such, these algorithms are
+			ideally suited to future super computer placement work since they already
+			operate at the scales required.
+			
+			\subsubsection{Cost functions}
+				
+				HPWL is popular but a bit crap for high fan-outs. It is, however, quite
+				simple.
+				
+				TODO: SELECT A BETTER COST FUNCTION...
+			
+			\subsubsection{Simulated annealing}
+				
+				One of the oldest techniques used for circuit placement is simulated
+				annealing and this remains popular today thanks to its sheer
+				versatility (see VPR, other open FPGA tools).
+				
+				SA works by analogy with the physical process of annealing.
+				The simulated annealing algorithm works by selecting random pairs of
+				components on a chip, swapping them and evaluating some cost function.
+				If the swap reduces the cost function, it is kept, if not, depending on
+				a function of the current temperature and the cost introduced by the
+				swap.
+				
+				TODO: ILLUSTRATION OF SIMULATED ANNEALING SWAP OPERATION
+				
+				By occasionally allowing costly swaps, the annealing algorithm avoids
+				becoming trapped in local minima. As the algorithm proceeds, the
+				temperature is slowly reduced and with it the proportion of costly
+				swaps which are retained. This causes the placement to move from
+				exploration early on towards refinement later on.
+				
+				The temperature schedule of an annealing algorithm is critical to its
+				success. In general these schedules are computed based on the
+				performance of the algorithm as it runs. In VPR the following schedule
+				is used.
+				
+				TODO: DESCRIBE VPR'S SCHEDULE
+				
+				TODO: FIND AND DESCRIBE ALTERNATIVE SCHEDULE?
+				
+				Unfortunately, SA is very difficult to parallelise, especially in the
+				case of placement. As a result, its scalability has been limited and
+				resulted in significantly reduced usage in recent work.
+			
+			\subsubsection{Partitioning placement}
+				
+				Partitioning based placement solves the placement problem using
+				graph-partitioning recursively on the problem graph to assign each part
+				of the circuit to some area in the super chip. Though a number of
+				algorithms have proven successful in academic placement contests over
+				the years, they are not popular in industrial settings.
+			
+			\subsubsection{Analytical placement}
+				
+				In analytical placement, cost function for the circuit graph is
+				approximated in a form which is amenable to solutions with standard
+				numerical or symbolic algebraic techniques. Using these techniques,
+				exact minimum cost (in terms of the approximation) configurations can
+				be obtained.
+				
+				Quadratic placement is a popular analytical placement technique which
+				approximates the cost of a placement as the sum of the squares of the
+				distances between connected circuit elements.
+				
+				TODO: FIGURE EXAMPLE QUADRATIC PLACEMENT PROBLEM AND SOLUTION
+				
+				As such this gives a quadratic cost function like so which we must
+				minimise.
+				
+				TODO: QUADRATIC COST EQN
+				
+				To minimise the function we differentiate and solve using simple
+				symbolic manipulation.
+				
+				TODO: QUADRATIC COST SOLUTION
+				
+				Unfortunately, quadratic placement doesn't contain any congestion
+				relief by default so various schemes exist. For example, extra anchor
+				nodes are inserted which gently pull the circuit components apart from
+				each other. As a result, the algorithm generally proceeds by iterating,
+				regenerating anchors each time.
+				
+				Other non-quadratic analytical methods exist too with numerical
+				solutions. The approaches are often similar.
+			
+			\subsubsection{Hierarchical clustering}
+				
+				Many placement algorithms scale super-linearly with problem size and so
+				larger problems become increasingly problematic to handle. To solve
+				this problem clustering techniques are first applied to first simplify
+				the placement problem. A solution is then found at the coarse level and
+				then hierarchically fleshed out.
+				
+				Various clustering algorithms are in use.
+				
+				TODO: TALK ABOUT CLUSTERING IN PLACEMENT...
+				
+				TODO: DESCRIBE THE ALGORITHM I IMPLEMENTED.
+	
+	\section{Using chip-placement algorithms for application placement}
+		
+		As described above, chip and FPGA placement algorithms are already able to
+		cope with the scale of the application placement problem but there are a
+		few differences which must be considered.
+		
+		\subsection{Topological restrictions}
+			
+			Chip placement occurs in 2D Euclidean space: the surface of a chip.
+			Unfortunately, super computer network topologies do not often exist in
+			such mundane forms. In the case of SpiNNaker we have a torus network
+			which causes great problems for many analytical techniques. This is
+			because distances in a torus do not increase or decrease monotonically as
+			two points are moved in opposite directions. As a result, solution
+			methods frequently fall apart.
+			
+			TODO: FIGURE ILLUSTRATING DISTANCE DISCONTINUITY
+		
+		\subsection{Placement constraints}
+			
+			At the simplest level, there is usually a non-overlapping constraint for
+			placement of circuit components. In FPGAs there may also be rules about
+			which parts of the chip a particular component may be placed (e.g. block
+			RAMS can only go in certain places...).
+			
+			In application placement there are multiple independent resource
+			constraints on a given chip. For example, CPU resource and memory
+			resource. As a result we're left with a bin packing problem not found in
+			circuit placement.
+			
+			The soft constraints on the placement solution are also similar in that
+			routing resources must be minimised and congestion avoided. Modern
+			placers may also have timing based constraints which are not generally
+			present in software applications due to strongly the non-deterministic
+			nature of network latency.
+	
+	\section{Application placement by simulated annealing}
+		
+		I have implemented a simplified SA based application placement algorithm
+		based on the approach used in the popular VPR place and route tool chain.
+		The algorithm is written in C and is optimised for experimentation rather
+		than performance but is production-ready. It has been integrated into the
+		`Rig' SpiNNaker software tools and has been used to place very large
+		simulations. More on that later.
+		
+		\subsection{Representation}
+			
+			Model each chip as having a quantity of various resources (e.g. Cores,
+			SDRAM) available. The application graph consists of vertices which each
+			consume some quantity of these resources. Vertices must be placed on a
+			single chip such that the resources required on a given chip do not
+			exceed those available. Vertices are then interconnected by 1:N nets with
+			weights which act as hints. The nets are treated as a soft constraint:
+			vertices connected via a net will, ideally, be placed near to each other,
+			with priority being given to nets with higher weights. Additionally there
+			will be a list of placement constraints (see later).
+			
+			A key observation is that while vertices in an application may frequently
+			have a 1:1 correspondence with application cores, this need-not be the
+			case. For example, a vertex may represent a block of SDRAM which is
+			shared. A vertex may also represent some other resource, for example,
+			external IO availability. By making these resource types user-defined,
+			applications programmers can express flexible hard-constraints on their
+			application.
+			
+			Another observation is that generic soft constraints can be expressed may
+			be expressed using a net with an appropriate weight.
+			
+			As a result of these facilities, application programmers can easily
+			express their own application-specific hard and soft placement
+			constraints without having to modify the algorithm. This representation
+			has become a de-facto standard for placement problem interchange for
+			SpiNNaker applications.
+		
+		\subsection{Cost function}
+			
+			At present I've used HPWL despite this being really bad for high-fan-out
+			multicast and totally ignorant to the hexagonal nature of SpiNNaker...
+			
+			To compute bounding boxes for tori I use the following approach. For each
+			dimension, sort the points on that dimension and find the largest gap
+			between them on a ring. The bounding box goes the other way.
+			
+			TODO: FIGURE ILLUSTRATING BOUNDING BOX COMPUTATION FOR TORI.
+		
+		\subsection{Annealing schedule}
+			
+			The annealing schedule is that used by VPR. Despite being for circuit
+			placement, it seems to work jolly well.
+			
+			TODO: DESCRIBE AND RATIONALISE THE SCHEDULE
+		
+		\subsection{Constraint handling}
+			
+			Various hard and soft constraints may be expressed by software
+			approaches. For each we explain how they may be handled by the placement
+			algorithm:
+			
+			\subsubsection{Location Constraint}
+				
+				The vertex is placed on a chip and removed from the set of movement
+				candidates.
+			
+			\subsubsection{Same-chip constraint}
+				
+				When two vertices must always be placed on the same chip they are
+				simply combined into one vertex which consumes the sum of their
+				resources. Placement then treats them as one chip and thus is forced to
+				atomically place the vertices.
+			
+			\subsubsection{Reserve resource constraint}
+				
+				Simply reduce resource availability on that chip.
+			
+			\subsubsection{Keep near Ethernet}
+				
+				Simply add a net.
+	
+	\section{Hierarchical placement}
+		
+		I have implemented the <TODO WHICH ALGO?> clustering algorithm and used
+		this as part of an experimental placement system. Maybe I'll remove this
+		section...
+		
+		\subsection{Clustering}
+		
+		\subsection{Refinement}
+			
+			Though it is conventional to allow communication between partitions
+			during placement, I've just ignored that and wish to see how it goes...
+		
+		\subsection{Parallelism}
+			
+			Run each refinement in parallel on SpiNNaker. Uniquely the amount of
+			parallelism available will exactly match that available in the problem,
+			by definition!
+	
+	\section{Evaluation}
+		
+		Though benchmarks exist for super computer loads and chip placement tasks,
+		such things don't exist for neural applications. As a result I use a
+		selection of real applications for SpiNNaker along with some synthetic
+		benchmarks based on biological data.
+		
+		\subsection{Benchmark networks}
+			
+			First some real networks.
+			
+			Some nengo networks: SPAUN: `The world's largest functional brain model'.
+			Word-net network from Jamie: Example of some learning.
+			
+			TODO: DESCRIBE SHAPE OF NENGO NETWORKS
+			
+			Some PyNN networks: Microcortical column model from PyNN. Note almost
+			broadcast connectivity but varying weights. Try and extract a vision
+			netlist from Anna. Maybe try and get a netlist for Tom's barrel cortex.
+			
+			Now for some artificial networks. Pipeline, noisy pipeline, mesh,
+			Gaussian 2D.
+		
+		\subsection{Experiments}
+			
+			We compare random, linear, greedy and annealing based placement
+			approaches to placement. We compare static metrics (such as mean/max
+			congestion, table usage) along with experiments based on simulated
+			network traffic in real hardware. Network Tester generates artificial
+			traffic in proportion with the weights given for each model. We compare
+			the relative level of traffic sustainable. We also consider use of
+			machines of various sizes.
+		
+		\subsection{Results}
+			
+			SA placement is slow but rather effective, especially for some networks.
+			Generally worth doing. Will need to be sped up for very large machines...
+			
+			TODO: EXPERIMENTS!
+	
