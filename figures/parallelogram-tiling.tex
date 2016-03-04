@@ -1,0 +1,105 @@
+\begin{tikzpicture}
+	
+	\definecolor{colour0}{gray}{0.95}
+	\definecolor{colour1}{gray}{0.75}
+	\definecolor{colour2}{gray}{0.45}
+	\definecolor{colour3}{gray}{0.15}
+	
+	\def\scale{0.4}
+	
+	\begin{scope}[hexagonXYZ,inner sep=0,scale=\scale,minimum size=\scale cm]
+		\newcommand{\tileNodes}[2]{
+			\pgfmathtruncatemacro{\x}{2*(#1)}
+			\pgfmathtruncatemacro{\y}{2*(#2)}
+			\node [hexagon] (hex00) at (\x+0,\y+0) {};
+			\node [hexagon] (hex10) at (\x+1,\y+0) {};
+			\node [hexagon] (hex01) at (\x+0,\y+1) {};
+			\node [hexagon] (hex11) at (\x+1,\y+1) {};
+		}
+		
+		\newcommand{\tile}[2]{
+			\pgfmathtruncatemacro{\x}{2*(#1)}
+			\pgfmathtruncatemacro{\y}{2*(#2)}
+			\node [draw,hexagon,fill=colour0] (hex00) at (\x+0,\y+0) {};
+			\node [draw,hexagon,fill=colour1] (hex10) at (\x+1,\y+0) {};
+			\node [draw,hexagon,fill=colour2] (hex01) at (\x+0,\y+1) {};
+			\node [draw,hexagon,fill=colour3] (hex11) at (\x+1,\y+1) {};
+		}
+		
+		\newcommand{\tileimposed}[2]{
+			\tile{#1}{#2}
+			\begin{pgfonlayer}{fg}
+				\node [ draw
+				      , ultra thick
+				      , hexagon
+				      , minimum size=\scale*2cm
+				      ]
+				      at (hex11.south)
+				      {};
+			\end{pgfonlayer}
+		}
+		
+		\newcommand{\tileclip}[2]{
+			\tileNodes{#1}{#2}
+			\begin{scope}
+				\node [ hexagon
+				      , minimum size=\scale*2cm
+				      ]
+				      (clip)
+				      at (hex11.south)
+				      {};
+				\clip (clip.corner 1)
+				   -- (clip.corner 2)
+				   -- (clip.corner 3)
+				   -- (clip.corner 4)
+				   -- (clip.corner 5)
+				   -- (clip.corner 6)
+				   -- cycle
+				      ;
+				
+				\tile{#1-1}{#2-1}
+				\tile{#1+1}{#2+1}
+				\tile{#1+0}{#2-1}
+				\tile{#1+0}{#2+1}
+				\tile{#1-1}{#2+0}
+				\tile{#1+1}{#2+0}
+				\tile{#1}{#2}
+			\end{scope}
+			
+			\draw [ultra thick]
+			      (clip.corner 1)
+			   -- (clip.corner 2)
+			   -- (clip.corner 3)
+			   -- (clip.corner 4)
+			   -- (clip.corner 5)
+			   -- (clip.corner 6)
+			   -- cycle
+			      ;
+		}
+		
+		\tile{-5}{0}
+		
+		\node at (hex00.side south |- 0,-4.5) {(a)};
+		
+		\tileimposed{-3}{0}
+		
+		\node at (hex00.side south |- 0,-4.5) {(b)};
+		
+		\tileimposed{-1}{0}
+		\tileimposed{1}{0}
+		\tileimposed{0}{-1}
+		\tileimposed{0}{1}
+		\tileimposed{1}{1}
+		\tileimposed{-1}{-1}
+		\tileimposed{0}{0}
+		
+		\node at (hex00.side south |- 0,-4.5) {(c)};
+		
+		\tileclip{3}{0}
+		
+		\node at (hex00.side south |- 0,-4.5) {(d)};
+	\end{scope}
+	
+\end{tikzpicture}
+
+

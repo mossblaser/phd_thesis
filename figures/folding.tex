@@ -1,0 +1,268 @@
+% Define the points on the quads which make up the folded sheet of the
+% specified size.
+\newcommand{\singleAxisFoldPoints}[4]{
+	\pgfmathtruncatemacro{\width}{#1}
+	\pgfmathtruncatemacro{\height}{#2}
+	\pgfmathtruncatemacro{\numFaces}{#3}
+	\pgfmathsetmacro{\foldAngle}{#4}
+	
+	
+	\pgfmathtruncatemacro{\lastPoint}{\numFaces+1}
+	
+	\coordinate (cur) at (0,0);
+	\foreach \x in {1,...,\lastPoint}{
+		\pgfmathtruncatemacro{\parity}{Mod(\x,2)}
+		\coordinate (px\x y1) at (cur);
+		\coordinate (px\x y2) at ([shift={(0,-\height)}]cur);
+		
+		\ifthenelse{\parity = 1}{
+			\coordinate (cur) at ([shift={(\width/\numFaces,0)}]cur);
+		}{
+			\coordinate (cur) at ([shift={(-180+\foldAngle:\width/\numFaces)}]cur);
+		}
+	}
+}
+
+% Define the points on the quads which make up the folded sheet folded
+% once along the y axis and many times along the x axis.
+\newcommand{\doubleAxisFoldPoints}[5]{
+	\pgfmathtruncatemacro{\width}{#1}
+	\pgfmathtruncatemacro{\height}{#2}
+	\pgfmathtruncatemacro{\numFaces}{#3}
+	\pgfmathsetmacro{\foldAngle}{#4}
+	\pgfmathsetmacro{\perspectiveAngle}{#5}
+	
+	\pgfmathtruncatemacro{\lastPoint}{\numFaces+1}
+	
+	\pgfmathsetmacro{\foldSpace}{2*(\width/\numFaces)*sin(\foldAngle/2)}
+	
+	\foreach \x in {1,...,\lastPoint}{
+		\pgfmathtruncatemacro{\parity}{Mod(\x,2)}
+		
+		% Common point where the folds meet on the Y-axis
+		\pgfmathsetmacro{\xx}{(1-\parity)*\width/\numFaces}
+		\coordinate (px\x y2) at (\xx, 0);
+		
+		% Edges of the paper fanned out
+		\begin{scope}[shift={(-\perspectiveAngle:\height/2)}]
+			
+			\pgfmathsetmacro{\xx}{(1-\parity)*\width/\numFaces}
+			\pgfmathsetmacro{\yy}{(\numFaces-\x)*\foldSpace}
+			\coordinate (px\x y1) at (\xx,\yy);
+			
+			\pgfmathsetmacro{\xx}{\xx}
+			\pgfmathsetmacro{\yy}{-\numFaces*\foldSpace-\yy-\foldSpace}
+			\coordinate (px\x y3) at (\xx,\yy);
+		\end{scope}
+	}
+}
+
+% Draw the faces of the most recently defined surface of the specified
+% size.
+\newcommand{\drawSheets}[2]{
+	\pgfmathtruncatemacro{\facesX}{#1}
+	\pgfmathtruncatemacro{\facesY}{#2}
+	
+	% Doesn't work for PDFs
+	\def\sheetOpacity{1.0}
+	
+	\foreach \y in {1,...,\facesY}{
+		\pgfmathtruncatemacro{\rowparity}{Mod(\y,2)}
+		\foreach \x in {1,...,\facesX}{
+			% Reverse draw direction as appropriate
+			\ifthenelse{\rowparity = 0}{
+				\pgfmathtruncatemacro{\x}{\facesX + 1 - \x}
+			}{}
+			\pgfmathtruncatemacro{\y}{\facesY + 1 - \y}
+			
+			\pgfmathtruncatemacro{\xx}{\x+1}
+			\pgfmathtruncatemacro{\yy}{\y+1}
+			
+			\pgfmathtruncatemacro{\parity}{Mod(\y+\x,2)}
+			\ifthenelse{\parity = 0}{
+				\draw [fill=white,fill opacity=\sheetOpacity]
+				      (px\x y\y) -- (px\xx y\y) -- (px\xx y\yy) -- (px\x y\yy) -- cycle;
+			}{
+				\draw [fill=black!10!white,fill opacity=\sheetOpacity]
+				      (px\x y\y) -- (px\xx y\y) -- (px\xx y\yy) -- (px\x y\yy) -- cycle;
+			}
+		}
+	}
+	% Draw feint outlines on top
+	\foreach \y in {1,...,\facesY}{
+		\pgfmathtruncatemacro{\rowparity}{Mod(\y,2)}
+		\foreach \x in {1,...,\facesX}{
+			% Reverse draw direction as appropriate
+			\ifthenelse{\rowparity = 0}{
+				\pgfmathtruncatemacro{\x}{\facesX + 1 - \x}
+			}{}
+			\pgfmathtruncatemacro{\y}{\facesY + 1 - \y}
+			
+			\pgfmathtruncatemacro{\xx}{\x+1}
+			\pgfmathtruncatemacro{\yy}{\y+1}
+			
+			\draw [ultra thin, dotted]
+			      (px\x y\y) -- (px\xx y\y) -- (px\xx y\yy) -- (px\x y\yy) -- cycle;
+		}
+	}
+}
+
+% Add coordinates of the form x1y1 for pins around the folded sheet
+\newcommand{\definePins}[4]{
+	\pgfmathtruncatemacro{\facesX}{#1}
+	\pgfmathtruncatemacro{\facesY}{#2}
+	\pgfmathtruncatemacro{\pinsX}{#3}
+	\pgfmathtruncatemacro{\pinsY}{#4}
+	
+	\pgfmathtruncatemacro{\facesXX}{\facesX+1}
+	\pgfmathtruncatemacro{\facesYY}{\facesY+1}
+	
+	\pgfmathtruncatemacro{\pinsXX}{\pinsX+1}
+	\pgfmathtruncatemacro{\pinsYY}{\pinsY+1}
+	
+	\foreach \x in {1,...,\pinsX}{
+		\pgfmathsetmacro{\faceX}{((\x-0.5)/\pinsX) * \facesX}
+		% Points defining the x position
+		\pgfmathtruncatemacro{\pX}{floor(\faceX)+1}
+		\pgfmathtruncatemacro{\pXX}{\pX+1}
+		
+		% Proportion along the edge
+		\pgfmathsetmacro{\oX}{\faceX-floor(\faceX)}
+		
+		\coordinate (x\x y0) at ($(px\pX y1)!\oX!(px\pXX y1)$);
+		\coordinate (x\x y\pinsYY) at ($(px\pX y\facesYY)!\oX!(px\pXX y\facesYY)$);
+	}
+	
+	\foreach \y in {1,...,\pinsY}{
+		\pgfmathsetmacro{\faceY}{((\y-0.5)/\pinsY) * \facesY}
+		% Points defining the y position
+		\pgfmathtruncatemacro{\pY}{floor(\faceY)+1}
+		\pgfmathtruncatemacro{\pYY}{\pY+1}
+		
+		% Proportion along the edge
+		\pgfmathsetmacro{\oY}{\faceY-floor(\faceY)}
+		
+		\coordinate (x0y\y) at ($(px1y\pY)!\oY!(px1y\pYY)$);
+		\coordinate (x\pinsXX y\y) at ($(px\facesXX y\pY)!\oY!(px\facesXX y\pYY)$);
+	}
+}
+
+\newcommand{\drawSlicedWires}[2]{
+	\def\width{#1}
+	\def\height{#2}
+	\def\wrapSize{0.2}
+	
+	\pgfmathtruncatemacro{\widthh}{\width+1}
+	\pgfmathtruncatemacro{\heightt}{\height+1}
+	\pgfmathtruncatemacro{\heightHalf}{\height/2}
+	
+	% Left-to-right wrap-around
+	\foreach \y in {1,...,\height}{
+		\draw (x0y\y) -- (x\widthh y\y);
+	}
+	
+	% Bottom-to-top
+	\foreach \x in {1,...,\width}{
+		\pgfmathtruncatemacro{\xx}{Mod((\x-1) - floor(\height/2), \width)+1}
+		\draw (x\x y\heightt) -- (x\xx y0);
+	}
+	
+	% Diagonal wrap-around
+	\ifthenelse{\width > \heightHalf}{
+		% Do nothing, line already drawn by bottom-to-top
+	}{
+		\draw (x1y\heightt) -- (x\heightHalf y0);
+	}
+}
+
+\newcommand{\drawShearedWires}[2]{
+	\def\width{#1}
+	\def\height{#2}
+	\def\wrapSize{0.2}
+	
+	\pgfmathtruncatemacro{\widthh}{\width+1}
+	\pgfmathtruncatemacro{\heightt}{\height+1}
+	
+	% Left-to-right wrap-around
+	\foreach \y in {1,...,\height}{
+		\draw (x0y\y) -- (x\widthh y\y);
+	}
+	
+	% Top-to-bottom wrap-around
+	\foreach \x in {1,...,\width}{
+		\draw (x\x y0) -- (x\x y\heightt);
+	}
+	
+	% Diagonal
+	\draw (x1y\heightt) -- (x\height y0);
+}
+
+\newcommand{\foldExample}[9]{
+	\def\exampleWidth{#1}
+	\def\exampleHeight{#2}
+	\def\exampleType{#3} % Either sliced or sheared
+	\def\exampleFoldsX{#4}
+	\def\exampleFoldsY{#5}
+	\def\exampleHighlightStart{#6}
+	\def\exampleHighlightEnd{#7}
+	\def\exampleFoldLineX{#8}
+	\def\exampleFoldLineY{#9}
+	
+	% Define the folding
+	\ifthenelse{\exampleFoldsY = 1}{
+		\singleAxisFoldPoints{\exampleWidth}{\exampleHeight}{\exampleFoldsX}{20}
+	}{
+		\doubleAxisFoldPoints{\exampleWidth}{\exampleHeight}{\exampleFoldsX}{10}{50}
+	}
+	
+	% Draw the page in
+	\drawSheets{\exampleFoldsX}{\exampleFoldsY}
+	
+	% Add connection coordinates for wires
+	\definePins{\exampleFoldsX}{\exampleFoldsY}{\exampleWidth}{\exampleHeight}
+	
+	% Draw the wires on
+	\begin{scope}[gray]
+		\ifthenelse{\equal{\exampleType}{sheared}}{
+			\drawShearedWires{\exampleWidth}{\exampleHeight}
+		}{
+			\drawSlicedWires{\exampleWidth}{\exampleHeight}
+		}
+	\end{scope}
+	
+	% Draw in fold lines
+	\ifthenelse{\equal{\exampleFoldLineX}{}}{
+		% Nothing to do
+	}{
+		\draw [dashed] (\exampleFoldLineX, 1) -- (\exampleFoldLineX,-1-\exampleHeight);
+	}
+	
+	% Draw in fold lines
+	\ifthenelse{\equal{\exampleFoldLineY}{}}{
+		% Nothing to do
+	}{
+		\draw [dashed] (-1, -\exampleFoldLineY) -- (1+\exampleWidth/\exampleFoldsX,-\exampleFoldLineY);
+	}
+	
+	% Draw in the highlighted wire
+	\ifthenelse{\equal{\exampleHighlightStart}{}}{
+		% Don't draw highlighted wire if none given...
+	}{
+		\draw [ultra thick] (\exampleHighlightStart) -- (\exampleHighlightEnd);
+		\fill [] (\exampleHighlightStart) circle (0.4em);
+		\fill [] (\exampleHighlightEnd) circle (0.4em);
+	}
+}
+
+\newcommand{\myarrow}[2]{
+	\fill [scale=0.5]
+	      (2*#1-0.85,2*#2+1.5)
+	   -- ++(0.7,0)
+	   -- ++(0,0.5)
+	   -- ++(1.0,-1.0)
+	   -- ++(-1.0,-1.0)
+	   -- ++(0,0.5)
+	   -- ++(-0.7,0)
+	   -- cycle
+	   ;
+}

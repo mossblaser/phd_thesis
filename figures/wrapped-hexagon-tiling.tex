@@ -1,0 +1,54 @@
+\begin{tikzpicture}
+	\def\scale{0.4}
+	
+	\definecolor{colour0}{gray}{0.75}
+	\definecolor{colour1}{gray}{0.95}
+	
+	\begin{scope}[hexagonXYZ,scale=\scale,inner sep=0, minimum width=\scale*1cm]
+		
+		\newcommand{\tile}[2]{
+			\pgfmathtruncatemacro{\x}{#1}
+			\pgfmathtruncatemacro{\y}{#2}
+			
+			\node [draw,fill=colour0,hexagon] at (\x+0,\y+0) (hex00) {};
+			\node [draw,fill=colour1,hexagon] at (\x+1,\y+1) {};
+			\node [draw,fill=colour1,hexagon] at (\x-1,\y-1) {};
+			\node [draw,fill=colour1,hexagon] at (\x+0,\y+1) {};
+			\node [draw,fill=colour1,hexagon] at (\x-0,\y-1) {};
+			\node [draw,fill=colour1,hexagon] at (\x+1,\y+0) {};
+			\node [draw,fill=colour1,hexagon] at (\x-1,\y-0) {};
+		}
+		
+		\newcommand{\tileimposed}[2]{
+			\tile{#1}{#2}
+			
+			\begin{pgfonlayer}{fg}
+				\node [ draw
+				      , ultra thick
+				      , hexagon
+				      , minimum size=\scale*2.5cm
+				      ]
+				      at (hex00)
+				      {};
+			\end{pgfonlayer}
+		}
+		
+		\tile{-11}{0}
+		\node at (hex00 |- 0,-6.0) {(a)};
+		
+		\tileimposed{-7}{0}
+		\node at (hex00 |- 0,-6.0) {(b)};
+		
+		\tileimposed{+3}{+1}
+		\tileimposed{-3}{-1}
+		\tileimposed{+1}{-2}
+		\tileimposed{-1}{+2}
+		\tileimposed{+2}{+3}
+		\tileimposed{-2}{-3}
+		\tileimposed{0}{0}
+		\node at (hex00 |- 0,-6.0) {(c)};
+		
+	\end{scope}
+\end{tikzpicture}
+
+

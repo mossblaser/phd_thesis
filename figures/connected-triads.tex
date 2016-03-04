@@ -1,0 +1,164 @@
+% Functions for drawing triads wired together.
+
+% Get physical coordinates from (x,y,z)
+% #1 name of output x
+% #2 name of output y
+% #3 x
+% #4 y
+% #5 z
+\newcommand*{\xyztoxy}[5]{%
+	\pgfmathtruncatemacro{#1}{((#3) * 2) + mod((#5), 2) - (#4)}%
+	\pgfmathtruncatemacro{#2}{(#4) + ceil((#5) / 3) + (#3)}%
+}
+
+% Get the number of columns off the left of the machine a given
+% coordinate is.
+% #1 name of output
+% #2 x
+% #3 y
+% #4 z
+\newcommand*{\xyztoabsx}[4]{%
+	\pgfmathtruncatemacro{#1}{mod((#4), 2) + ((#2)*2) - (#3)}%
+}
+
+% Get physical coordinates from (x,y,z) with boards off to the left
+% sliced off and moved to the right
+% #1 name of output x
+% #2 name of output y
+% #3 x
+% #4 y
+% #5 z
+\newcommand*{\xyztoslicedxy}[5]{%
+	\xyztoxy{#1}{#2}{#3}{#4}{#5}
+	\xyztoabsx{\absx}{#3}{#4}{#5}
+	
+	% Wrap around
+	\ifthenelse{\absx < 0}{
+		\pgfmathsetmacro{#1}{#1 + (\width*2)}
+		\pgfmathsetmacro{#2}{#2 + \width}
+	}{
+	}
+}
+
+% Draw a link between two boards if they're not physically adjacent
+% in the diagram
+% #1: x1
+% #2: y1
+% #3: z1
+% #4: edge1
+% #5: x2
+% #6: y2
+% #7: z2
+% #8: edge2
+% #9: Sliced?
+\newcommand{\drawLink}[9]{
+	\ifthenelse{#9 > 0}{
+		\xyztoslicedxy{\xxA}{\yyA}{#1}{#2}{#3}
+		\xyztoslicedxy{\xxB}{\yyB}{#5}{#6}{#7}
+	}{
+		\xyztoxy{\xxA}{\yyA}{#1}{#2}{#3}
+		\xyztoxy{\xxB}{\yyB}{#5}{#6}{#7}
+	}
+	
+	\pgfmathtruncatemacro{\delta}{abs(\xxA - \xxB) + abs(\yyA - \yyB)}
+	\ifthenelse{\delta < 2}{
+		% Do nothing, neighbouring in diagram
+	}{
+		\draw (node#1#2#3.#4) -- (node#5#6#7.#8);
+	}
+}
+
+% Draw the boards
+% #1 width
+% #2 height
+% #3 true to slice, false to not slice
+% #4 scale (1=true, 0=false)
+% #5 shear (1=true, 0=false)
+\newcommand{\drawconnectedtriads}[5]{
+	\pgfmathtruncatemacro{\width}{#1}
+	\pgfmathtruncatemacro{\height}{#2}
+	\pgfmathtruncatemacro{\slice}{#3}
+	\pgfmathsetmacro{\scale}{#4}
+	\pgfmathsetmacro{\shear}{#5}
+	
+	\pgfmathtruncatemacro{\widthh}{\width-1}
+	\pgfmathtruncatemacro{\heightt}{\height-1}
+	
+	\pgfmathsetmacro{\slant}{(cos(30)*2/3) * \shear}
+	
+	\begin{scope}[hexagonBoardXYZ, scale=\scale, xslant=\slant]
+		\foreach \y in {0,...,\heightt}{
+			\foreach \x in {0,...,\widthh}{
+				\foreach \z in {0,1,2}{
+					\xyztoxy{\xx}{\yy}{\x}{\y}{\z}
+					\xyztoabsx{\xxx}{\x}{\y}{\z}
+					
+					\ifthenelse{\slice > 0 \AND \xxx < 0}{
+						\node [ draw
+						      , help lines
+						      , hexagonBoard
+						      , inner sep=0
+						      , minimum width=\scale*1cm
+						      , xslant=\slant
+						      ] (ghost\x\y\z) at (\xx,\yy) {};
+						\pgfmathsetmacro{\yy}{\yy + \width}
+						\pgfmathsetmacro{\xx}{\xx + (\width*2)}
+						\node [ draw
+						      , ultra thick
+						      , hexagonBoard
+						      , inner sep=0
+						      , minimum width=\scale*1cm
+						      , xslant=\slant
+						      ] (node\x\y\z) at (\xx,\yy) {};
+					}{
+						\node [ draw
+						      , hexagonBoard
+						      , inner sep=0
+						      , minimum width=\scale*1cm
+						      , xslant=\slant
+						      ] (node\x\y\z) at (\xx,\yy) {};
+					}
+				}
+			}
+		}
+	\end{scope}
+	
+	% Draw connections around periphery
+	\begin{scope}[help lines]
+		\foreach \x in {0,...,\widthh}{
+			\foreach \y in {0,...,\heightt}{
+				\pgfmathtruncatemacro{\xr}{mod(\width + \x + 1, \width)}   % right
+				\pgfmathtruncatemacro{\ya}{mod(\height + \y + 1, \height)} % above
+				\pgfmathtruncatemacro{\yb}{mod(\height + \y - 1, \height)} % below
+				
+				\drawLink{\x}{\y}{0}{side east}{\x}{\yb}{2}{side west}{\slice}
+				\drawLink{\x}{\y}{0}{side north east}{\x}{\y}{1}{side south west}{\slice}
+				\drawLink{\x}{\y}{0}{side north}{\x}{\y}{2}{side south}{\slice}
+				
+				\drawLink{\x}{\y}{1}{side east}{\xr}{\y}{0}{side west}{\slice}
+				\drawLink{\x}{\y}{1}{side north east}{\xr}{\y}{2}{side south west}{\slice}
+				\drawLink{\x}{\y}{1}{side north}{\xr}{\ya}{0}{side south}{\slice}
+				
+				\drawLink{\x}{\y}{2}{side east}{\x}{\y}{1}{side west}{\slice}
+				\drawLink{\x}{\y}{2}{side north east}{\xr}{\ya}{0}{side south west}{\slice}
+				\drawLink{\x}{\y}{2}{side north}{\x}{\ya}{1}{side south}{\slice}
+			}
+		}
+	\end{scope}
+	
+	\ifthenelse{\slice > 0}{
+		% Draw slice
+		\draw [dashed, thick]
+		      ([shift={(0, -0.75 * \scale cm)}]node000.side south west) --
+		      ([shift={(0, 0.75 * \scale cm)}]node000.side south west |-
+		                                     node0\heightt2.side west);
+		% Arrow
+		\draw [->,thick,rounded corners]
+		      ([yshift=0.1em]ghost0\heightt2.side north)
+		   |- ([yshift=1.0em]node0\heightt2.side north)
+		   -- ([yshift=0.1em]node0\heightt2.side north)
+		      ;
+	}{
+		% Draw no arrow if not slicing
+	}
+}

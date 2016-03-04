@@ -1,0 +1,73 @@
+\newcommand{\slicedNodes}[4]{
+	\def\width{#1}
+	\def\height{#2}
+	\def\scale{#3}
+	\def\emphlines{#4}
+	
+	\pgfmathtruncatemacro{\widthh}{\width-1}
+	\pgfmathtruncatemacro{\heightt}{\height-1}
+	\ifthenelse{\emphlines = 1}{
+		\definecolor{hexcolour}{gray}{0.8}
+		\definecolor{wirecolour}{gray}{0.0}
+	}{
+		\definecolor{hexcolour}{gray}{0.0}
+		\definecolor{wirecolour}{gray}{0.5}
+	}
+	
+	\begin{scope}[hexagonXYZ,scale=\scale,inner sep=0, minimum width=\scale*1cm]
+		% Hexagons themselves
+		\foreach \y in {0,...,\heightt}{
+			\foreach \x in {0,...,\widthh}{
+				\pgfmathtruncatemacro{\xx}{(\x - (\y+1)/2)}
+				\ifthenelse{\xx < 0}{
+					\pgfmathsetmacro{\xpos}{\x+\width}
+					
+					% Add a shadow
+					\node [draw=hexcolour,hexagon,help lines] (ghost x\x y\y) at (\x,\y) {};
+					% Emphasise the moved hexagons
+					\node [draw=hexcolour,hexagon,ultra thick] (node x\x y\y) at (\xpos,\y) {};
+				}{
+					\node [draw=hexcolour,hexagon,thick] (node x\x y\y) at (\x,\y) {};
+				}
+				
+				% Real hexagon
+			}
+		}
+	\end{scope}
+	
+	% Connections
+	\begin{scope}[help lines,draw=wirecolour]
+		\foreach \y in {0,...,\heightt}{
+			\foreach \x in {0,...,\widthh}{
+				\pgfmathtruncatemacro{\xx}{Mod(\x+1,\width)}
+				\pgfmathtruncatemacro{\yy}{Mod(\y+1,\height)}
+				\draw (node x\x y\y.side west) -- (node x\xx y\y.side east);
+				\draw (node x\x y\y.side north) -- (node x\x y\yy.side south);
+				\draw (node x\x y\y.side north east) -- (node x\xx y\yy.side south west);
+			}
+		}
+	\end{scope}
+	
+	% Slice line
+	\pgfmathtruncatemacro{\heightparity}{Mod(\height,2)}
+	\ifthenelse{\heightparity = 1}{
+		\pgfmathtruncatemacro{\x}{Mod(floor(\height/2), \width)}
+		\draw [dashed, thick]
+		      ([yshift=-0.5em]node x0y0.side south west)
+		   -- ([yshift=+0.5em]node x\x y\heightt.side north)
+		      ;
+	}{
+		\pgfmathtruncatemacro{\x}{\height/2-1}
+		\draw [dashed, thick]
+		      ([yshift=-0.5em]node x0y0.side south west)
+		   -- ([yshift=+0.5em]ghost x\x y\heightt.side north east)
+		      ;
+	}
+	
+	% Arrow
+	\draw [->,thick,rounded corners]
+	      ([yshift=0.1em]ghost x0y\heightt.corner 1)
+	   |- ([yshift=1.0em]node x0y\heightt.corner 1)
+	   -- ([yshift=0.1em]node x0y\heightt.corner 1)
+	      ;
+}

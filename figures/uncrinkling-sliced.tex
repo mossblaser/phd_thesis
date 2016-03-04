@@ -1,0 +1,100 @@
+\begin{tikzpicture}
+	\def\size{3}
+	\def\scale{0.3}
+	
+	\clip (-\scale*4, -\scale*10.5) rectangle ++(\scale*8.5,\scale*16.5);
+	
+	% Boards
+	\begin{scope}[hexagonBoardXYZ,help lines, xshift=-\scale*\size cm]
+		\foreach \x in {0,...,\size}{
+			\foreach \y in {0,...,\size}{
+				\foreach \z in {0,1,2}{
+					\pgfmathtruncatemacro{\xx}{(\x*2) + (-\y) + floor(\z/2)}
+					\pgfmathtruncatemacro{\yy}{(\x  ) + ( \y) + (\z/max(\z,1))}
+					\ifthenelse{\xx < 0}{
+						\pgfmathtruncatemacro{\xx}{\xx + ((\size+1)*2)}
+						\pgfmathtruncatemacro{\yy}{\yy + \size + 1}
+					}{}
+					
+					\pgfmathtruncatemacro{\yyy}{\yy - \xx/2}
+					
+					\node [ draw
+					      , hexagonBoard
+					      , inner sep=0
+					      , minimum width=1cm*\scale
+					      ]
+					      (board \xx \yyy)
+					      at (\xx*\scale,\yy*\scale,0)
+					      {}
+					      ;
+				}
+			}
+		}
+	\end{scope}
+	
+	% Crinkles
+	\pgfmathtruncatemacro{\sizex}{(\size+1)*2 - 1}
+	\pgfmathtruncatemacro{\sizey}{\size*2 - 1}
+	\begin{scope}[rounded corners, thick]
+		\foreach \y in {0,...,\sizey}{
+			\draw (board 0\y.center)
+			      \foreach \x in {1,...,\sizex}{
+			        -- (board \x\y.center)
+			      }
+			      ;
+		}
+	\end{scope}
+	
+	% Annotations
+	\newcommand{\annotate}[2]{
+		\node [font=\tiny]
+		      at (#1)
+		      {\contour{white}{#2}}
+		      ;
+	}
+	\annotate{board 32}{$1$}
+	\annotate{board 42}{$2$}
+	\annotate{board 22}{$h$}
+	\annotate{board 31}{$g$}
+	\annotate{board 41}{$f$}
+	\annotate{board 51}{$e$}
+	\annotate{board 52}{$d$}
+	\annotate{board 43}{$c$}
+	\annotate{board 33}{$b$}
+	\annotate{board 23}{$a$}
+	
+	\draw [->,thick] (0,-1.0em) -- ++(0,-1em);
+	
+	% Squares
+	\begin{scope}[yshift=-3em, xshift=-0.5*\scale*\sizex cm, help lines]
+		\foreach \y in {0,...,\sizey}{
+			\foreach \x in {0,...,\sizex}{
+				\pgfmathtruncatemacro{\yy}{\sizey-\y}
+				\node [draw, rectangle,inner sep=0,minimum size=1cm*\scale]
+				      (square \x\yy)
+				      at (\x*\scale cm, -\y*\scale cm)
+				      {};
+			}
+		}
+	\end{scope}
+	
+	% Straightened Crinkles 
+	\begin{scope}[thick]
+		\foreach \y in {0,...,\sizey}{
+			\draw (square 0\y .center)
+			   -- (square \sizex\y .center)
+			      ;
+		}
+	\end{scope}
+	
+	\annotate{square 32}{$1$}
+	\annotate{square 42}{$2$}
+	\annotate{square 22}{$h$}
+	\annotate{square 31}{$g$}
+	\annotate{square 41}{$f$}
+	\annotate{square 51}{$e$}
+	\annotate{square 52}{$d$}
+	\annotate{square 43}{$c$}
+	\annotate{square 33}{$b$}
+	\annotate{square 23}{$a$}
+\end{tikzpicture}

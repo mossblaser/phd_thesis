@@ -26,21 +26,32 @@
 			comparison with their physical construction in order to make construction
 			more practical. For example, a single circuit board may contain tens or
 			even hundreds of nodes \cite{gilge14,ajima12}. The majority of commercial
-			super computers use torus topologies partitioned into hypercubes
+			super computers use torus topologies partitioned into hypercubes as
+			illustrated in figure \ref{fig:hypercube-partitioning}
 			\cite{chen11,ajima12}.
-			
-			TODO: FIGURE HYPERCUBE PARTITIONING
-			
-			One possible analogue in a hexagonal torus topology is a parallelogram as
-			illustrated in figure \ref{fig:parallelogramPartitioning}.
 			
 			\begin{figure}
 				\center
-				\input{figures/parallelogramPartitioning}
+				\begin{subfigure}[b]{0.45\textwidth}
+					\center
+					\input{figures/hypercube-partitioning}
+					\caption{2D hypercube partitioning}
+					\label{fig:hypercube-partitioning}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.45\textwidth}
+					\center
+					\input{figures/parallelogram-partitioning}
+					\caption{Parallelogram partitioning}
+					\label{fig:parallelogram-partitioning}
+				\end{subfigure}
 				
-				\caption{Partitioning of a hexagonal torus into parallelograms.}
-				\label{fig:parallelogramPartitioning}
+				\caption{Conventional hypercube topology partitioning (a) and the
+				hexagonal torus topology analogue (b).}
+				\label{fig:partitioning-options}
 			\end{figure}
+			
+			One possible analogue in a hexagonal torus topology is a parallelogram as
+			illustrated in figure \ref{fig:parallelogram-partitioning}.
 			
 			Each partition connects to six neighbouring partitions and, unlike
 			hypercube partitions, the number of connections to each is imbalanced.
@@ -49,9 +60,18 @@
 			types of interconnect for connecting partitioned pieces of the system,
 			adding both to design complexity and cost.
 			
-			Another 'obvious' choice of partition is a hexagonal one like so:
+			Another `obvious' choice of partition is that of a hexagon wrapped in
+			concentric layers of hexagons as illustrated in figure
+			\ref{fig:wrapped-hexagon-tiling}.
 			
-			TODO: FIGURE SHOWING WRAPPED HEXAGON
+			\begin{figure}
+				\center
+				\input{figures/wrapped-hexagon-tiling}
+				
+				\caption{A single hexagon wrapped in layers of hexagons does not tile the
+				same way as a pointy-topped hexagon.}
+				\label{fig:wrapped-hexagon-tiling}
+			\end{figure}
 			
 			While this partition presents six equally-sized edges, it cannot be used
 			to build a hexagonal torus as described. A partition constructed from
@@ -59,37 +79,80 @@
 			pointy-topped hexagons iff the partition tiles with a translational
 			symmetry shared with a hexagonal torus. As we can see from the figure,
 			this is not the case. This tiles more like a twisted torus of some sort.
-			To prove this test is legit, see the figure below where we superimpose a
-			pointy-topped hexagon on a parallelogram.
+			To prove this test is legit, see figure \ref{fig:parallelogram-tiling}
+			where we superimpose a pointy-topped hexagon on a parallelogram.
 			
-			TODO: FIGURE POINTY TOP SUPERIMPOSED PARALLELOGRAM TILING
+			\begin{figure}
+				\center
+				\input{figures/parallelogram-tiling}
+				
+				\caption{Demonstration that a parallelogram partition tiles a hexagonal
+				torus.}
+				\label{fig:parallelogram-tiling}
+			\end{figure}
 			
 			Furber, Davison \emph{et al.} \cite{davidsonWiring} proposed an
 			alternative based on wrapped triples where you take three hexagons and
 			wrap more layers around them as required. This pattern tiles like
 			flat-topped hexagons, which isn't quite right. But since we know a
-			pointy-topped triple
-			tiles like a flat-topped hexagon, a flat-topped triple must tile like a
-			pointy-topped hexagon. Combining these facts gives that by tiling triads
-			of wrapped triples we can tile a hexagonal torus.
+			pointy-topped triple tiles like a flat-topped hexagon, a flat-topped
+			triple must tile like a pointy-topped hexagon. Combining these facts
+			gives that by tiling triads of wrapped triples we can tile a hexagonal
+			torus.
 			
-			TODO: FIGURES DEMONSTRATING TILING OF TRIADS OF WRAPPED TRIPLES
+			\begin{figure}
+				\center
+				\input{figures/wrapped-triple-tiling}
+				
+				\caption{Three pointy-topped hexagons tiles in the same way as flat-topped
+				hexagons.}
+				\label{fig:wrapped-triple-tiling}
+			\end{figure}
+			
+			\begin{figure}
+				\center
+				\input{figures/triad-tiling}
+				
+				\caption{Demonstration that a triad tiles a hexagonal torus topology.}
+				\label{fig:triad-tiling}
+			\end{figure}
 		
 		\subsection{Folding regular toruses}
 			
 			Once partitioned, a na\"ive arrangements of torus topologies, including
-			hexagonal torus topologies, feature long `wrap-around' connections.
-			
-			TODO: FIGURE SHOWING LONG CABLES DUE TO WRAP-AROUND
-			
-			In conventional torus topologies these long connections are eliminated by
+			hexagonal torus topologies, feature long `wrap-around' connections. In
+			conventional torus topologies these long connections are eliminated by
 			folding and interleaving nodes of the network. For example, for a 1D
 			torus network (a.k.a. a ring network), one long connection exists to
 			connect the two opposite sides of the system. To remove these long
 			connections, half the nodes are `folded' on top of the others and then
 			this arrangement of nodes is interleaved.
 			
-			TODO: FIGURE SHOWING RING NETWORK BEING FOLDED
+			\begin{figure}
+				\center
+				\begin{subfigure}[b]{0.39\linewidth}
+					\center
+					\include{figures/ring-folding-row}
+					\caption{A ring network}
+					\label{fig:ring-folding-row}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.24\linewidth}
+					\center
+					\include{figures/ring-folding-folded}
+					\caption{Folded}
+					\label{fig:ring-folding-folded}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.35\linewidth}
+					\center
+					\include{figures/ring-folding-interleaved}
+					\caption{Folded and interleaved}
+					\label{fig:ring-folding-interleaved}
+				\end{subfigure}
+				
+				\caption{Folding and interleaving a ring network to reduce maximum wire
+				length.}
+				\label{fig:ring-folding}
+			\end{figure}
 			
 			This approach substantially decreases the maximum wire length (in fact
 			does so regardless of network size) at the expense of approximately
@@ -102,38 +165,72 @@
 		
 		\subsection{Cabling installation}
 			
-			Conventional machine room installations often feature very repetitive
-			cabling patterns which can easily be followed by a human technician.
-			Such cabling patterns are more practical in data-center networks where
-			cabling within a cabinet tends to concentrate on a small number of
-			high-port-count switches. Unfortunately, such patterns do not appear as
-			commonly in super computer cabling where point-to-point connections
-			between compute nodes are the norm.
+			Existing machine room installations feature very repetitive cabling
+			patterns which can easily be memorised by a human technician.  For
+			example in BlueGene super computers connectivity between neighbouring
+			racks are highly regular \cite{lakner07} and in data centre networks
+			cabling often centres around a small number of high-port-count switches
+			\cite{cisco07,csernai15}.
 			
-			TODO: MORE BACKGROUND READING FOR DATACENTER ETC HOPEFULLY CAN FIND SOME
-			INFO ABOUT WIRE LENGTH SELECTION RATHER THAN MOSTLY CABLE MANAGEMENT. TIA
-			STANDARD SEEMS GOOD.
+			Like many super computers and some new data centre network architectures
+			\cite{abu11}, SpiNNaker features point-to-point connectivity between
+			compute nodes rather than relying on external network switching hardware,
+			typically resulting in greater cabling complexity. Due to the small scale
+			and high packing density of SpiNNaker's compute nodes the cabling
+			complexity is further exacerbated.
 			
-			In BlueGene architectures, the 5D torus network topology places some of
-			its torus wiring on fixed PCB backplanes which means no manual wiring is
-			required at all. The rest of the cabling uses optical interconnect which
-			must be manually installed. Groups of individual cables are custom-made
-			to match the exact lengths requirede and factory assembled into labeled
-			bundles of cables which connect pairs of cabinets. Technicians then use
-			the labels to guide installation order into pre-labeled sockets.
+			Cable installation is usually only aided by the labelling of connectors
+			and sockets using widely used in data centres \cite{tia2006} and super
+			computers such as BlueGene (see figure \ref{fig:bgWiring}).
 			
-			TODO: IBM BLUEGENE ASSEMBLY PHOTOS
+			\begin{figure}
+				\center
+				\begin{subfigure}[t]{0.5\textwidth}
+					\begin{tikzpicture}
+						\node (cables) [inner sep=0]
+						      {\includegraphics[width=\textwidth]{figures/bgCables.png}};
+						\node (sockets) [inner sep=0, below=1.0em of cables]
+						      {\includegraphics[width=\textwidth]{figures/bgSockets.png}};
+						
+						% Point at label on cable
+						\draw [white, <-, line width=0.4em]
+						      ([shift={(0.7cm, -0.3cm)}]cables.center)
+						      -- ++(45:1cm);
+						
+						% Point at label on socket
+						\draw [white, <-, line width=0.4em]
+						      ([shift={(-1.0cm, 1.1cm)}]sockets.center)
+						      -- ++(-45:1cm);
+					\end{tikzpicture}
+					
+					\caption{Pre-labelled cables and sockets}
+				\end{subfigure}
+				~
+				\begin{subfigure}[t]{0.30\textwidth}
+					\includegraphics[height=6.15cm]{figures/bgWiring.jpg}
+					
+					\caption{Installation of cables}
+				\end{subfigure}
+				
+				\caption{BlueGene/Q cable installation \cite{cscs13}}
+				\label{fig:bgWiring}
+			\end{figure}
 			
-			Manufacturing custom cables is an expensive proposition and is not
-			practical for many applications. SpiNNaker's interconnect uses
-			off-the-shelf S-ATA cables to reduce costs. Such cables are widely
-			available in standardised lengths. SpiNNaker's packaging is also
-			significantly finer-grained than BlueGene which comes in pre-assembled
-			cabinets with most intra-cabinet connectivity provided by the backplane.
-			SpiNNaker has 120 PCBs with 6 sockets each in every cabinet, all of which
-			need connecting. The labelled approach does not scale.
+			Despite the regularity and careful labelling of cables, installation and
+			maintenance alone can be significant with costs in the range of \$45-95
+			per 1 meter cable run and \$100-400 for runs of 10 meters
+			\cite{mudigonda11}. Much of this cost is due to the care required during
+			installation to avoid miswiring and ensure that cooling airflow is not
+			hampered by cable runs \cite{cisco07}.
 			
-			TODO: PHOTO OF SPINNAKER PCBS IN RACK.
+			Existing work to reduce cable installation costs have focused on
+			developing alternative network topologies with shorter, or fewer, cable
+			runs \cite{curtis12, popa10, mudigonda11}. By contrast, in this chapter I
+			take an alternative approach: providing interactive guidance to cable
+			installers to enable complex wiring schemes to be followed quickly and
+			without mistakes. I also demonstrate that, contrary to conventional
+			wisdom, the more complex wiring schemes proposed do not negatively impact
+			either system maintainability or cooling performance.
 	
 	\section{Folding \& interleaving hexagonal toruses}
 		
@@ -164,7 +261,73 @@
 			maintains distances in hexagonal meshes without distortion but sadly with
 			wires criss-crossing which will cause some headaches later.
 			
-			TODO: FIGURE SHOWING NATIVE VS SLICING VS SHEARING FOR TRIADS AND CHIPS
+			\begin{figure}
+				\center
+				\begin{subfigure}[b]{0.32\linewidth}
+					\center
+					\input{figures/hexToPlaneNodeNative}
+					
+					\caption{$7 \times 7$ node torus}
+					\label{fig:hexToPlaneNodeNative}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.32\linewidth}
+					\center
+					\input{figures/hexToPlaneNodeShear}
+					
+					\caption{Sheared}
+					\label{fig:hexToPlaneNodeShear}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.32\linewidth}
+					\center
+					\input{figures/hexToPlaneNodeSlice}
+					
+					\caption{Sliced}
+					\label{fig:hexToPlaneNodeSlice}
+				\end{subfigure}
+				
+				\caption{Transformations of hexagonal toruses of nodes into a
+				rectangular form. Thin lines show wrap-around links. (Pointy-topped)
+				hexagons represent individual nodes.}
+				\label{fig:hexToPlaneNode}
+			\end{figure}
+			
+			\begin{figure}
+				
+				\input{figures/connected-triads}
+				
+				\begin{subfigure}[b]{0.32\linewidth}
+					\center
+					\begin{tikzpicture}
+						\drawconnectedtriads{4}{4}{0}{0.4}{0}
+					\end{tikzpicture}
+					
+					\caption{$4 \times 4$ triad torus}
+					\label{fig:hexToPlaneNative}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.32\linewidth}
+					\center
+					\begin{tikzpicture}
+						\drawconnectedtriads{4}{4}{0}{0.4}{1}
+					\end{tikzpicture}
+					
+					\caption{Sheared}
+					\label{fig:hexToPlaneShear}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.32\linewidth}
+					\center
+					\begin{tikzpicture}
+						\drawconnectedtriads{4}{4}{1}{0.4}{0}
+					\end{tikzpicture}
+					
+					\caption{Sliced}
+					\label{fig:hexToPlaneSlice}
+				\end{subfigure}
+				
+				\caption{Transformations of hexagonal toruses of wrapped triples into a
+				rectangular form.  Thin lines show wrap-around links. (Flat-topped)
+				hexagons represent a wrapped triple of nodes.}
+				\label{fig:hexToPlane}
+			\end{figure}
 			
 		\subsection{Uncrinkling}
 			
@@ -174,7 +337,48 @@
 			for sliced systems of either kind, the arrays of hexagons contain
 			crinkled columns and rows as illustrated below.
 			
-			TODO: UNCRINKLING FIGURE
+			\begin{figure}
+				\center
+				\begin{subfigure}[b]{0.44\linewidth}
+					\center
+					\input{figures/uncrinkling-node-sheared}
+					
+					\caption{$7 \times 7$ nodes, sheared}
+					\label{fig:uncrinkling-node-sheared}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.44\linewidth}
+					\center
+					\input{figures/uncrinkling-node-sliced}
+					
+					\caption{$7 \times 7$ nodes, sliced}
+					\label{fig:uncrinkling-node-sliced}
+				\end{subfigure}
+				
+				\vspace{1cm}
+				
+				\begin{subfigure}[b]{0.44\linewidth}
+					\center
+					\input{figures/uncrinkling-sheared}
+					
+					\caption{$4 \times 4$ triples, sheared}
+					\label{fig:uncrinkling-sheared}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.44\linewidth}
+					\center
+					\input{figures/uncrinkling-sliced}
+					
+					\caption{$4 \times 4$ triples, sliced}
+					\label{fig:uncrinkling-sliced}
+				\end{subfigure}
+				
+				\vspace{1em}
+				
+				\caption{Mapping rectangular arrangements of hexagons into a square
+				grid. Thick lines show how layers of hexagons are uncrinkled.
+				Annotations show how the relative positions of nodes and wrapped triples
+				change after uncrinkling.}
+				\label{fig:uncrinkling}
+			\end{figure}
 			
 			By uncrinkling these columns or rows, a regular 2D grid arrangement is
 			formed. In the figure, the numbered hexagons enumerate the different
@@ -194,13 +398,93 @@
 			all very local except for the connections crossing from side-to-side and
 			normal folding techniques can be used.
 			
-			TODO: FIGURE SHOWING FOLDING WORKING
+			\begin{figure}
+				\begin{subfigure}{\linewidth}
+					\center
+					\begin{tikzpicture}[thick]
+						\input{figures/folding}
+						\begin{scope}[scale=0.4]
+							\begin{scope}[shift={( 0.0, 0)}] \foldExample{8}{8}{sheared}{1}{1}{x1y9}{x8y0}{4}{} \end{scope}
+							\myarrow{10}{-4.5}
+							\begin{scope}[shift={(13.0, 0)}] \foldExample{8}{8}{sheared}{2}{1}{x1y9}{x8y0}{}{4} \end{scope}
+							\myarrow{20.0}{-4.5}
+							\begin{scope}[shift={(21.5,-2)}] \foldExample{8}{8}{sheared}{2}{2}{x1y9}{x8y0}{}{}  \end{scope}
+						\end{scope}
+					\end{tikzpicture}
+					\caption{$N \times M$ sheared systems and $N \times 2N$ sliced systems}
+					\label{fig:foldingSheared}
+				\end{subfigure}
+				
+				\vspace{1em}
+				
+				\begin{subfigure}{\linewidth}
+					\center
+					\begin{tikzpicture}[thick]
+						\input{figures/folding}
+						\begin{scope}[scale=0.4]
+							\begin{scope}[shift={( 0.0, 0)}] \foldExample{8}{8}{sliced}{1}{1}{x1y9}{x5y0}{4}{} \end{scope}
+							\myarrow{10}{-4.5}
+							\begin{scope}[shift={(12.0, 0)}] \foldExample{8}{8}{sliced}{2}{1}{x1y9}{x5y0}{2}{} \end{scope}
+							\myarrow{18}{-4.5}
+							\begin{scope}[shift={(21.0, 0)}] \foldExample{8}{8}{sliced}{4}{1}{x1y9}{x5y0}{}{4} \end{scope}
+							\myarrow{27}{-4.5}
+							\begin{scope}[shift={(29.5,-2)}] \foldExample{8}{8}{sliced}{4}{2}{x1y9}{x5y0}{}{}  \end{scope}
+						\end{scope}
+					\end{tikzpicture}
+					\caption{$N \times N$ sliced systems}
+					\label{fig:foldingSliced}
+				\end{subfigure}
+				
+				\caption{Schematic illustrating elimination of long wrap-around links
+				during folding. In each example a single link has been highlighted to
+				aid in following the process.}
+				\label{fig:folding}
+			\end{figure}
 			
 			That is unless you used the slicing technique. If you've done this then
 			you get criss-crossing streams of cables which folding will not remove,
 			depending on the dimensions of the network.
 			
-			TODO: FIGURE SHOWING BAD SLICING PRODUCING BAD FOLDS
+			\begin{figure}
+				% #1 width (triads)
+				% #2 height (triads)
+				\newcommand{\slicedView}[2]{
+					\begin{tikzpicture}
+						\input{figures/slicedNodes.tex}
+						\slicedNodes{#1}{#2}{0.4}{0}
+					\end{tikzpicture}
+				}
+				\newcommand{\schematicView}[2]{
+					\begin{tikzpicture}[scale=0.3,scale=0.5]
+						\pgfmathtruncatemacro{\w}{#1*2}
+						\pgfmathtruncatemacro{\h}{#2*2}
+						\input{figures/folding}
+						\foldExample{\w}{\h}{sliced}{1}{1}{}{}{}{}
+					\end{tikzpicture}
+				}
+				\newcommand{\slicedSizesRow}[2]{
+					$#1 \times #2$ &
+					\raggedleft\arraybackslash\slicedView{#1}{#2} &
+					\centering\arraybackslash\schematicView{#1}{#2} \\
+				}
+				
+				\center
+				\begin{tabular}{m{0.12\linewidth} m{0.35\linewidth} m{0.25\linewidth}}
+					\toprule
+						Size &
+						\centering\arraybackslash Sliced &
+						\centering\arraybackslash Schematic \\
+					\midrule
+						% TODO: Vertically center sizes
+						\slicedSizesRow{5}{5}
+						\slicedSizesRow{5}{7}
+						\slicedSizesRow{5}{10}
+					\bottomrule
+				\end{tabular}
+				
+				\caption{Patterns of wiring in sliced systems of various sizes.}
+				\label{fig:slicedSizes}
+			\end{figure}
 			
 			If you have Nx2N then you actually get normal crossing patterns and thus
 			folding can be done as-per-normal.
@@ -220,87 +504,130 @@
 			
 			TODO: DESCRIBE ALGORITHM
 			
+			\begin{figure}
+				\center
+				\input{figures/cabinetisation}
+				
+				\caption{Mapping from 2D space to cabinets, frames and boards}
+				\label{fig:cabinetisation}
+			\end{figure}
+			
 			The result is a connection list like so...
 		
 	\section{Installation}
 		
 		Installation will be performed by a (team of) technicians and requires that
-		all cables are connected correctly and connectivity tested.
+		all cables are connected correctly and connectivity tested. We use some
+		automation and guidance provided by SpiNNer.
 		
 		\subsection{Cable selection}
 			
-			The common length selection method of requiring a fixed slack is
-			insufficient in practice due to the wide variation in cable lengths
-			(centimetres to tens of centimetres): short cables become too tight and
-			long cables become too slack. Based on the observation that short and
-			medium length cables tend to form an arc between their endpoints we
-			propose a wire length selection heuristic based on enforcing a minimum
-			height of the arc. We then pick the available cable long enough to
-			achieve the specified arc height.
+			Controlling slack is critical to ensuring reliable and maintainable
+			cabling installations. If cables are too tight, cables and connectors can
+			become easily damaged and when too slack, the excess cable obstructs
+			other cables and can easily become tangled and damaged \cite{cisco07}. It
+			has been observed that when ready-made cables are employed technicians
+			frequently over-estimate the cable lengths required preferring to use
+			overly long cables for all connections \cite{mazaris97}. To solve this
+			problem, the SpiNNer wiring guide software dictates the cable lengths to
+			be used by an installer based the rule of (three-)thumbs according to
+			Mazaris \cite{mazaris97}. This rule suggests that an ideal amount of
+			slack is approximately that which can be wrapped around three fingers.
+			Specifically, the shortest available cable is selected which ensures at
+			least \SI{5}{\centi\meter} of slack.
 			
-			TODO: PHOTOGRAPHS OF CABLES FORMING ARCS AND SHORT LOOPS
-			
-			TODO: DIAGRAM SHOWING ARC/LOOP HEIGHT CONSTRAINT.
-			
-			When the wire forms the arc, the following eqn must be solved. Sadly this
-			has no closed form solution so a simple numerical approximation is used
-			to compute it.
-			
-			TODO: FORMULAE FOR ARC HEIGHT COMPUTATION
-			
-			In the case where the wire is too small to form an arc they form a loop
-			whose height is calculated thus.
-			
-			TODO: FORMULAE FOR LOOP HEIGHT COMPUTATION
+			The SpiNNer tool allocates cables assuming all cables take a Euclidean
+			straight-line path between the endpoints of the connection. The result is
+			that wiring is not routed through dedicated cable management structures
+			but is simply suspended by its connectors in front of the machine. As
+			demonstrated later, this unconventional approach leads neither to cooling
+			problems nor increased maintenance effort.
 		
 		\subsection{Interactive technician guidance and validation}
 			
-			By using diagnostic LEDs controlled via a low-bandwidth system-management
-			bus provided by the backplane before cabling it is possible to provide
-			interactive guidance to installing technicians. Rather than issuing paper
-			guides and using cable labelling, these LEDs, augmented with a visual
-			display and TTS can be used. This significantly reduces infrastructure
-			requirements.
+			While automated systems for validating cabling correctness are
+			commonplace, these systems are typically used only after cabling has been
+			completed \cite{lakner07}. SpiNNaker features a low-bandwidth system
+			management bus which may be used to interrogate SpiNNaker's network
+			hardware and control diagnostic LEDs prior to the installation of the
+			main SpiNNaker network interconnect. Using these facilities I have
+			constructed a tool which interactively guides a technician through the
+			cable installation process, checking each cable is installed in
+			real-time.
 			
-			This infrastructure can also be used to configure the high-speed serial
-			links to enter a special diagnostic mode. In this mode unique IDs
-			assigned by a host to each link are sent instead of sending random data
-			during idle frames (used normally for EMC reasons). The unique IDs
-			received at the opposing end of the connection can be used to determine
-			cable correctness.
+			The interactive wiring guide uses a GUI (figure
+			\ref{fig:interactive-wiring-guide-gui}) to give a visual indication of
+			the endpoints of the next cable to install and also the cable length to
+			use. The centre of the display shows a `big-picture' perspective of the
+			locations of the boards to be connected. The detailed views on the left
+			and right indicate which of the six sockets on each board the cables
+			should connect. In addition to the GUI, diagnostic LEDs on the SpiNNaker
+			machine itself are illuminated to indicate which boards to connect
+			(figure \ref{fig:interactive-wiring-guide-leds}). Finally, a
+			Text-To-Speech (TTS) system is used to announce the cable type and
+			location of each connection which in practice means that a technician
+			rarely needs to refer to the GUI during installation.
+			
+			\begin{figure}
+				\center
+				\begin{subfigure}[b]{0.546\textwidth}
+					\begin{tikzpicture}[thin, black!20!white]
+						\node (screen) [inner sep=0]
+						      {\includegraphics[width=\textwidth]{figures/wiring_guide_screenshot.png}};
+						\draw (screen.south west) rectangle (screen.north east);
+					\end{tikzpicture}
+					
+					\caption{Interactive wiring guide GUI}
+					\label{fig:interactive-wiring-guide-gui}
+				\end{subfigure}
+				~
+				\begin{subfigure}[b]{0.40\textwidth}
+					\begin{tikzpicture}
+						\node (leds) [inner sep=0]
+						      {\includegraphics[width=\textwidth]{figures/leds.jpg}};
+						% Point at left LED
+						\draw [white, <-, line width=0.4em]
+						      ([shift={(-0.0cm, -0.6cm)}]leds.center)
+						      -- ++(225:1cm);
+						% Point at right LED
+						\draw [white, <-, line width=0.4em]
+						      ([shift={(1.1cm, -1.1cm)}]leds.center)
+						      -- ++(225:1cm);
+					\end{tikzpicture}
+					
+					\caption{Diagnostic LEDs}
+					\label{fig:interactive-wiring-guide-leds}
+				\end{subfigure}
+				
+				\caption{The SpiNNer interactive wiring guide uses a GUI,
+				text-to-speech and diagnostic LEDs to assist during cable
+				installation.}
+				\label{fig:interactive-wiring-guide}
+			\end{figure}
+			
+			The interactive wiring guide also validates the connectivity of the
+			system in real-time by polling the network hardware at the endpoints of
+			the cable being installed to determine if they are correctly connected.
+			If a miswiring occurs, this is immediately detected and announced via TTS
+			enabling the technician to immediately correct the error. Once a cable
+			has been installed correctly, the software automatically advances to the
+			next cable meaning direct interaction with the software by the technician
+			is minimal.
 		
-		\subsection{Installation ordering}
+			The interactive wiring guide presents the cables in an order intended to
+			maximise ease of installation. Cables installed in three groups with
+			intra-frame cables being installed first, followed by intra-cabinet
+			cables and inter-cabinet cables. Within each group, the tightest cables
+			are installed first resulting in slacker cables naturally being installed
+			over already installed cables. By grouping cables in this manner,
+			multiple technicians may work independently on the wiring within
+			individual frames and cabinets.
 			
-			The order of installation can have a significant impact on
-			maintainability and installation effort. To make installation practical,
-			wiring congestion should be avoided when possible.
-			
-			Thanks the locality of all connections, it is practical to install both
-			ends at once (not often done in data centre installations) and doing so
-			enables real-time validation of connections. This also means that cables
-			need not be labelled.
-			
-			Based on the observation that cables tend to run in arcs, we want to
-			install things in an order such that later cables can easily fit over the
-			top of existing cables. Thanks to the arc model above, we order cable
-			installation by arc height, installing those with wider arc height later.
-			
-			Additionally, cables are grouped by direction since SpiNNaker's cable
-			sockets are also grouped by direction this means each direction does not
-			obstruct the next until connections begin to run between cabinets.
-			
-			We also group cables by intra and inter rack and cabinet. As well as
-			generally causing short cables are installed first, wires crossing
-			between cabinets and racks are inherently going to obstruct cables within
-			the rack so we want to do that second. Further since racks are
-			conveniently wide enough for a single technician to comfortably work,
-			saving intra-cabinet connections 'til last means that for most of the
-			installation the technicians run no risk of colliding.
-			
-			Finally, ordering runs top-to-bottom, left-to-right as the final
-			tie-breaker. Since hops with similar arc length etc. tend to follow
-			similar patterns, this means that wires tend to follow in repeating
-			patterns.
+			The interactive wiring guide may also be used to repair or replace cables
+			in the system. During maintenance, obstructing cables may be blindly
+			removed alongside any cable being replaced. At the conclusion of the
+			process, the wiring guide may be used to interactively guide
+			re-installation of all removed cables.
 	
 	\section{Results and Evaluation}
 		
@@ -320,6 +647,18 @@
 			When mapped to real hardware the largest planned SpiNNaker machine
 			requires cables no longer than 70cm.
 			
+			\begin{figure}
+				
+				\center
+				\input{figures/wire-length-histogram}
+				
+				\caption{Histogram of connection distances in a ten-cabinet,
+				one-million core SpiNNaker machine annotated with the suggested cable
+				length.}
+				\label{fig:wire-length-histogram}
+				
+			\end{figure}
+			
 		\subsection{Installation practicality}
 			
 			TODO: LENGTH SUITABILITY (EXPERIMENTS?) ARE THE CABLES TOO TIGHT OR NOT.
@@ -327,15 +666,43 @@
 			
 			TODO: ANALYSIS OF INSTALL TIME DEPENDING ON CABLE LENGTH AND CROSSING
 			TYPES
+			\begin{figure}
+				\begin{tikzpicture}[thick]
+					\begin{axis}[ ybar stacked
+					            , ymin=0
+					            , xmin=0
+					            , width=\textwidth
+					            , height=6cm
+					            , xlabel=Cable install time (\si{\second})
+					            , ylabel=Count
+					            %, tick align=inside
+					            ]
+						\addplot table [x=duration, y=intra_frame, col sep=comma]
+						         {data/connection_log.csv};
+						\addplot table [x=duration, y=inter_frame, col sep=comma]
+						         {data/connection_log.csv};
+						\addplot table [x=duration, y=inter_cabinet, col sep=comma]
+						         {data/connection_log.csv};
+						
+						\legend{Intra-frame,Inter-frame,Inter-cabinet}
+					\end{axis}
+				\end{tikzpicture}
+				
+				\caption{Histogram of cable installation times}
+			\end{figure}
 			
 			TODO: GUIDANCE AND INSTALLATION. MAYBE INCLUDE TRIALS OF UNDERGRAD
 			VOLUNTEERS. COMPARE INSTALL WITH AND WITHOUT VALIDATION.
 			
 			With in-line verification, all connectors were correctly seated in the
 			correct sockets first time since everything is verified at build time.
+		
+		\subsection{Thermal Impact}
+			
+			TODO: SHOW HOW TEMPERATURE IS CHANGED
 			
 		\subsection{Maintenance}
 			
 			TOOD: QUANTIFY CABLE REMOVALS REQUIRED. EXPERIMENT: REMOVE/REPLACE RANDOM
 			BOARDS AND MEASURE TIME TAKEN, CABLES REMOVED. COMPARE WITH STANDARD DATA
-			CENTER WIRING
+			CENTRE WIRING

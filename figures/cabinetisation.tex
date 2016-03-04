@@ -1,0 +1,80 @@
+\begin{tikzpicture}[thick]
+	\pgfmathsetmacro{\scale}{0.5}
+	
+	\pgfmathtruncatemacro{\width}{3}
+	\pgfmathtruncatemacro{\height}{3}
+	\pgfmathtruncatemacro{\innerwidth}{4}
+	\pgfmathtruncatemacro{\innerheight}{3}
+	
+	\begin{scope}[scale=\scale]
+		\foreach \xx in {1,...,\width}{
+			\foreach \yy in {1,...,\height}{
+				% Boards
+				\foreach \x in {1,...,\innerwidth}{
+					\foreach \y in {1,...,\innerheight}{
+						\pgfmathsetmacro{\xpos}{(\xx * (\innerwidth + 0.5)) + \x}
+						\pgfmathsetmacro{\ypos}{(\yy * (\innerheight + 0.5)) + \y}
+						
+						\node [ inner sep=0
+						      , minimum width=\scale * 1cm
+						      , minimum height=\scale * 1cm
+						      , draw
+						      , rectangle
+						      ] (node\xx\yy\x\y) at (\xpos, \ypos) {};
+					}
+				}
+			
+				% Board order line
+				\begin{scope}[ultra thick]
+					\foreach [count=\lastx] \x in {2,...,\innerwidth}{
+						\draw [rounded corners]
+						      (node\xx\yy\lastx2.center) --
+						      (node\xx\yy\lastx\innerheight.center) --
+						      (node\xx\yy\x1.center) --
+						      (node\xx\yy\x2.center);
+					}
+					\draw (node\xx\yy11.center) -- (node\xx\yy12.center);
+					\draw [->]
+					      (node\xx\yy\innerwidth2.center) --
+					      (node\xx\yy\innerwidth\innerheight.center);
+				\end{scope}
+			}
+		}
+	\end{scope}
+	
+	% Cabinet numbering
+	\foreach \cabinet in {1,...,\width}{
+		\pgfmathtruncatemacro{\index}{\cabinet-1}
+		\draw [decorate,decoration={brace,amplitude=0.5em,raise=0.5em}]
+		      (node\cabinet\height1\innerheight.north west) -- 
+		      node [yshift=1em, anchor=south] {Cabinet \index}
+		      (node\cabinet\height\innerwidth\innerheight.north east);
+	}
+	
+	% Frame numbering
+	\foreach \frame in {1,...,\height}{
+		\pgfmathtruncatemacro{\index}{\frame-1}
+		\draw [decorate,decoration={brace,amplitude=0.5em,mirror,raise=0.5em}]
+		      (node\width\frame\innerwidth1.south east) -- 
+		      node [xshift=1em, anchor=west] {Frame \index}
+		      (node\width\frame\innerwidth\innerheight.north east);
+	}
+	
+	% X and Y axis numbering
+	\begin{scope}[help lines, font=\footnotesize]
+		\foreach \xx in {1,...,\width}{
+			\foreach \x in {1,...,\innerwidth}{
+				\pgfmathtruncatemacro{\index}{((\xx - 1) * \innerwidth) + \x - 1}
+				\node [below=0.25em of node\xx1\x1] {\index};
+			}
+		}
+		\foreach \yy in {1,...,\height}{
+			\foreach \y in {1,...,\innerheight}{
+				\pgfmathtruncatemacro{\index}{((\yy - 1) * \innerheight) + \y - 1}
+				\node [left=0.25em of node1\yy1\y] {\index};
+			}
+		}
+	\end{scope}
+
+\end{tikzpicture}
+

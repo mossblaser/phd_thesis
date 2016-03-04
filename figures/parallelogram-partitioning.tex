@@ -1,0 +1,94 @@
+\begin{tikzpicture}[thick]
+	\pgfmathsetmacro{\scale}{0.5}
+	
+	\pgfmathtruncatemacro{\width}{4}
+	\pgfmathtruncatemacro{\height}{4}
+	
+	\begin{scope}[scale=\scale,hexagonXYZ]
+		\clip (0, \height + 3.0)
+		      rectangle
+		      (\width + 1.0, -2);
+		
+		\foreach \xx in {-1,0,1}{
+			\foreach \yy in {-1,0,1}{
+				% Nodes in partition
+				\foreach \x in {1,...,\width}{
+					\foreach \y in {1,...,\height}{
+						\pgfmathtruncatemacro{\posx}{((\width+1) * \xx) + \x}
+						\pgfmathtruncatemacro{\posy}{((\height+1) * \yy) + \y}
+						\node (node\xx\yy\x\y) at (\posx, \posy)
+						      [ minimum width=\scale*1cm
+						      , minimum height=\scale*1cm
+						      , inner sep=0
+						      , hexagon
+						      , draw
+						      ]
+						      {};
+					}
+				}
+				
+				% Outline around partition
+				\begin{scope}[line cap=round]
+					\foreach \x in {1,...,\width}{
+						\draw [ultra thick]
+						      (node\xx\yy\x1.corner 3) --
+						      (node\xx\yy\x1.corner 4) --
+						      (node\xx\yy\x1.corner 5);
+						\draw [ultra thick]
+						      (node\xx\yy\x\height.corner 6) --
+						      (node\xx\yy\x\height.corner 1) --
+						      (node\xx\yy\x\height.corner 2);
+					}
+					\foreach \y in {1,...,\height}{
+						\draw [ultra thick]
+						      (node\xx\yy1\y.corner 2) --
+						      (node\xx\yy1\y.corner 3) --
+						      (node\xx\yy1\y.corner 4);
+						\draw [ultra thick]
+						      (node\xx\yy\width\y.corner 5) --
+						      (node\xx\yy\width\y.corner 6) --
+						      (node\xx\yy\width\y.corner 1);
+					}
+				\end{scope}
+			}
+		}
+		
+		% Links between partitions
+		\foreach \xx in {-1,0,1}{
+			\foreach \yy in {-1,0}{
+				\foreach \x in {1,...,\width}{
+					\pgfmathtruncatemacro{\destyy}{\yy+1}
+					\draw (node\xx\yy\x\height.side north)
+					      -- (node\xx\destyy\x1.side south);
+				}
+				\foreach [count=\lastx] \x in {2,...,\width}{
+					\pgfmathtruncatemacro{\destyy}{\yy+1}
+					\draw (node\xx\yy\lastx\height.side north east)
+					      -- (node\xx\destyy\x1.side south west);
+				}
+			}
+		}
+		\foreach \xx in {-1,0}{
+			\foreach \yy in {-1,0,1}{
+				\foreach \y in {1,...,\height}{
+					\pgfmathtruncatemacro{\destxx}{\xx+1}
+					\draw (node\xx\yy\width\y.side east)
+					      -- (node\destxx\yy1\y.side west);
+				}
+				\foreach [count=\lasty] \y in {2,...,\height}{
+					\pgfmathtruncatemacro{\destxx}{\xx+1}
+					\draw (node\xx\yy\width\lasty.side north east)
+					      -- (node\destxx\yy1\y.side south west);
+				}
+			}
+		}
+		\foreach \lastxx/\xx in {-1/0,0/1}{
+			\foreach \lastyy/\yy in {-1/0,0/1}{
+				\draw (node\lastxx\lastyy\width\height.side north east)
+				      -- (node\xx\yy11.side south west);
+			}
+		}
+	\end{scope}
+	
+\end{tikzpicture}
+

@@ -1,0 +1,56 @@
+\begin{tikzpicture}
+	\def\size{6}
+	\def\scale{0.3}
+	
+	\pgfmathsetmacro{\slant}{cos(30)*2/3}
+	
+	\clip (-\scale*4, -\scale*10.5) rectangle ++(\scale*8.5,\scale*16.5);
+	
+	% Boards
+	\begin{scope}[xslant=\slant,help lines,hexagonXYZ,scale=\scale,inner sep=0, minimum width=\scale*1cm,xshift=\size/2*-1cm]
+		% Hexagons themselves
+		\foreach \y in {0,...,\size}{
+			\foreach \x in {0,...,\size}{
+				\node [xslant=\slant,draw,hexagon] (board \x \y) at (\x,\y) {};
+			}
+		}
+	\end{scope}
+	
+	% Annotations
+	\newcommand{\annotate}[2]{
+		\node [font=\tiny]
+		      at (#1)
+		      {#2}
+		      ;
+	}
+	\annotate{board 23}{$1$}
+	\annotate{board 24}{$a$}
+	\annotate{board 34}{$b$}
+	\annotate{board 33}{$c$}
+	\annotate{board 22}{$d$}
+	\annotate{board 12}{$e$}
+	\annotate{board 13}{$f$}
+	
+	\draw [->,thick] (0,-1.0em) -- ++(0,-1em);
+	
+	% Squares
+	\begin{scope}[help lines,xshift=\size/2*\scale*-1cm,yshift=-3.0em]
+		\foreach \y in {0,...,\size}{
+			\foreach \x in {0,...,\size}{
+				\pgfmathtruncatemacro{\yy}{\size-\y}
+				\node [draw, rectangle,inner sep=0,minimum size=1cm*\scale]
+				      (square \x\yy)
+				      at (\x*\scale cm, -\y*\scale cm)
+				      {};
+			}
+		}
+	\end{scope}
+	
+	\annotate{square 23}{$1$}
+	\annotate{square 24}{$a$}
+	\annotate{square 34}{$b$}
+	\annotate{square 33}{$c$}
+	\annotate{square 22}{$d$}
+	\annotate{square 12}{$e$}
+	\annotate{square 13}{$f$}
+\end{tikzpicture}

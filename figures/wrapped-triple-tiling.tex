@@ -1,0 +1,125 @@
+\begin{tikzpicture}
+	\def\scale{0.5}
+	
+	% Due to bad automatic clipping...
+	\clip [scale=\scale]
+	      (-8.75,-4.2) rectangle
+	   ++ (15,7.5);
+	
+	% Scaling factor for big flat-topped hexagons
+	\pgfmathsetmacro{\rescale}{cos(30)*2}
+	
+	\definecolor{colour0}{gray}{0.95}
+	\definecolor{colour1}{gray}{0.75}
+	\definecolor{colour2}{gray}{0.45}
+	
+	\begin{scope}[hexagonXYZ,scale=\scale,inner sep=0, minimum width=\scale*1cm]
+		\newcommand{\tileNodes}[2]{
+			\pgfmathtruncatemacro{\x}{#1*2}
+			\pgfmathtruncatemacro{\y}{#2*2}
+			\node [hexagon] at (\x+0,\y+0) (hex00) {};
+			\node [hexagon] at (\x+1,\y+0) (hex10) {};
+			\node [hexagon] at (\x+1,\y+1) (hex11) {};
+		}
+		\newcommand{\tile}[2]{
+			\pgfmathtruncatemacro{\x}{#1*2}
+			\pgfmathtruncatemacro{\y}{#2*2}
+			\node [draw,fill=colour0,hexagon] at (\x+0,\y+0) (hex00) {};
+			\node [draw,fill=colour1,hexagon] at (\x+1,\y+0) (hex10) {};
+			\node [draw,fill=colour2,hexagon] at (\x+1,\y+1) (hex11) {};
+		}
+		\newcommand{\tileimposed}[2]{
+			\begin{scope}[hexagonBoardXYZ, scale=\rescale, shift={(#1,#2)}]
+				\begin{scope}[hexagonXYZ, scale=1/\rescale]
+					\tile{0}{0}
+				\end{scope}
+			\end{scope}
+			\begin{pgfonlayer}{fg}
+				\node [ draw
+				      , ultra thick
+				      , hexagonBoard
+				      , minimum size=\scale*\rescale*1cm
+				      ]
+				      (overlay)
+				      at (hex11.south)
+				      {};
+			\end{pgfonlayer}
+		}
+		\newcommand{\tileclip}{
+			\tileNodes{0}{0}
+			\begin{scope}
+				\node [ hexagonBoard
+				      , minimum size=\scale*\rescale*1cm
+				      ]
+				      (clip)
+				      at (hex11.south)
+				      {};
+				\clip (clip.corner 1)
+				   -- (clip.corner 2)
+				   -- (clip.corner 3)
+				   -- (clip.corner 4)
+				   -- (clip.corner 5)
+				   -- (clip.corner 6)
+				   -- cycle
+				      ;
+				
+				\tile{+1.0}{+2.0}
+				\tile{-0.5}{-1.0}
+				\tile{+2.0}{+1.0}
+				\tile{+1.0}{-0.5}
+				\tile{-1.0}{-0.5}
+				\tile{-0.5}{+1.0}
+				\tile{+0.0}{+0.0}
+			\end{scope}
+			
+			\draw [ultra thick]
+			      (clip.corner 1)
+			   -- (clip.corner 2)
+			   -- (clip.corner 3)
+			   -- (clip.corner 4)
+			   -- (clip.corner 5)
+			   -- (clip.corner 6)
+			   -- cycle
+			      ;
+		}
+		
+		\tile{-4}{0}
+		\node at (hex11 |- 0,-4.0) {(a)};
+		
+		\tileimposed{-3}{-1.5}
+		\draw [->,gray,thick]
+		      (hex11.corner 1)
+		      to [out=65,in=-65,looseness=5]
+		      (overlay.side south)
+		      ;
+		\draw [->,gray,thick]
+		      (hex00.corner 3)
+		      to [out=65+120,in=-65+120,looseness=5]
+		      (overlay.side north east)
+		      ;
+		\draw [->,gray,thick]
+		      (hex10.corner 5)
+		      to [out=65-120,in=-65-120,looseness=5]
+		      (overlay.side west)
+		      ;
+		
+		\node at (hex11 |- 0,-4.0) {(b)};
+		
+		\tileimposed{+1}{+1}
+		\tileimposed{-1}{-1}
+		\tileimposed{+1}{+0}
+		\tileimposed{-1}{-0}
+		\tileimposed{+0}{+1}
+		\tileimposed{-0}{-1}
+		\tileimposed{+0}{+0}
+		
+		\node at (hex11 |- 0,-4.0) {(c)};
+		
+		\begin{scope}[xshift=4.5cm]
+			\tileclip
+		\end{scope}
+		\node at (hex11 |- 0,-4.0) {(d)};
+	\end{scope}
+\end{tikzpicture}
+
+

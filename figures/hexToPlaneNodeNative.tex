@@ -1,0 +1,31 @@
+\begin{tikzpicture}
+	\def\width{7}
+	\def\height{7}
+	\def\scale{0.4}
+	
+	\pgfmathtruncatemacro{\widthh}{\width-1}
+	\pgfmathtruncatemacro{\heightt}{\height-1}
+	
+	\begin{scope}[thick,hexagonXYZ,scale=\scale,inner sep=0, minimum width=\scale*1cm]
+		% Hexagons themselves
+		\foreach \y in {0,...,\heightt}{
+			\foreach \x in {0,...,\widthh}{
+				\node [draw,hexagon] (node x\x y\y) at (\x,\y) {};
+			}
+		}
+	\end{scope}
+	
+	% Connections
+	\begin{scope}[help lines]
+		\foreach \y in {0,...,\heightt}{
+			\foreach \x in {0,...,\widthh}{
+				\pgfmathtruncatemacro{\xx}{Mod(\x+1,\width)}
+				\pgfmathtruncatemacro{\yy}{Mod(\y+1,\width)}
+				\draw (node x\x y\y.side west) -- (node x\xx y\y.side east);
+				\draw (node x\x y\y.side north) -- (node x\x y\yy.side south);
+				\draw (node x\x y\y.side north east) -- (node x\xx y\yy.side south west);
+			}
+		}
+	\end{scope}
+\end{tikzpicture}
+
