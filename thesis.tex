@@ -5,75 +5,14 @@
 \newcommand{\thesisyear}{2016}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Used packages
+% Set up document options
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Nice printing of URLs
-\usepackage{url}
-
-% Actually not tear-your-eyes-out-ugly tables
-\usepackage{booktabs}
-
-% Adjust linespacing for localised parts of the paper (e.g. abstract)
-\usepackage{setspace}
-
-% For the \ifthenelse macro
-\usepackage{ifthen}
-
-% For the \degree macro
-\usepackage{gensymb}
-
-% For subfigure support
-\usepackage{caption}
-\usepackage{subcaption}
-
-% SI unit and number formatting
-\usepackage{siunitx}
-
-% Used to draw labels with a white outline to make them stand-out in diagrams
-\usepackage[outline]{contour}
-
-% TikZ + PGF Plots for diagram/plot drawing
-\usepackage{tikz}
-\usepackage{tikz3d}
-\usepackage{pgfplots}
-\usetikzlibrary{ hexagon
-               , calc
-               , backgrounds
-               , positioning
-               , decorations.pathreplacing
-               , decorations.markings
-               , arrows
-               , positioning
-               , automata
-               , shadows
-               , fit
-               , shapes
-               , arrows
-               , patterns
-               , spy
-               }
-\usepgfplotslibrary{statistics}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Environment settings
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Set up all packages
+\input{thesis-env}
 
 % 1.5 linespacing (as required by university)
 \renewcommand{\baselinestretch}{1.5}
-
-
-% Specifies the thickness of the contour added by the \contour macro.
-\contourlength{1.5pt}
-
-% Define a few layers for TikZ to allow easier layering
-\pgfdeclarelayer{bg}
-\pgfdeclarelayer{fg}
-\pgfsetlayers{bg,main,fg}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Definitions
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Used in place of \chapter for preface sections. Prevents numbering but
 % includes the chapter in the ToC
@@ -82,50 +21,6 @@
 	\addcontentsline{toc}{chapter}{#1}
 }
 
-% Adds 'discard if' and  'discard if not' options for \addplot to enable
-% filtering of data. Taken from
-% http://tex.stackexchange.com/questions/58548/is-it-possible-to-change-the-color-of-a-single-bar-when-the-bar-plot-is-based-on
-\pgfplotsset{
-    discard if/.style 2 args={
-        x filter/.code={
-            \edef\tempa{\thisrow{#1}}
-            \edef\tempb{#2}
-            \ifx\tempa\tempb
-                \def\pgfmathresult{inf}
-            \fi
-        }
-    },
-    discard if not/.style 2 args={
-        x filter/.code={
-            \edef\tempa{\thisrow{#1}}
-            \edef\tempb{#2}
-            \ifx\tempa\tempb
-            \else
-                \def\pgfmathresult{inf}
-            \fi
-        }
-    }
-}
-
-% Make PGFplots Treat "NA" (regardless of letter case) as "nan". From:
-% http://tex.stackexchange.com/questions/110441/skip-specific-string-in-a-numeric-column-while-using-pgfplots
-\makeatletter
-\expandafter\def\csname pgffltA@N\endcsname{\pgfflt@readundef}
-\expandafter\def\csname pgffltA@n\endcsname{\pgfflt@readundef}
-\def\pgfflt@readundef #1{%
-    \def\pgfflt@readnan@ok{1}%
-    \if#1a\else\if#1A\else\def\pgfflt@readnan@ok{0}\fi\fi
-    \if\pgfflt@readnan@ok1%
-        \pgfmathfloat@a@S=3\relax%
-        \pgfmathfloat@a@Mtok={0.0}%
-        \pgfmathfloat@a@E=0%
-        \expandafter\pgfflt@finish
-    \else
-        \def\pgfflt@readnan@{\pgfflt@error #1}%
-        \expandafter\pgfflt@readnan@
-    \fi
-}
-\makeatother
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Document body

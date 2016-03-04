@@ -34,13 +34,13 @@
 				\center
 				\begin{subfigure}[b]{0.45\textwidth}
 					\center
-					\input{figures/hypercube-partitioning}
+					\buildfig{figures/hypercube-partitioning.tex}
 					\caption{2D hypercube partitioning}
 					\label{fig:hypercube-partitioning}
 				\end{subfigure}
 				\begin{subfigure}[b]{0.45\textwidth}
 					\center
-					\input{figures/parallelogram-partitioning}
+					\buildfig{figures/parallelogram-partitioning.tex}
 					\caption{Parallelogram partitioning}
 					\label{fig:parallelogram-partitioning}
 				\end{subfigure}
@@ -66,7 +66,7 @@
 			
 			\begin{figure}
 				\center
-				\input{figures/wrapped-hexagon-tiling}
+				\buildfig{figures/wrapped-hexagon-tiling.tex}
 				
 				\caption{A single hexagon wrapped in layers of hexagons does not tile the
 				same way as a pointy-topped hexagon.}
@@ -84,7 +84,7 @@
 			
 			\begin{figure}
 				\center
-				\input{figures/parallelogram-tiling}
+				\buildfig{figures/parallelogram-tiling.tex}
 				
 				\caption{Demonstration that a parallelogram partition tiles a hexagonal
 				torus.}
@@ -102,7 +102,7 @@
 			
 			\begin{figure}
 				\center
-				\input{figures/wrapped-triple-tiling}
+				\buildfig{figures/wrapped-triple-tiling.tex}
 				
 				\caption{Three pointy-topped hexagons tiles in the same way as flat-topped
 				hexagons.}
@@ -111,7 +111,7 @@
 			
 			\begin{figure}
 				\center
-				\input{figures/triad-tiling}
+				\buildfig{figures/triad-tiling.tex}
 				
 				\caption{Demonstration that a triad tiles a hexagonal torus topology.}
 				\label{fig:triad-tiling}
@@ -132,19 +132,19 @@
 				\center
 				\begin{subfigure}[b]{0.39\linewidth}
 					\center
-					\include{figures/ring-folding-row}
+					\buildfig{figures/ring-folding-row.tex}
 					\caption{A ring network}
 					\label{fig:ring-folding-row}
 				\end{subfigure}
 				\begin{subfigure}[b]{0.24\linewidth}
 					\center
-					\include{figures/ring-folding-folded}
+					\buildfig{figures/ring-folding-folded.tex}
 					\caption{Folded}
 					\label{fig:ring-folding-folded}
 				\end{subfigure}
 				\begin{subfigure}[b]{0.35\linewidth}
 					\center
-					\include{figures/ring-folding-interleaved}
+					\buildfig{figures/ring-folding-interleaved.tex}
 					\caption{Folded and interleaved}
 					\label{fig:ring-folding-interleaved}
 				\end{subfigure}
@@ -265,24 +265,24 @@
 				\center
 				\begin{subfigure}[b]{0.32\linewidth}
 					\center
-					\input{figures/hexToPlaneNodeNative}
+					\buildfig{figures/hex-to-plane-node-native.tex}
 					
 					\caption{$7 \times 7$ node torus}
-					\label{fig:hexToPlaneNodeNative}
+					\label{fig:hex-to-plane-node-native}
 				\end{subfigure}
 				\begin{subfigure}[b]{0.32\linewidth}
 					\center
-					\input{figures/hexToPlaneNodeShear}
+					\buildfig{figures/hex-to-plane-node-shear.tex}
 					
 					\caption{Sheared}
-					\label{fig:hexToPlaneNodeShear}
+					\label{fig:hex-to-plane-node-shear}
 				\end{subfigure}
 				\begin{subfigure}[b]{0.32\linewidth}
 					\center
-					\input{figures/hexToPlaneNodeSlice}
+					\buildfig{figures/hex-to-plane-node-slice.tex}
 					
 					\caption{Sliced}
-					\label{fig:hexToPlaneNodeSlice}
+					\label{fig:hex-to-plane-node-slice}
 				\end{subfigure}
 				
 				\caption{Transformations of hexagonal toruses of nodes into a
@@ -293,31 +293,23 @@
 			
 			\begin{figure}
 				
-				\input{figures/connected-triads}
-				
 				\begin{subfigure}[b]{0.32\linewidth}
 					\center
-					\begin{tikzpicture}
-						\drawconnectedtriads{4}{4}{0}{0.4}{0}
-					\end{tikzpicture}
+					\buildfig{figures/hex-to-plane-native.tex}
 					
 					\caption{$4 \times 4$ triad torus}
 					\label{fig:hexToPlaneNative}
 				\end{subfigure}
 				\begin{subfigure}[b]{0.32\linewidth}
 					\center
-					\begin{tikzpicture}
-						\drawconnectedtriads{4}{4}{0}{0.4}{1}
-					\end{tikzpicture}
+					\buildfig{figures/hex-to-plane-shear.tex}
 					
 					\caption{Sheared}
 					\label{fig:hexToPlaneShear}
 				\end{subfigure}
 				\begin{subfigure}[b]{0.32\linewidth}
 					\center
-					\begin{tikzpicture}
-						\drawconnectedtriads{4}{4}{1}{0.4}{0}
-					\end{tikzpicture}
+					\buildfig{figures/hex-to-plane-slice.tex}
 					
 					\caption{Sliced}
 					\label{fig:hexToPlaneSlice}
@@ -341,14 +333,14 @@
 				\center
 				\begin{subfigure}[b]{0.44\linewidth}
 					\center
-					\input{figures/uncrinkling-node-sheared}
+					\buildfig{figures/uncrinkling-node-sheared.tex}
 					
 					\caption{$7 \times 7$ nodes, sheared}
 					\label{fig:uncrinkling-node-sheared}
 				\end{subfigure}
 				\begin{subfigure}[b]{0.44\linewidth}
 					\center
-					\input{figures/uncrinkling-node-sliced}
+					\buildfig{figures/uncrinkling-node-sliced.tex}
 					
 					\caption{$7 \times 7$ nodes, sliced}
 					\label{fig:uncrinkling-node-sliced}
@@ -358,14 +350,14 @@
 				
 				\begin{subfigure}[b]{0.44\linewidth}
 					\center
-					\input{figures/uncrinkling-sheared}
+					\buildfig{figures/uncrinkling-sheared.tex}
 					
 					\caption{$4 \times 4$ triples, sheared}
 					\label{fig:uncrinkling-sheared}
 				\end{subfigure}
 				\begin{subfigure}[b]{0.44\linewidth}
 					\center
-					\input{figures/uncrinkling-sliced}
+					\buildfig{figures/uncrinkling-sliced.tex}
 					
 					\caption{$4 \times 4$ triples, sliced}
 					\label{fig:uncrinkling-sliced}
@@ -401,36 +393,16 @@
 			\begin{figure}
 				\begin{subfigure}{\linewidth}
 					\center
-					\begin{tikzpicture}[thick]
-						\input{figures/folding}
-						\begin{scope}[scale=0.4]
-							\begin{scope}[shift={( 0.0, 0)}] \foldExample{8}{8}{sheared}{1}{1}{x1y9}{x8y0}{4}{} \end{scope}
-							\myarrow{10}{-4.5}
-							\begin{scope}[shift={(13.0, 0)}] \foldExample{8}{8}{sheared}{2}{1}{x1y9}{x8y0}{}{4} \end{scope}
-							\myarrow{20.0}{-4.5}
-							\begin{scope}[shift={(21.5,-2)}] \foldExample{8}{8}{sheared}{2}{2}{x1y9}{x8y0}{}{}  \end{scope}
-						\end{scope}
-					\end{tikzpicture}
+					\buildfig{figures/folding-sheared.tex}
 					\caption{$N \times M$ sheared systems and $N \times 2N$ sliced systems}
-					\label{fig:foldingSheared}
+					\label{fig:folding-sheared}
 				\end{subfigure}
 				
 				\vspace{1em}
 				
 				\begin{subfigure}{\linewidth}
 					\center
-					\begin{tikzpicture}[thick]
-						\input{figures/folding}
-						\begin{scope}[scale=0.4]
-							\begin{scope}[shift={( 0.0, 0)}] \foldExample{8}{8}{sliced}{1}{1}{x1y9}{x5y0}{4}{} \end{scope}
-							\myarrow{10}{-4.5}
-							\begin{scope}[shift={(12.0, 0)}] \foldExample{8}{8}{sliced}{2}{1}{x1y9}{x5y0}{2}{} \end{scope}
-							\myarrow{18}{-4.5}
-							\begin{scope}[shift={(21.0, 0)}] \foldExample{8}{8}{sliced}{4}{1}{x1y9}{x5y0}{}{4} \end{scope}
-							\myarrow{27}{-4.5}
-							\begin{scope}[shift={(29.5,-2)}] \foldExample{8}{8}{sliced}{4}{2}{x1y9}{x5y0}{}{}  \end{scope}
-						\end{scope}
-					\end{tikzpicture}
+					\buildfig{figures/folding-sliced.tex}
 					\caption{$N \times N$ sliced systems}
 					\label{fig:foldingSliced}
 				\end{subfigure}
@@ -446,42 +418,8 @@
 			depending on the dimensions of the network.
 			
 			\begin{figure}
-				% #1 width (triads)
-				% #2 height (triads)
-				\newcommand{\slicedView}[2]{
-					\begin{tikzpicture}
-						\input{figures/slicedNodes.tex}
-						\slicedNodes{#1}{#2}{0.4}{0}
-					\end{tikzpicture}
-				}
-				\newcommand{\schematicView}[2]{
-					\begin{tikzpicture}[scale=0.3,scale=0.5]
-						\pgfmathtruncatemacro{\w}{#1*2}
-						\pgfmathtruncatemacro{\h}{#2*2}
-						\input{figures/folding}
-						\foldExample{\w}{\h}{sliced}{1}{1}{}{}{}{}
-					\end{tikzpicture}
-				}
-				\newcommand{\slicedSizesRow}[2]{
-					$#1 \times #2$ &
-					\raggedleft\arraybackslash\slicedView{#1}{#2} &
-					\centering\arraybackslash\schematicView{#1}{#2} \\
-				}
-				
 				\center
-				\begin{tabular}{m{0.12\linewidth} m{0.35\linewidth} m{0.25\linewidth}}
-					\toprule
-						Size &
-						\centering\arraybackslash Sliced &
-						\centering\arraybackslash Schematic \\
-					\midrule
-						% TODO: Vertically center sizes
-						\slicedSizesRow{5}{5}
-						\slicedSizesRow{5}{7}
-						\slicedSizesRow{5}{10}
-					\bottomrule
-				\end{tabular}
-				
+				\buildfig{figures/slicing-examples.tex}
 				\caption{Patterns of wiring in sliced systems of various sizes.}
 				\label{fig:slicedSizes}
 			\end{figure}
@@ -506,7 +444,7 @@
 			
 			\begin{figure}
 				\center
-				\input{figures/cabinetisation}
+				\buildfig{figures/cabinetisation.tex}
 				
 				\caption{Mapping from 2D space to cabinets, frames and boards}
 				\label{fig:cabinetisation}
@@ -650,7 +588,7 @@
 			\begin{figure}
 				
 				\center
-				\input{figures/wire-length-histogram}
+				\buildfig{figures/wire-length-histogram.tex}
 				
 				\caption{Histogram of connection distances in a ten-cabinet,
 				one-million core SpiNNaker machine annotated with the suggested cable
@@ -667,27 +605,8 @@
 			TODO: ANALYSIS OF INSTALL TIME DEPENDING ON CABLE LENGTH AND CROSSING
 			TYPES
 			\begin{figure}
-				\begin{tikzpicture}[thick]
-					\begin{axis}[ ybar stacked
-					            , ymin=0
-					            , xmin=0
-					            , width=\textwidth
-					            , height=6cm
-					            , xlabel=Cable install time (\si{\second})
-					            , ylabel=Count
-					            %, tick align=inside
-					            ]
-						\addplot table [x=duration, y=intra_frame, col sep=comma]
-						         {data/connection_log.csv};
-						\addplot table [x=duration, y=inter_frame, col sep=comma]
-						         {data/connection_log.csv};
-						\addplot table [x=duration, y=inter_cabinet, col sep=comma]
-						         {data/connection_log.csv};
-						
-						\legend{Intra-frame,Inter-frame,Inter-cabinet}
-					\end{axis}
-				\end{tikzpicture}
-				
+				\builddata{data/build_connection_log.tex}
+				\buildfig{figures/install-histogram.tex}
 				\caption{Histogram of cable installation times}
 			\end{figure}
 			

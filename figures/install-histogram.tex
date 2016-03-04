@@ -1,0 +1,21 @@
+\begin{tikzpicture}[thick]
+	\begin{axis}[ ybar stacked
+	            , ymin=0
+	            , xmin=0
+	            , width=\textwidth
+	            , height=6cm
+	            , xlabel=Cable install time (\si{\second})
+	            , ylabel=Count
+	            %, tick align=inside
+	            ]
+		\addplot table [x=duration, y=intra_frame, col sep=comma]
+		         {data/connection_log.csv};
+		\addplot table [x=duration, y=inter_frame, col sep=comma]
+		         {data/connection_log.csv};
+		\addplot table [x=duration, y=inter_cabinet, col sep=comma]
+		         {data/connection_log.csv};
+		
+		\legend{Intra-frame,Inter-frame,Inter-cabinet}
+	\end{axis}
+\end{tikzpicture}
+

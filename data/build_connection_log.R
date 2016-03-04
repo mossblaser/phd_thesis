@@ -1,6 +1,6 @@
 require(dplyr)
 
-wiring_log <- read.csv("wiring_log.csv")
+wiring_log <- read.csv("data/wiring_log.csv")
 
 connection_log <- wiring_log %>%
 	filter(event_type == "connection_complete", duration > 1.0) %>%
@@ -24,12 +24,4 @@ d$inter_cabinet <- hist(filter(connection_log, connection_type=="inter-cabinet")
 d$inter_frame <- hist(filter(connection_log, connection_type=="inter-frame")$duration, bins, plot=FALSE)$counts
 d$intra_frame <- hist(filter(connection_log, connection_type=="intra-frame")$duration, bins, plot=FALSE)$counts
 
-write.csv(d, "connection_log.csv", quote=FALSE)
-
-#h <- hist(filter(connection_log, connection_type=="inter-frame")$duration, bins, plot=FALSE)
-#write.csv(data.frame(duration=h$mids, count=h$counts),
-#          "connection_log_inter_frame.csv", quote=FALSE)
-#
-#h <- hist(filter(connection_log, connection_type=="intra-frame")$duration, bins, plot=FALSE)
-#write.csv(data.frame(duration=h$mids, count=h$counts),
-#          "connection_log_intra_frame.csv", quote=FALSE)
+write.csv(d, "data/connection_log.csv", quote=FALSE)

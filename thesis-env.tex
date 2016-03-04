@@ -1,0 +1,80 @@
+% This \input-able file should be included in the preamble to use and configure
+% all LaTeX packages used.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Used packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Nice printing of URLs
+\usepackage{url}
+
+% Actually not tear-your-eyes-out-ugly tables
+\usepackage{booktabs}
+
+% Adjust linespacing for localised parts of the paper (e.g. abstract)
+\usepackage{setspace}
+
+% For the \ifthenelse macro
+\usepackage{ifthen}
+
+% For the \degree macro
+\usepackage{gensymb}
+
+% For subfigure support
+\usepackage{caption}
+\usepackage{subcaption}
+
+% SI unit and number formatting
+\usepackage{siunitx}
+
+% Used to draw labels with a white outline to make them stand-out in diagrams
+\usepackage[outline]{contour}
+
+% TikZ + PGF Plots for diagram/plot drawing
+\usepackage{tikz}
+\usepackage{tikz3d}
+\usepackage{pgfplots}
+\usetikzlibrary{ hexagon
+               , calc
+               , backgrounds
+               , positioning
+               , decorations.pathreplacing
+               , decorations.markings
+               , arrows
+               , positioning
+               , automata
+               , shadows
+               , fit
+               , shapes
+               , arrows
+               , patterns
+               , spy
+               }
+\usepgfplotslibrary{statistics}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Environment settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Specifies the thickness of the contour added by the \contour macro.
+\contourlength{1.5pt}
+
+% Define a few layers for TikZ to allow easier layering
+\pgfdeclarelayer{bg}
+\pgfdeclarelayer{fg}
+\pgfsetlayers{bg,main,fg}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Build (and input) a LaTeX figure, recompiling only if necessary
+\newcommand{\buildfig}[1]{%
+	\input{|"python buildfig.py #1"}%
+}
+
+% Build a LaTeX script, recompiling if necessary. Does not include the compiled
+% document. This may be used, e.g., for running analysis scripts on raw data.
+\newcommand{\builddata}[1]{%
+	\input{|"python buildfig.py --no-includegraphics #1"}%
+}
