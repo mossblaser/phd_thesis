@@ -23,6 +23,54 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Show version/draft status in header
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% The background package is used to add things to the header
+\usepackage{background}
+
+% Package defines extra nodes relative to the page to allow nice positioning of
+% the notice.
+\usepackage{tikzpagenodes}
+
+% Get commit information
+\makeatletter
+\immediate\write18{git show -s --format="\@percentchar h" > thesis.hash}
+\immediate\write18{git show -s --format="\@percentchar aD" | cut -f 1 -d + > thesis.date}
+\immediate\write18{./git_change_summary.sh > thesis.gitchanges}
+\makeatother
+
+% Display at the bottom of the page (comment out to disable)
+\backgroundsetup{pages=all,
+                 angle=0, scale=1,
+                 color=black, opacity=1, contents={
+	\begin{tikzpicture}[overlay,remember picture,help lines]
+		% Main commit/version
+		\node (commit notice)
+		      [ font=\footnotesize
+		      , inner sep=4pt
+		      , above=of current page text area.south |- current page.south
+		      ]
+		      {Draft.
+		       Revision \texttt{\input{thesis.hash}\unskip}
+		       committed on \input{thesis.date}\unskip.};
+		% Box around commit message
+		\draw [rounded corners, white!90!black]
+		      (commit notice.south west)
+		      rectangle
+		      (commit notice.north east);
+		% List changed files (if any)
+		\node [ above=10pt of commit notice
+		      , text width=\linewidth
+		      , font=\tiny
+		      , align=center
+		      ]
+		      {\input{thesis.gitchanges}};
+	\end{tikzpicture}
+}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Document body
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
