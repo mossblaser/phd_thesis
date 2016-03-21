@@ -5,11 +5,17 @@
 % Used packages
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% More advanced mathematical typesetting
+\usepackage{amsmath}
+
 % Nice printing of URLs
 \usepackage{url}
 
 % Actually not tear-your-eyes-out-ugly tables
 \usepackage{booktabs}
+
+% Support for multiple-row table cells
+\usepackage{multirow}
 
 % Adjust linespacing for localised parts of the paper (e.g. abstract)
 \usepackage{setspace}
@@ -78,3 +84,6 @@
 \newcommand{\builddata}[1]{%
 	\input{|"python buildfig.py --no-includegraphics #1"}%
 }
+
+% A colour to use when drawing the back of a sheet of paper
+\colorlet{paperback}{black!10!white}

@@ -1,0 +1,35 @@
+\begin{tikzpicture}[thick]
+	
+	\begin{scope}[hexagonXYZ]
+		% Align bottom of figure with others in this set
+		\draw [white] (1, 0) -- ++(0, 0, 1);
+		
+		% Flat part
+		\draw (0, 0.75) --
+		      ++(0, -0.75) --
+		      ++(2, 0) --
+		      ++(0, 0.75);
+		
+		% Missing half
+		\draw [help lines, dotted]
+		      (0, 0.75) --
+		      ++(0, 0.75) --
+		      ++(2, 0) --
+		      ++(0, -0.75);
+		
+		% Folded part
+		\draw [fill=paperback]
+		      (0, 0.75) --
+		      ++(0, 0, 0.75) --
+		      ++(2, 0) --
+		      ++(0, 0, -0.75);
+		
+		% "See-through"
+		\draw [help lines, dotted] (0, 0) -- ++(0, 0.75);
+		
+		% Fold-line
+		\draw [dashed] (-0.5, 0.75) -- ++(3, 0);
+		
+	\end{scope}
+	
+\end{tikzpicture}

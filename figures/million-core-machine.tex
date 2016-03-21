@@ -1,0 +1,23 @@
+\begin{tikzpicture}
+	\pgfmathsetlengthmacro{\height}{3.6cm}
+	
+	\pgfmathsetlengthmacro{\machineheight}{\height}
+	\pgfmathsetlengthmacro{\manheight}{\height * (177.8cm/192.2cm)}
+	
+	\node (machine)
+	      [inner sep=0]
+	      {\includegraphics[height=\machineheight]{figures/spinnaker106.pdf}};
+	
+	\node (person)
+	      [ left=5mm of machine.south west
+	      , inner sep=0
+	      , anchor=south east
+	      ]
+	      {\includegraphics[height=\manheight]{figures/person.pdf}};
+	
+	\draw [<->]
+	      ([yshift=1em]machine.north west)
+	      -- node [fill=white] {\SI{6}{\meter}}
+	      ([yshift=1em]machine.north east);
+	
+\end{tikzpicture}

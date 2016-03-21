@@ -1,48 +1,43 @@
 \begin{tikzpicture}
-	\def\size{3}
+	\def\size{6}
 	\def\scale{0.3}
 	
-	\clip (-\scale*6.5, -\scale*10.5) rectangle ++(\scale*13.0,\scale*16.5);
+	\clip (-\scale*4, -\scale*10.5) rectangle ++(\scale*8.5,\scale*16.5);
 	
 	% Boards
-	\pgfmathsetmacro{\slant}{cos(30)*2 / 3}
-	\begin{scope}[xslant=\slant,hexagonBoardXYZ,help lines, xshift=-\scale*\size cm]
+	\begin{scope}[hexagonXYZ,help lines,xshift=\scale*\size/2*-1cm,scale=\scale]
 		\foreach \x in {0,...,\size}{
 			\foreach \y in {0,...,\size}{
-				\foreach \z in {0,1,2}{
-					\pgfmathtruncatemacro{\xx}{(\x*2) + (-\y) + floor(\z/2)}
-					\pgfmathtruncatemacro{\yy}{(\x  ) + ( \y) + (\z/max(\z,1))}
-					
-					\node [ xslant=\slant
-					      , draw
-					      , hexagonBoard
-					      , inner sep=0
-					      , minimum width=1cm*\scale
-					      ]
-					      (board \x \y \z)
-					      at (\xx*\scale,\yy*\scale,0)
-					      {}
-					      ;
+				\pgfmathtruncatemacro{\xx}{(\x - (\y+1)/2)}
+				\ifthenelse{\xx < 0}{
+					\pgfmathsetmacro{\xpos}{\x+\size+1}
+				}{
+					\pgfmathsetmacro{\xpos}{\x}
 				}
+				\pgfmathtruncatemacro{\xx}{Mod(\x - floor((\y+1)/2),\size+1)}
+				
+				\node [ draw
+				      , hexagon
+				      , inner sep=0
+				      , minimum width=1cm*\scale
+				      , font=\tiny
+				      ]
+				      (board \xx \y)
+				      at (\xpos,\y)
+				      {}
+				      ;
 			}
 		}
 	\end{scope}
 	
 	% Crinkles
-	\begin{scope}[rounded corners=2pt, thick]
-		\foreach \y in {0,...,\size}{
-			\draw (board 0\y 0.center)
-			   -- (board 0\y 1.center)
-			   -- (board 0\y 2.center)
+	\begin{scope}[rounded corners, thick]
+		\foreach \x in {0,...,\size}{
+			\draw (board \x 0.center)
+			      \foreach \y in {1,...,\size}{
+			        -- (board \x\y.center)
+			      }
 			      ;
-			\foreach \x in {1,...,\size}{
-				\pgfmathtruncatemacro{\xx}{\x-1}
-				\draw (board \xx \y 2.center)
-				   -- (board \x  \y 0.center)
-				   -- (board \x  \y 1.center)
-				   -- (board \x  \y 2.center)
-				      ;
-			}
 		}
 	\end{scope}
 	
@@ -53,31 +48,26 @@
 		      {\contour{white}{#2}}
 		      ;
 	}
-	\annotate{board 120}{$1$}
-	\annotate{board 121}{$2$}
-	\annotate{board 122}{$3$}
-	\annotate{board 022}{$a$}
-	\annotate{board 130}{$b$}
-	\annotate{board 132}{$c$}
-	\annotate{board 230}{$d$}
-	\annotate{board 221}{$e$}
-	\annotate{board 220}{$f$}
-	\annotate{board 111}{$g$}
-	\annotate{board 012}{$h$}
-	\annotate{board 011}{$i$}
+	\annotate{board 23}{$1$}
+	\annotate{board 24}{$2$}
+	\annotate{board 25}{$a$}
+	\annotate{board 34}{$b$}
+	\annotate{board 33}{$c$}
+	\annotate{board 32}{$d$}
+	\annotate{board 22}{$e$}
+	\annotate{board 13}{$f$}
+	\annotate{board 14}{$g$}
+	\annotate{board 15}{$h$}
 	
-	\draw [->,thick] (0,-1em) -- ++(0,-1em);
+	\draw [->,thick] (0,-1.0em) -- ++(0,-1em);
 	
 	% Squares
-	\pgfmathtruncatemacro{\sizee}{(\size+1)*3 - 1}
-	\begin{scope}[yshift=-3em, xshift=-0.5*\scale*\sizee cm,help lines]
+	\begin{scope}[help lines,xshift=\size/2*\scale*-1cm,yshift=-3.0em]
 		\foreach \y in {0,...,\size}{
-			\foreach \x in {0,...,\sizee}{
-				\pgfmathtruncatemacro{\xx}{\x/3}
-				\pgfmathtruncatemacro{\z}{Mod(\x,3)}
+			\foreach \x in {0,...,\size}{
 				\pgfmathtruncatemacro{\yy}{\size-\y}
 				\node [draw, rectangle,inner sep=0,minimum size=1cm*\scale]
-				      (square \xx\yy\z)
+				      (square \x\yy)
 				      at (\x*\scale cm, -\y*\scale cm)
 				      {};
 			}
@@ -86,24 +76,21 @@
 	
 	% Straightened Crinkles 
 	\begin{scope}[thick]
-		\foreach \y in {0,...,\size}{
-			\draw (square 0\y0.center)
-			   -- (square \size\y2.center)
+		\foreach \x in {0,...,\size}{
+			\draw (square \x0.center)
+			   -- (square \x\size.center)
 			      ;
 		}
 	\end{scope}
 	
-	\annotate{square 120}{$1$}
-	\annotate{square 121}{$2$}
-	\annotate{square 122}{$3$}
-	\annotate{square 022}{$a$}
-	\annotate{square 130}{$b$}
-	\annotate{square 132}{$c$}
-	\annotate{square 230}{$d$}
-	\annotate{square 221}{$e$}
-	\annotate{square 220}{$f$}
-	\annotate{square 111}{$g$}
-	\annotate{square 012}{$h$}
-	\annotate{square 011}{$i$}
+	\annotate{square 23}{$1$}
+	\annotate{square 24}{$2$}
+	\annotate{square 25}{$a$}
+	\annotate{square 34}{$b$}
+	\annotate{square 33}{$c$}
+	\annotate{square 32}{$d$}
+	\annotate{square 22}{$e$}
+	\annotate{square 13}{$f$}
+	\annotate{square 14}{$g$}
+	\annotate{square 15}{$h$}
 \end{tikzpicture}
-
