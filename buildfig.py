@@ -172,12 +172,16 @@ def _compile_figure(source, output):
         return 0
 
 
+def _list_figure_dependencies(filename, all_files):
+    """Return a list of all dependencies of a figure."""
+    stub = LATEX_STUB.format(filename).encode("utf-8")
+    return _spider(_iter_dependencies(stub, all_files), all_files)
+
+
 def _figure_hash(filename, all_files):
     """Get the hash of a figure and all its dependencies."""
     stub = LATEX_STUB.format(filename).encode("utf-8")
-    
     dependencies = _spider(_iter_dependencies(stub, all_files), all_files)
-    
     return _hash_files(dependencies, stub)
 
 
@@ -205,9 +209,15 @@ def main(args=None):
         "figure",
         help="The filename of a tex file containing a figure to build.")
     parser.add_argument(
+        "--dependencies", "-d", action="store_true",
+        help=r"List the dependencies of a figure and quit.")
+    parser.add_argument(
         "--no-includegraphics", "-n", action="store_true", default=False,
         help=r"Don't print an \includegraphics command to include the "
              r"compiled PDF.")
+    parser.add_argument(
+        "--output", "-o",
+        help=r"Write the output PDF to the supplied file-name.")
     args = parser.parse_args(args)
     
     # Fail if the figure does not exist
@@ -218,6 +228,12 @@ def main(args=None):
     
     # Enumeration of all files in the directory tree, used by various utilities
     all_files = set(_iter_all_files("."))
+    
+    # If requested, just list dependencies
+    if args.dependencies:
+        dependencies = _list_figure_dependencies(args.figure, all_files)
+        print("\n".join(dependencies))
+        return 0
     
     # Find out if the figure has been built yet
     filehash = _figure_hash(args.figure, all_files)
@@ -239,6 +255,10 @@ def main(args=None):
     if not args.no_includegraphics:
         print(r"\includegraphics{{{}}}".format(output_filename))
     
+    # Copy the figure to the specified location
+    if args.output is not None:
+        shutil.copy(output_filename, args.output)
+    
     return 0
 
 
@@ -248,5 +268,5 @@ if __name__=="__main__":
     except Exception as e:
         print(r"\PackageError{{buildfig}}"
               r"{{Script crashed}}{{{}}}".format(
-                  args.figure, str(e)))
+                  sys.argv, str(e)))
         raise
