@@ -1,0 +1,52 @@
+\pgfmathsetseed{69}
+\pgfmathsetseed{87}
+
+\pgfmathtruncatemacro{\width}{5}
+\pgfmathtruncatemacro{\height}{7}
+\pgfmathtruncatemacro{\numnodes}{10}
+
+\pgfmathsetlengthmacro{\diameter}{0.6em}
+
+\pgfmathsetlengthmacro{\searchradius}{2.3}
+
+\pgfmathtruncatemacro{\sx}{4}
+\pgfmathtruncatemacro{\sy}{1}
+
+\pgfmathtruncatemacro{\dx}{2}
+\pgfmathtruncatemacro{\dy}{4}
+
+% Force image to consistent size
+%\draw [hexagonXYZ] (0, \height) (\width, 0);
+
+% #1 name
+% #2 x
+% #3 y
+% #4 style
+\newcommand{\dest}[4]{
+	\node (#1) at ([hexagonXYZ]#2, #3)
+	      [ inner sep=0
+	      , fill
+	      , circle
+	      , minimum width=0.7*\diameter
+	      ] [#4]
+	      {};
+}
+
+% Source
+\dest{src}{\sx}{\sy}{}
+\draw (src.center) circle (\diameter);
+\node [left=5pt of src, inner sep=0] {S};
+
+% Some random destinations
+\foreach \i in {1,...,\numnodes}{
+	\pgfmathsetmacro{\x}{random(\width)}
+	\pgfmathsetmacro{\y}{random(\height)}
+	\dest{n\i}{\x}{\y}{}
+}
+
+% Destination
+\dest{dst}{\dx}{\dy}{}
+\draw (dst.center) circle (\diameter);
+\node [left=5pt of dst, inner sep=0] {D};
+
+\colorlet{searchbg}{black!30!white}

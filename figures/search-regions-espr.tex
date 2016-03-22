@@ -1,0 +1,26 @@
+\begin{tikzpicture}[thick, scale=0.7]
+	
+	\input{figures/search-regions-common.tex}
+	
+	% Existing routes
+	\draw [hexagonXYZ] (src.center) -- ++(0, 2) -- ++(-1, 0, 0) -- ++(0, 1, 0);
+	\draw [hexagonXYZ] (src.center) -- ++(-3, 0, 0);
+	
+	%% New route
+	\draw [hexagonXYZ, dotted] (dst.center) -- ++(1, 0, 0);
+	
+	% Search Radius
+	\begin{pgfonlayer}{bg}
+		\fill [ hexagonXYZ
+		      , searchbg
+		      , rounded corners
+		      ]
+		      ([shift={(-1.70*\diameter, \diameter)}]\dx, \dy) --
+		      ([shift={(1.70*\diameter, \diameter)}]\sx, \dy) --
+		      ([shift={(1.70*\diameter, -\diameter)}]\sx, \sy) --
+		      ([shift={(-1.70*\diameter, -\diameter)}]\dx, \sy) --
+		      cycle
+		      ;
+	\end{pgfonlayer}
+	
+\end{tikzpicture}

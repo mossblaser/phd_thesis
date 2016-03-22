@@ -1,38 +1,85 @@
 \chapter{Routing packets in large SpiNNaker machines}
 	
 	In large networks, faults are inevitable and routing algorithms are required
-	to work around them. TODO: GIVE SOME MOTIVATING FAULT NUMBERS, E.G.  FROM
+	to work around them. TODO: GIVE SOME MOTIVATING FAULT NUMBERS, E.G. FROM
 	BLUEGENE OR SPINNAKER. This chapter hopes to extend the state of the art by
 	defining a new fault-tolerant routing algorithm for SpiNNaker which can route
 	around arbitrary permanent link failures.
 	
-	Routing packets is NP complete and a key factor in the efficiency of a
-	super computer network. Numerous heuristic algorithms exist which target
-	different network technologies but many techniques are not portable.
-	
-	In this work we care about SpiNNaker which has a table-based router, packet
-	dropping flow control, and applications which deal with multicast. So far
-	all proposed routing algorithms for SpiNNaker have been fault-intolerant
-	and in this chapter, a new fault-tolerant algorithm is proposed.
+	Numerous heuristic algorithms exist which target different network
+	technologies but many techniques are not portable. In this work we care
+	about SpiNNaker which has a table-based router, packet dropping flow control,
+	and applications which deal with multicast. So far all proposed routing
+	algorithms for SpiNNaker have been fault-intolerant and in this chapter, a
+	new fault-tolerant algorithm is proposed.
 	
 	\section{Related work}
 		
+		TODO: PROPER SECTION INTRODUCTION...
+		
 		Various fault-intolerant multicast routing algorithms exist for many
-		networks and a number have been proposed for SpiNNaker. In \cite{davies12},
-		three routing strategies based on overlapping DOR, RTOR and LDFR routes are
-		suggested which have no ability to avoid faults.
+		networks and a number have been proposed and evaluated specifically in the
+		context of SpiNNaker.
 		
-		DOR routes follow a shortest-path from source to destination following one
-		dimensions then the next and can be computed in SpiNNaker as in previous
-		chapter.
+		In 2012, Davies \emph{et al.} evaluated the use of three common torus
+		routing algorithms in SpiNNaker and found that simple oblivious routing is
+		suitable for typical neural applications \cite{davies12}.
 		
-		TODO DESCRIBE RTOR AND LDFR.
+		\begin{description}
+			
+			\item[Dimension Order Routing (DOR)] Packets are routed along each
+			dimension (e.g. $X$, $Y$ and $Z$) in turn until no further hops are
+			available in that direction.  The order in which the dimensions are
+			traversed is fixed.
+			
+			\item[Right Turn Only Routing (RTOR)] As in DOR except the dimension
+			order is chosen such that routes only contain right-turns.
+			
+			\item[Longest Dimension First Routing (LDFR)] As in DOR except the
+			dimension order is chosen in descending order of number of hops in each
+			dimension.
+			
+		\end{description}
 		
-		In \cite{navaridas14} ESPR and NER are introduced which are able to
-		generate more efficient multicast routes but, again, do not have the
-		ability to avoid faults.
+		TODO: SOME SORT OF FIGURE DEMONSTRATING THE ABOVE?
 		
-		TODO DESCRIBE ESPR AND NER.
+		In 2014, Navaridas \emph{et al.} introduced two new algorithms, `Enhanced
+		Shortest Path Routing' (ESPR) and `Neighbourhood Exploring Routing' (NER)
+		which produce multicast routing trees with fewer total hops
+		\cite{navaridas14}. In both algorithms, routes are generated sequentially
+		for each of the destinations of a route using LDFR. Unlike LDFR, however,
+		these algorithms search a limited area of the network for other,
+		already-connected destination nodes to which LDFR routes may be
+		constructed. If no suitable destination is found, a LDFR route is
+		constructed to the source node. Figure \ref{fig:search-regions} illustrates
+		the shape of the searched regions of each algorithm. ESPR searches the
+		trapezoidal region between the source and destination nodes while NER
+		searches a fixed radius out from the destination node.
+		
+		\begin{figure}
+			\center
+			\begin{subfigure}{0.45\linewidth}
+				\center
+				\buildfig{figures/search-regions-espr.tex}
+				
+				\caption{ESPR}
+				\label{fig:search-regions-espr}
+			\end{subfigure}
+			\begin{subfigure}{0.45\linewidth}
+				\center
+				\buildfig{figures/search-regions-ner.tex}
+				
+				\caption{NER}
+				\label{fig:search-regions-espr}
+			\end{subfigure}
+			
+			\caption{The ESPR and NER algorithms attempt to connect the node marked
+			`D' to the closest node in the shaded region which is connected to the
+			source node, `S'. If no connected node is found in the shaded region, the
+			LDFR route is taken to `S'. The dotted line indicates the route chosen
+			from `D'.}
+			\label{fig:search-regions}
+		\end{figure}
 		
 		Work on fault-tolerant routing in super computer networks often focuses
 		heavily on the issue of deadlock avoidance. Super computers typically rely
