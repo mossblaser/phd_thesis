@@ -1,0 +1,63 @@
+\begin{tikzpicture}[thick, scale=0.6]
+	% #1 \a
+	% #2 \b
+	\newcommand{\swap}[2]{
+		\pgfmathtruncatemacro{\temp}{#1}
+		\pgfmathtruncatemacro{#1}{#2}
+		\pgfmathtruncatemacro{#2}{\temp}
+	}
+	
+	% #1 dx
+	% #2 dy
+	% #3 dz
+	\newcommand{\drawroute}[3]{
+		\minimiseXYZ{#1}{#2}{#3}
+		
+		% The three segments
+		\pgfmathtruncatemacro{\xa}{\mx}
+		\pgfmathtruncatemacro{\ya}{0}
+		\pgfmathtruncatemacro{\za}{0}
+		
+		\pgfmathtruncatemacro{\xb}{0}
+		\pgfmathtruncatemacro{\yb}{\my}
+		\pgfmathtruncatemacro{\zb}{0}
+		
+		\pgfmathtruncatemacro{\xc}{0}
+		\pgfmathtruncatemacro{\yc}{0}
+		\pgfmathtruncatemacro{\zc}{\mz}
+		
+		% Sort via sorting network...
+		\pgfmathtruncatemacro{\magb}{abs(\xb) + abs(\yb) + abs(\zb)}
+		\pgfmathtruncatemacro{\magc}{abs(\xc) + abs(\yc) + abs(\zc)}
+		\ifthenelse{\magc < \magb}{
+			\swap{\xb}{\xc}
+			\swap{\yb}{\yc}
+			\swap{\zb}{\zc}
+		}{}
+		
+		\pgfmathtruncatemacro{\maga}{abs(\xa) + abs(\ya) + abs(\za)}
+		\pgfmathtruncatemacro{\magc}{abs(\xc) + abs(\yc) + abs(\zc)}
+		\ifthenelse{\magc < \maga}{
+			\swap{\xa}{\xc}
+			\swap{\ya}{\yc}
+			\swap{\za}{\zc}
+		}{}
+		
+		\pgfmathtruncatemacro{\maga}{abs(\xa) + abs(\ya) + abs(\za)}
+		\pgfmathtruncatemacro{\magb}{abs(\xb) + abs(\yb) + abs(\zb)}
+		\ifthenelse{\magb < \maga}{
+			\swap{\xa}{\xb}
+			\swap{\ya}{\yb}
+			\swap{\za}{\zb}
+		}{}
+		
+		\draw [hexagonXYZ] (0, 0, 0) --
+		      ++(\xc, \yc, \zc) --
+		      ++(\xb, \yb, \zb) --
+		      ++(\xa, \ya, \za);
+	}
+	
+	\input{figures/simple-routers-common.tex}
+	
+\end{tikzpicture}
+

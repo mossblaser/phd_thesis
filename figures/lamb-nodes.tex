@@ -1,0 +1,53 @@
+\begin{tikzpicture}[thick, scale=0.6]
+	
+	\pgfmathsetlengthmacro{\nodewidth}{0.7em}
+	
+	\pgfmathtruncatemacro{\width}{7}
+	\pgfmathtruncatemacro{\height}{7}
+	
+	% Dead-node position
+	\pgfmathtruncatemacro{\dx}{3}
+	\pgfmathtruncatemacro{\dy}{4}
+	
+	\tikzstyle{node}=[draw, circle, inner sep=0, minimum width=\nodewidth]
+	\tikzstyle{dead node}=[node, help lines]
+	\tikzstyle{lamb node}=[node, dotted]
+	
+	\newcommand{\crossout}[1]{
+		\begin{scope}[red]
+			\draw ([shift={(-0.3, -0.3)}]#1.center) -- ++(0.6, 0.6);
+			\draw ([shift={(0.3, -0.3)}]#1.center) -- ++(-0.6, 0.6);
+		\end{scope}
+	}
+	
+	% Draw the nodes
+	\foreach \x in {1,...,\width}{
+		\foreach \y in {1,...,\height}{
+			\ifthenelse{\x = \dx \AND \y = \dy}{
+				% Dead node
+				\node (n\x\y) at (\x, \y) [dead node] {};
+				\crossout{n\x\y}
+			}{\ifthenelse{\x = \dx \OR \y = \dy}{
+				% Lamb node
+				\node (n\x\y) at (\x, \y) [lamb node] {};
+			}{
+				% Normal node
+				\node (n\x\y) at (\x, \y) [node ] {};
+			}}
+		}
+	}
+	
+	% Key
+	\node (example node) [node, right=2 of $(n\width1)!0.7!(n\width\height)$] {};
+	\node (example dead node) [dead node, right=2 of $(n\width1)!0.5!(n\width\height)$] {};
+	\node (example lamb node) [lamb node, right=2 of $(n\width1)!0.3!(n\width\height)$] {};
+	\crossout{example dead node}
+	
+	\node [right=0.5em of example node] {Working node};
+	\node [right=0.5em of example dead node] {Dead node};
+	\node [right=0.5em of example lamb node] {Lamb node};
+	
+	% Draw some example routes
+	%\draw [->] (n21.center) -- (n25.center) -- (n45.west);
+	
+\end{tikzpicture}

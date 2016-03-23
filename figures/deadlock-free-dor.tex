@@ -1,0 +1,98 @@
+\begin{tikzpicture}[thick, scale=2.0]
+	
+	\pgfmathtruncatemacro{\width}{3}
+	\pgfmathtruncatemacro{\widthh}{\width-1}
+	\pgfmathtruncatemacro{\height}{3}
+	\pgfmathtruncatemacro{\heightt}{\height-1}
+	
+	\tikzstyle{edge number}=[ fill=white
+	                        , inner sep=1pt
+	                        ]
+	
+	% Compass points
+	\coordinate (compass) at (-0.75, 1.75);
+	\draw [->] (compass) -- ++(0.5, 0) node [anchor=west] {X};
+	\draw [->] (compass) -- ++(0, 0.5) node [anchor=south] {Y};
+	
+	\foreach \x in {1,...,\width}{
+		\foreach \y in {1,...,\height}{
+			\node (n\x\y)
+			      [ inner sep=0
+			      , minimum width=1.2em
+			      , draw
+			      , circle
+			      ]
+			      at (\x, \y)
+			      {};
+		}
+	}
+	
+	\pgfmathtruncatemacro{\nextedgenum}{0}
+	\newcount\edgenum
+	\edgenum=0
+	
+	% Number edges
+	\begin{scope}[ help lines
+	             , -{>[length=5, width=4]}
+	             ]
+		% X+ Edges
+		\foreach \y in {1,...,\height}{
+			\foreach [count=\x] \xx in {2,...,\width}{
+				\draw (n\x\y)
+				      to [bend right]
+				      node [edge number] {\the\edgenum}
+				      (n\xx\y);
+				\global\advance\edgenum by1
+			}
+		}
+		
+		% X- Edges
+		\foreach \y in {1,...,\height}{
+			\foreach \x in {\width,\widthh,...,2}{
+				\pgfmathtruncatemacro{\xx}{\x - 1}
+				\draw (n\x\y)
+				      to [bend right]
+				      node [edge number] {\the\edgenum}
+				      (n\xx\y);
+				\global\advance\edgenum by1
+			}
+		}
+		
+		% Y+ Edges
+		\foreach \x in {1,...,\width}{
+			\foreach [count=\y] \yy in {2,...,\height}{
+				\draw (n\x\y)
+				      to [bend right]
+				      node [edge number] {\the\edgenum}
+				      (n\x\yy);
+				\global\advance\edgenum by1
+			}
+		}
+		
+		% Y- Edges
+		\foreach \x in {1,...,\height}{
+			\foreach \y in {\height,\heightt,...,2}{
+				\pgfmathtruncatemacro{\yy}{\y - 1}
+				\draw (n\x\y)
+				      to [bend right]
+				      node [edge number] {\the\edgenum}
+				      (n\x\yy);
+				\global\advance\edgenum by1
+			}
+		}
+	\end{scope}
+	
+	\begin{scope}[->, dotted]
+		\draw (n11.center) -- (n\width1.center) -- (n\width2.center);
+		\draw (1 + \width, 1.5) --
+		      node [anchor=north] {0, 1, 16}
+		      ++(1, 0);
+	\end{scope}
+	\begin{scope}[->, dashed]
+		\draw (n\width\height.center) -- (n2\height.center) -- (n22.center);
+		\draw (1 + \width, 2.5) --
+		      node [anchor=north] {10, 20}
+		      ++(1, 0);
+	\end{scope}
+	
+\end{tikzpicture}

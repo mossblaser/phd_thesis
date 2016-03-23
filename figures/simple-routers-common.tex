@@ -1,0 +1,42 @@
+\tikzstyle{node}=[inner sep=0, minimum width=0.7*0.6em, circle]
+
+% #1 x
+% #2 y
+% #3 z
+\newcommand{\drawnode}[3]{
+	\node at ([hexagonXYZ]#1, #2, #3) [node, fill] {};
+}
+
+\newcommand{\drawsrc}{
+	\node (src) [node, fill=white, draw] {};
+}
+
+% Inputs
+% #1 x
+% #2 y
+% #3 z
+% Output: \mx \my \mz
+\newcommand{\minimiseXYZ}[3]{
+	\pgfmathtruncatemacro{\m}{max(min(#1,#2), min(max(#1,#2),#3))}
+	\pgfmathtruncatemacro{\mx}{#1 - \m}
+	\pgfmathtruncatemacro{\my}{#2 - \m}
+	\pgfmathtruncatemacro{\mz}{#3 - \m}
+}
+
+\pgfmathtruncatemacro{\radius}{3}
+\foreach \sx/\sy/\sz/\dx/\dy/\dz in { \radius/0/0  / 0/1/0 %
+                                    , 0/0/-\radius / -1/0/0 %
+                                    , 0/\radius/0  / 0/0/1 %
+                                    , -\radius/0/0 / 0/-1/0 %
+                                    , 0/0/\radius  / 1/0/0 %
+                                    , 0/-\radius/0 / 0/0/-1 %
+                                    }{
+	\foreach \step in {1,...,\radius}{
+		\pgfmathtruncatemacro{\x}{\sx + (\step - 1)*\dx}
+		\pgfmathtruncatemacro{\y}{\sy + (\step - 1)*\dy}
+		\pgfmathtruncatemacro{\z}{\sz + (\step - 1)*\dz}
+		\drawnode{\x}{\y}{\z}
+		\drawroute{\x}{\y}{\z}
+	}
+}
+\drawsrc

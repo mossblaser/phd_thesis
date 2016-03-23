@@ -17,149 +17,247 @@
 		
 		TODO: PROPER SECTION INTRODUCTION...
 		
-		Various fault-intolerant multicast routing algorithms exist for many
-		networks and a number have been proposed and evaluated specifically in the
-		context of SpiNNaker.
+		\subsection{Multicast routing in SpiNNaker}
 		
-		In 2012, Davies \emph{et al.} evaluated the use of three common torus
-		routing algorithms in SpiNNaker and found that simple oblivious routing is
-		suitable for typical neural applications \cite{davies12}.
-		
-		\begin{description}
+			Various fault-intolerant multicast routing algorithms exist for many
+			networks and a number have been proposed and evaluated specifically in the
+			context of SpiNNaker.
 			
-			\item[Dimension Order Routing (DOR)] Packets are routed along each
-			dimension (e.g. $X$, $Y$ and $Z$) in turn until no further hops are
-			available in that direction.  The order in which the dimensions are
-			traversed is fixed.
+			In 2012, Davies \emph{et al.} evaluated the use of three common torus
+			routing algorithms in SpiNNaker and found that simple oblivious routing is
+			suitable for typical neural applications \cite{davies12}. The three
+			routing techniques are:
 			
-			\item[Right Turn Only Routing (RTOR)] As in DOR except the dimension
-			order is chosen such that routes only contain right-turns.
-			
-			\item[Longest Dimension First Routing (LDFR)] As in DOR except the
-			dimension order is chosen in descending order of number of hops in each
-			dimension.
-			
-		\end{description}
-		
-		TODO: SOME SORT OF FIGURE DEMONSTRATING THE ABOVE?
-		
-		In 2014, Navaridas \emph{et al.} introduced two new algorithms, `Enhanced
-		Shortest Path Routing' (ESPR) and `Neighbourhood Exploring Routing' (NER)
-		which produce multicast routing trees with fewer total hops
-		\cite{navaridas14}. In both algorithms, routes are generated sequentially
-		for each of the destinations of a route using LDFR. Unlike LDFR, however,
-		these algorithms search a limited area of the network for other,
-		already-connected destination nodes to which LDFR routes may be
-		constructed. If no suitable destination is found, a LDFR route is
-		constructed to the source node. Figure \ref{fig:search-regions} illustrates
-		the shape of the searched regions of each algorithm. ESPR searches the
-		trapezoidal region between the source and destination nodes while NER
-		searches a fixed radius out from the destination node.
-		
-		\begin{figure}
-			\center
-			\begin{subfigure}{0.45\linewidth}
-				\center
-				\buildfig{figures/search-regions-espr.tex}
+			\begin{description}
 				
-				\caption{ESPR}
-				\label{fig:search-regions-espr}
-			\end{subfigure}
-			\begin{subfigure}{0.45\linewidth}
-				\center
-				\buildfig{figures/search-regions-ner.tex}
+				\item[Dimension Order Routing (DOR)] Packets are routed along each
+				dimension (e.g. $X$, $Y$ and $Z$) in turn until no further hops are
+				available in that direction.  The order in which the dimensions are
+				traversed is fixed.
 				
-				\caption{NER}
-				\label{fig:search-regions-espr}
-			\end{subfigure}
+				\item[Right Turn Only Routing (RTOR)] As in DOR except the dimension
+				order is chosen such that routes only contain right-turns.
+				
+				\item[Longest Dimension First Routing (LDFR)] As in DOR except the
+				dimension order is chosen in descending order of number of hops in each
+				dimension.
+				
+			\end{description}
 			
-			\caption{The ESPR and NER algorithms attempt to connect the node marked
-			`D' to the closest node in the shaded region which is connected to the
-			source node, `S'. If no connected node is found in the shaded region, the
-			LDFR route is taken to `S'. The dotted line indicates the route chosen
-			from `D'.}
-			\label{fig:search-regions}
-		\end{figure}
+			These unicast routing techniques are converted into a multicast routing
+			algorithm by merging together the routes produced between the source node
+			and each destination node as illustrated in figure
+			\ref{fig:simple-routers}.
+			
+			\begin{figure}
+				\center
+				\begin{subfigure}{0.3\linewidth}
+					\center
+					\buildfig{figures/simple-routers-dor.tex}
+					
+					\caption{DOR}
+					\label{fig:simple-routers-dor}
+				\end{subfigure}
+				\begin{subfigure}{0.3\linewidth}
+					\center
+					\buildfig{figures/simple-routers-rtor.tex}
+					
+					\caption{RTOR}
+					\label{fig:simple-routers-dor}
+				\end{subfigure}
+				\begin{subfigure}{0.3\linewidth}
+					\center
+					\buildfig{figures/simple-routers-ldfr.tex}
+					
+					\caption{LDFR}
+					\label{fig:simple-routers-dor}
+				\end{subfigure}
+				
+				\caption{Example multicast routes produced by merging together unicast
+				routes from a central source node to each destination node.}
+				\label{fig:simple-routers}
+			\end{figure}
+			
+			In 2014, Navaridas \emph{et al.} introduced two new algorithms, `Enhanced
+			Shortest Path Routing' (ESPR) and `Neighbourhood Exploring Routing' (NER)
+			which produce multicast routing trees with fewer total hops
+			\cite{navaridas14}. In both algorithms, routes are generated sequentially
+			for each of the destinations of a route using LDFR. Unlike LDFR, however,
+			these algorithms search a limited area of the network for other,
+			already-connected destination nodes to which LDFR routes may be
+			constructed. If no suitable destination is found, a LDFR route is
+			constructed to the source node. Figure \ref{fig:search-regions} illustrates
+			the shape of the searched regions of each algorithm. ESPR searches the
+			trapezoidal region between the source and destination nodes while NER
+			searches a fixed radius out from the destination node.
+			
+			\begin{figure}
+				\center
+				\begin{subfigure}{0.45\linewidth}
+					\center
+					\buildfig{figures/search-regions-espr.tex}
+					
+					\caption{ESPR}
+					\label{fig:search-regions-espr}
+				\end{subfigure}
+				\begin{subfigure}{0.45\linewidth}
+					\center
+					\buildfig{figures/search-regions-ner.tex}
+					
+					\caption{NER}
+					\label{fig:search-regions-espr}
+				\end{subfigure}
+				
+				\caption{The ESPR and NER algorithms attempt to connect the node marked
+				`D' to the closest node in the shaded region which is connected to the
+				source node, `S'. If no connected node is found in the shaded region, the
+				LDFR route is taken to `S'. The dotted line indicates the route chosen
+				from `D'.}
+				\label{fig:search-regions}
+			\end{figure}
+			
+			Unfortunately none of these routing algorithms make any allowance for the
+			avoidance of network faults. As a result their utility in real-world
+			systems is limited.
 		
-		Work on fault-tolerant routing in super computer networks often focuses
-		heavily on the issue of deadlock avoidance. Super computers typically rely
-		on router micro architecture and restricted routing rules \cite{dally93}.
-		In addition to the costs imposed by this method of deadlock avoidance, such
-		restrictions can be fatal to fault tolerance: e.g. enforced DOR or no-turn
-		rules may prevent routing around a fault or non-optimal paths may be
-		required \cite{dally04}.
-		
-		TODO DIAGRAM OF EXAMPLE DEADLOCK SCENARIO AND AVOIDANCE VIA ROUTING RULES
-		AND AN AVOIDABLE-IF-NOT-FOR-DEADLOCKS FAULT
-		
-		Some techniques attempt to exploit diversity in the available routes to
-		avoid faults in the same way that congestion may be avoided
-		\cite{rodrigo08}. Alternatively, when the normal routing mechanism fails, a
-		simple but non-optimal technique may be used in place. For example,
-		\cite{puente07} uses an adaptive routing scheme but in the presence of
-		faults, falls back on a ring network. This guarantees delivery at the cost
-		of the ring network being a very inefficient.
-		
-		Other techniques involve identifying of regions of the system surrounding a
-		fault and enforcing the use of less-optimal routing procedures in these
-		areas, for example, \cite{boppana95,mejia06} find subregions with faults
-		and use ring-type networks within these.
-		
-		TODO FIGURE?
-		
-		The BlueGene/L supercomputer \cite{adiga02} takes another approach to fault
-		tolerant routing. Faults are avoided by disabling a number of otherwise
-		functional `lamb' nodes in the machine to and from which routes generated
-		by the underlying routing algorithms are blocked due to the presence of the
-		fault \cite{ho04}. This approach allows simpler fault-oblivious routing
-		logic to be used in the presence of faults at the expense of some wasted
-		resources. In this case, instead of using less optimal routing strategies,
-		working nodes are sacrificed in order to ensure fault tolerance. This type
-		of approach is most appropriate when algorithmic routing is used and
-		routing rules are inflexible. SpiNNaker is table based and thus we have far
-		more flexibility on offer.
-		
-		TODO: FIGURE SHOWING LAMB NODE SOLUTION WORKING
-		
-		Other algorithms proposed for the BlueGene architecture attempt to avoid
-		the need for lamb nodes by generating routes which reach their destination
-		via a `proxy' node \cite{gomez04}. By appropriately selecting the location
-		of such a proxy, the existing routing algorithm used by the system can be
-		guaranteed to select a route free of faults.
-		
-		TODO: EXAMPLE OF PROXY ROUTING TO AVOID FAULT
-		
-		Finally, many algorithms in in the field are distributed and use only local
-		information along with limited information from their peers to generate
-		routes \cite{fick09b}. In SpiNNaker, route generation is conventionally
-		carried out centrally since no special on-chip hardware facilities exist
-		for route generation. Centralised route generation also enables the routing
-		algorithm to consider all available routes. As a result, there is little
-		incentive for the use of distributed routing algorithms on SpiNNaker since
-		global system information could be compactly shared for one-off routing
-		passes.
-		
-		Algorithms for other architectures such as IP networks tend to be poor fits
-		for static, regular network topologies since they use expensive graph-based
-		algorithms for route discovery which aren't necessary here. They also tend
-		to heavily feature graph topology discovery etc. which aren't needed here.
-		
-		Work on fault-tolerance in data centre networks does exploit the regularity
-		of the network topology in routing algorithms \cite{guo08,liao12}.
-		Unfortunately, the approaches used are not general enough to be applied to
-		mesh-like topologies such as the one in SpiNNaker.
-		
-		Outside the field of computer networks, routing algorithms used to route
-		wires across the surfaces of chips are required to solve similar problems
-		to fault-tolerant network routing problems in mesh networks. Like mesh
-		networks, the routes must be defined within a regular Manhattan geometry
-		and congested areas, rather than faults must be avoided by the algorithms
-		\cite{kahng11}.  Unfortunately, these algorithms are designed for
-		occasional batch operation prior to the multi-month process of chip
-		manufacturing and so runtimes of hours or days are commonplace
-		\cite{nam08}. As such these algorithms would be inappropriate for use with
-		applications such as SpiNNaker where users' applications tend to be
-		short-lived and thus routing should not be allowed to dominate runtime.
+		\subsection{Fault-tolerant routing}
+			
+			Numerous fault-tolerant routing algorithms have been proposed for
+			super-computer networks. These algorithms are largely constrained by the
+			need to maintain deadlock freedom. Since SpiNNaker's routers employ a
+			timeout based deadlock-breaking strategy, much of this effort is
+			unnecessary in SpiNNaker. As described below, this frequently renders
+			existing fault-tolerant routing algorithms unnecessarily complex and
+			inflexible.
+			
+			Deadlocks occur in a network if a cyclic dependency exists on any limited
+			resource in the network. For example, as illustrated in figure
+			\ref{fig:ring-deadlock}, in a ring network a deadlock may form when every
+			node is waiting on the next node to accept a packet before accepting new
+			packets from the previous node.
+			
+			\begin{figure}
+				\center
+				\buildfig{figures/ring-deadlock.tex}
+				
+				\caption{A deadlock in a ring network where each node is waiting for
+				the next to accept a packet before accepting any further packets.}
+				\label{fig:ring-deadlock}
+			\end{figure}
+			
+			To prevent deadlocks, combinations of router microarchitectural features
+			and routing restrictions may be employed. For example, a simple
+			deadlock-free routing algorithm for mesh and torus networks mandates the
+			use of DOR \cite{dally93}. Packets travelling in a -ve direction along
+			each axis take priority over those travelling in a +ve direction. Packets
+			travelling along the Y axis take priority over those travelling along the
+			X dimension. Given these rules it is possible to define a total ordering
+			on all hops in the network. Figure \ref{fig:deadlock-free-dor}
+			illustrates a $3\times3$ mesh network whose hops have been numbered
+			according to the total ordering defined above.  Any `X-then-Y' DOR route
+			through this network results in the use of hops labelled with strictly
+			increasing numbers. As a result, no cyclic dependencies (and thus no
+			deadlocks) may occur.
+			
+			\begin{figure}
+				\center
+				\buildfig{figures/deadlock-free-dor.tex}
+			
+				\caption{Deadlock-free routing of two example routes using DOR in a 2D
+				mesh topology. The numbers of the hops taken by each route are given on
+				the right.}
+				\label{fig:deadlock-free-dor}
+			\end{figure}
+			
+			Unfortunately, the routing restrictions imposed to ensure deadlock
+			freedom can result in fault-intolerant routing. In the example above, if
+			the node at the bottom-right corner of the figure was faulty, the dotted
+			example route would be blocked as no alternative routes are allowed.
+			
+			In practice, the routing rules used may be more relaxed, for example
+			requiring that any route whose length is equal to a DOR must exist to
+			guarantee routability \cite{rodrigo09}.
+			
+			Alternative routing strategies take a hybrid approach whereby an
+			efficient but fault-intollerant routing algorithm is used where possible
+			and in the presence of faults a less efficient but more robust strategy
+			is employed. For example, the Immucube network architecture employs three
+			virtual networks which operate independently over the same physical links
+			\cite{puente07}. Initially messages are routed using a high-performance
+			but potentially-deadlockable routing scheme in the first virtual network.
+			If a deadlock is occurs, the deadlocked packet is dropped into the second
+			virtual network in which packets are routed using a less efficient but
+			deadlock-free but fault-intolerant routing algorithm. Finally, upon
+			encountering a fault, packets are dropped onto the third virtual network
+			which forms a ring network routing packets to every node in the network.
+			
+			Releated approaches \cite{mejia06,boppana95} divide the network into
+			regions in which different routing rules are enforced to ensure deadlock
+			freedom and, when required, fault tolerance.
+			
+			TODO FIGURE?
+			
+			The BlueGene/L supercomputer \cite{adiga02} uses DOR for its torus
+			network and implements fault-tolerance by sacrificing otherwise
+			functioning `lamb' nodes to ensure no route passes through a known dead
+			link \cite{ho04}. In figure \ref{fig:lamb-nodes} an example scenario is
+			shown where a single dead node is present and all nodes in the same row
+			or column as the dead node have been made into lamb nodes. The lamb nodes
+			may not be used in an application except as a through-route for other
+			traffic. This pattern of lamb nodes guarantees that all dimension-order
+			routes between all pairs of non-lamb nodes are not obstructed by the
+			faulty node. This approach trades use of higher performance routing
+			logic for wasted resources. This type of approach is most appropriate
+			when algorithmic routing is used and routing rules are inflexible.
+			
+			\begin{figure}
+				\center
+				\buildfig{figures/lamb-nodes.tex}
+				
+				\caption{`Lamb' nodes may be disabled to ensure DOR will never
+				encounter a fault.}
+				\label{fig:lamb-nodes}
+			\end{figure}
+			
+			Other algorithms proposed for the BlueGene architecture attempt to avoid
+			the need for lamb nodes by generating routes which reach their destination
+			via a `proxy' node \cite{gomez04}. By appropriately selecting the location
+			of such a proxy, the existing routing algorithm used by the system can be
+			guaranteed to select a route free of faults.
+			
+			TODO: EXAMPLE OF PROXY ROUTING TO AVOID FAULT
+			
+			Finally, many algorithms in in the field are distributed and use only local
+			information along with limited information from their peers to generate
+			routes \cite{fick09b}. In SpiNNaker, route generation is conventionally
+			carried out centrally since no special on-chip hardware facilities exist
+			for route generation. Centralised route generation also enables the routing
+			algorithm to consider all available routes. As a result, there is little
+			incentive for the use of distributed routing algorithms on SpiNNaker since
+			global system information could be compactly shared for one-off routing
+			passes.
+			
+			Algorithms for other architectures such as IP networks tend to be poor fits
+			for static, regular network topologies since they use expensive graph-based
+			algorithms for route discovery which aren't necessary here. They also tend
+			to heavily feature graph topology discovery etc. which aren't needed here.
+			
+			Work on fault-tolerance in data centre networks does exploit the regularity
+			of the network topology in routing algorithms \cite{guo08,liao12}.
+			Unfortunately, the approaches used are not general enough to be applied to
+			mesh-like topologies such as the one in SpiNNaker.
+			
+			Outside the field of computer networks, routing algorithms used to route
+			wires across the surfaces of chips are required to solve similar problems
+			to fault-tolerant network routing problems in mesh networks. Like mesh
+			networks, the routes must be defined within a regular Manhattan geometry
+			and congested areas, rather than faults must be avoided by the algorithms
+			\cite{kahng11}.  Unfortunately, these algorithms are designed for
+			occasional batch operation prior to the multi-month process of chip
+			manufacturing and so runtimes of hours or days are commonplace
+			\cite{nam08}. As such these algorithms would be inappropriate for use with
+			applications such as SpiNNaker where users' applications tend to be
+			short-lived and thus routing should not be allowed to dominate runtime.
 	
 	\section{Fault-tolerant multicast routing}
 		

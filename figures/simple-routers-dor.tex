@@ -1,0 +1,15 @@
+\begin{tikzpicture}[thick, scale=0.6]
+	% #1 dx
+	% #2 dy
+	% #3 dz
+	\newcommand{\drawroute}[3]{
+		\minimiseXYZ{#1}{#2}{#3}
+		\draw [hexagonXYZ] (0, 0, 0) --
+		      ++(\mx, 0, 0) --
+		      ++(0, \my, 0) --
+		      ++(0, 0, \mz);
+	}
+	
+	\input{figures/simple-routers-common.tex}
+	
+\end{tikzpicture}

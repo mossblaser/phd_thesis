@@ -1,0 +1,44 @@
+\begin{tikzpicture}[thick, scale=0.6]
+	% #1 dx
+	% #2 dy
+	% #3 dz
+	\newcommand{\drawroute}[3]{
+		\minimiseXYZ{#1}{#2}{#3}
+		
+		% The three segments
+		\ifthenelse{\mz = 0}{
+			\pgfmathtruncatemacro{\xa}{\mx}
+			\pgfmathtruncatemacro{\ya}{0}
+			\pgfmathtruncatemacro{\za}{0}
+			
+			\pgfmathtruncatemacro{\xb}{0}
+			\pgfmathtruncatemacro{\yb}{\my}
+			\pgfmathtruncatemacro{\zb}{0}
+		}{\ifthenelse{\my = 0}{
+			\pgfmathtruncatemacro{\xa}{0}
+			\pgfmathtruncatemacro{\ya}{0}
+			\pgfmathtruncatemacro{\za}{\mz}
+			
+			\pgfmathtruncatemacro{\xb}{\mx}
+			\pgfmathtruncatemacro{\yb}{0}
+			\pgfmathtruncatemacro{\zb}{0}
+		}{ % \mx = 0
+			\pgfmathtruncatemacro{\xa}{0}
+			\pgfmathtruncatemacro{\ya}{\my}
+			\pgfmathtruncatemacro{\za}{0}
+			
+			\pgfmathtruncatemacro{\xb}{0}
+			\pgfmathtruncatemacro{\yb}{0}
+			\pgfmathtruncatemacro{\zb}{\mz}
+		}}
+		
+		\draw [hexagonXYZ] (0, 0, 0) --
+		      ++(\xa, \ya, \za) --
+		      ++(\xb, \yb, \zb);
+	}
+	
+	\input{figures/simple-routers-common.tex}
+	
+\end{tikzpicture}
+
+

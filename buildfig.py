@@ -40,11 +40,11 @@ LATEX_TOC_FILES = ("toc", "aux", "bib")
 running pdflatex, a further LaTeX compilation pass is necessary."""
 
 LATEX_STUB = r"""
-    \documentclass[12pt]{{standalone}}
-    \input{{thesis-env.tex}}
-    \begin{{document}}
-        \input{{{}}}
-    \end{{document}}
+    \documentclass[12pt]{{standalone}}%
+    \input{{thesis-env.tex}}%
+    \begin{{document}}%
+        \input{{{}}}%
+    \end{{document}}%
 """
 """A LaTeX document stub into which {} is substituted for the filename of a
 target LaTeX file to build."""

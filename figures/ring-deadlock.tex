@@ -1,0 +1,54 @@
+\begin{tikzpicture}[thick]
+	\pgfmathtruncatemacro{\numnodes}{4}
+	\pgfmathtruncatemacro{\bufsize}{3}
+	
+	\pgfmathsetlengthmacro{\bufheight}{0.4cm}
+	
+	\coordinate (last node) at (0, 0);
+	\foreach \n in {1,...,\numnodes}{
+		
+		% Draw node's buffer
+		\coordinate (last slot) at ([xshift=1.5cm] last node);
+		\foreach \s in {1,...,\bufsize}{
+			\node (node\n slot\s)
+			      [ right=0.1*\bufheight of last slot
+			      , fill=gray
+			      , rectangle
+			      , inner sep=0
+			      , minimum width=\bufheight
+			      , minimum height=\bufheight
+			      ] {};
+			\coordinate (last slot) at (node\n slot\s.east);
+		}
+		
+		
+		% Buffer Border
+		\draw ([shift={(-0.1*\bufheight, -0.1*\bufheight)}]node\n slot1.south west)
+		      rectangle
+		      ([shift={(0.1*\bufheight, 0.1*\bufheight)}]node\n slot\bufsize.north east);
+		\coordinate (node\n in) at ([xshift=-0.1*\bufheight]node\n slot1.west);
+		\coordinate (node\n out) at ([xshift=0.1*\bufheight]node\n slot\bufsize.east);
+		
+		% Node label
+		\node (label)
+		      at ([yshift=0.5em]$(node\n slot1.north)!0.5!(node\n slot\bufsize.north)$)
+		      [anchor=south]
+		      {Node \n};
+		
+		% Node Border
+		\draw [ultra thick]
+		      ([shift={(-0.7em, -0.7em)}]node\n slot1.south west)
+		      rectangle
+		      ([shift={(0.7em, 0.3em)}]node\n slot\bufsize.north east |- label.north);
+		
+		\coordinate (last node) at (last slot);
+	}
+	
+	% Links
+	\foreach [count=\x] \xx in {2,...,\numnodes}{
+		\draw [->] (node\x out) -- (node\xx in);
+	}
+	\draw [->, rounded corners]
+	      (node\numnodes out) -| ++(2em, -2.5em)
+	      -| ([xshift=-2em]node1in) -- (node1in);
+\end{tikzpicture}
