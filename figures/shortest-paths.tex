@@ -1,0 +1,19 @@
+\pgfmathtruncatemacro{\width}{6}%
+\pgfmathtruncatemacro{\height}{6}%
+\newcommand{\diagram}[1]{%
+	\begin{tikzpicture}[thick, scale=0.4]
+		\foreach \x in {1,...,\width}{
+			\foreach \y in {1,...,\height}{
+				\node (n\x\y) at (\x, \y)
+				      [ fill
+				      , circle
+				      , minimum width=0.2em
+				      , inner sep=0
+				      ]
+				      {};
+			}
+		}
+		
+		\draw #1;
+	\end{tikzpicture}%
+}%

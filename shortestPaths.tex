@@ -1,11 +1,28 @@
-\chapter{Finding shortest paths in SpiNNaker's network}
+\chapter{Finding shortest path vectors in SpiNNaker's network}
 	
-	In the Manhattan geometry used in conventional torus topologies, computing a
-	minimal route or distance between two points is trivial. In hexagonal torus
-	topologies, this computation is less straight-forward. In this chapter I
-	describe a more elegant (and marginally more efficient) function for
-	computing shortest path routes in hexagonal toruses than the current
-	brute-force state-of-the-art approach.
+	Once a SpiNNaker machine has been constructed as described in the previous
+	chapter, its network forms a large hexagonal torus topology. To exploit this
+	network routing algorithms must be used to generate routes for packets to
+	follow between nodes. As well as ensuring that packets arrive at the correct
+	destination, routing algorithms often attempt to produce routes which make
+	efficient use of the network. This often involves attempting to reduce
+	congestion by ensuring packets do not travel further through the network than
+	absolutely necessary.
+	
+	Many popular routing algorithms for torus topologies, including all published
+	algorithms designed for SpiNNaker's hexagonal torus topology
+	\cite{davies12,navaridas14}, internally function by computing shortest path
+	vectors and generating routes from them. Existing methods of calculating
+	shortest path vectors in hexagonal torus topologies are unable to generate
+	all possible shortest path vectors and, as a result, reduces the diversity of
+	routes produced by routing algorithms, potentially worsening network
+	contention.
+	
+	In this chapter I describe a novel technique for computing shortest path
+	vectors in hexagonal torus topologies which yields \emph{all} possible
+	shortest path vectors for any pair of nodes. Further, implementations of this
+	new technique execute an order of magnitude faster than the existing
+	alternatives.
 	
 	\section{Related work}
 		
@@ -13,6 +30,64 @@
 		dimensions then the next. For mesh topologies this requires computing a
 		vector from the source to the sink and is straightforward:
 		
+		\subsection{Shortest path vectors and routing}
+	
+			A shortest path between two points in a torus topology is a sequence of
+			`hops' between connected nodes which uses the minimum possible number of
+			hops. Figure \ref{fig:shortest-paths} shows four paths between a pair of
+			points in a (non-hexagonal) 2D torus topology. For the two points in the
+			example, no path with fewer than five hops exists making all four examples
+			`shortest paths'.
+			
+			\begin{figure}
+				\center
+				\begin{subfigure}[b]{0.24\linewidth}
+					\center
+					\buildfig{figures/shortest-paths-dor.tex}
+					\caption{}
+					\label{fig:shortest-paths-dor}
+				\end{subfigure}%
+				\begin{subfigure}[b]{0.24\linewidth}
+					\center
+					\buildfig{figures/shortest-paths-zig-zag.tex}
+					\caption{}
+					\label{fig:shortest-paths-zig-zag}
+				\end{subfigure}%
+				\begin{subfigure}[b]{0.24\linewidth}
+					\center
+					\buildfig{figures/shortest-paths-wrap-dor.tex}
+					\caption{}
+					\label{fig:shortest-paths-wrap-dor}
+				\end{subfigure}%
+				\begin{subfigure}[b]{0.24\linewidth}
+					\center
+					\buildfig{figures/shortest-paths-wrap-zig-zag.tex}
+					\caption{}
+					\label{fig:shortest-paths-wrap-zig-zag}
+				\end{subfigure}%
+				
+				\caption{Shortest-paths between two points in a 2D torus topology.}
+				\label{fig:shortest-paths}
+			\end{figure}
+			
+			Shortest paths are typically generated in two steps. In the first step, a
+			`shortest path vector' from the starting node to the destination node is
+			computed. In the second step, a path is generated from this vector.
+			
+			In the example in figure \ref{fig:shortest-paths}, the vectors $(3, 2)$ and
+			$(-3, 2)$ both describe the relationship between the bottom-left and
+			top-right connected nodes. A `Manhattan' path is then constructed according
+			to either of these vectors yields a shortest path. For example, figures
+			\ref{fig:shortest-paths-dor} and \ref{fig:shortest-paths-zig-zag} show
+			shortest paths built from the vector $(3, 2)$ and figures
+			\ref{fig:shortest-paths-wrap-dor} and \ref{fig:shortest-paths-wrap-zig-zag}
+			show shortest paths built from the vector $(-3, 2)$.
+			
+			Many simple but popular routing algorithms for torus topologies function by
+			computing a shortest path vector from the source to destination node and
+			then using a particular rule for generating a path from that vector. For
+			example, 
+	
 		\subsection{Mesh Networks}
 			
 			TODO DESCRIBE MESH CALCULATION
