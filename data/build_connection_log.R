@@ -11,9 +11,9 @@ connection_log <- wiring_log %>%
 
 connection_log$connection_type = factor(connection_log$connection_type)
 
-print("Max connection duration")
 max_duration <- max(connection_log$duration)
-print(max_duration)
+# print("Max connection duration")
+# print(max_duration)
 
 num_bins <- 25
 bins <- seq(0, max_duration, length.out=num_bins)
@@ -24,4 +24,4 @@ d$inter_cabinet <- hist(filter(connection_log, connection_type=="inter-cabinet")
 d$inter_frame <- hist(filter(connection_log, connection_type=="inter-frame")$duration, bins, plot=FALSE)$counts
 d$intra_frame <- hist(filter(connection_log, connection_type=="intra-frame")$duration, bins, plot=FALSE)$counts
 
-write.csv(d, "data/connection_log.csv", quote=FALSE)
+write.csv(d, commandArgs(TRUE)[1], quote=FALSE)

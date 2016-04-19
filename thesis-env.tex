@@ -79,13 +79,12 @@
 
 % Build (and input) a LaTeX figure, recompiling only if necessary
 \newcommand{\buildfig}[1]{%
-	\input{|"python buildfig.py #1"}%
+  \input{|"python buildfig.py #1"}%
+  \includegraphics{\filename}
 }
 
-% Build a LaTeX script, recompiling if necessary. Does not include the compiled
-% document. This may be used, e.g., for running analysis scripts on raw data.
-\newcommand{\builddata}[1]{%
-	\input{|"python buildfig.py --no-includegraphics #1"}%
+\newcommand{\buildfile}[2]{%
+  \input{|"python buildfig.py --extension #2 --script #1"}%
 }
 
 % A colour to use when drawing the back of a sheet of paper

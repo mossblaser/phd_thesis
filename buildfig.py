@@ -5,15 +5,28 @@ r"""Builds figures and caches the resulting PDFs.
 A \buildfig LaTeX macro as defined below may be substituted for \input in 99%
 of cases to result in the same behaviour but with the resulting figure cached.
 
+    % Build a TeX figure and include it right here.
+    %  \buildfig{figures/my-figure.tex}
     \newcommand{\buildfig}[1]{%
       \input{|"python buildfig.py #1"}%
+      \includegraphics{\filename}
     }
 
-This script automatically compiles the wrapped TeX file in a 'standalone'
-environment as many times as required. The resulting PDF is stored and an
-\includegraphics snippet which displays the figure is printed on standard out.
-Future calls will not rebuild the figure unless the figure (or any file it
-mentions) changes. The full chain of dependencies is checked where possible.
+In this mode the script automatically compiles the wrapped TeX file in a
+'standalone' environment as many times as required. The resulting PDF filename
+is assigned to \filename by buildfig.py and this is then displayed using
+\includegraphics. Future calls will not rebuild the figure unless the figure
+(or any file it mentions) changes. The full chain of dependencies is checked
+where possible.
+
+A script may be executed and the output filename captured using:
+    
+    % Run a script and put its output file in \filename
+    %  \buildfile{scripts/my-script.py {OUTPUT} }{.dat}
+    %  \myfancymacro{\filename}
+    \newcommand{\buildfile}[2]{%
+      \input{|"python buildfig.py --extension #2 --script #1"}%
+    }
 """
 
 import sys
@@ -26,6 +39,7 @@ import contextlib
 import tempfile
 import logging
 import subprocess
+import shlex
 
 from collections import deque
 
@@ -185,15 +199,16 @@ def _figure_hash(filename, all_files):
     return _hash_files(dependencies, stub)
 
 
-def _normalised_filename(filename, filehash):
+def _normalised_filename(filename, filehash, extension):
     """Return a normalised filename for the cached built figure."""
     # Sanitise the filename
     alphabet = "abcdefghijklmnopqrstuvwxyz"
     alphabet += alphabet.upper()
     alphabet += "0123456789"
+    filename = "__".join(filename)
     filename = "".join(c if c in alphabet else "_" for c in filename)
     
-    return(os.path.join(CACHE_DIR, "{}_{}.pdf".format(filename, filehash)))
+    return(os.path.join(CACHE_DIR, "{}_{}{}".format(filename, filehash, extension)))
 
 
 def main(args=None):
@@ -206,25 +221,49 @@ def main(args=None):
     parser = argparse.ArgumentParser(
         description="Build a LaTeX figure.")
     parser.add_argument(
-        "figure",
-        help="The filename of a tex file containing a figure to build.")
+        "figure", nargs="?",
+        help="The filename of a tex file containing a figure to build. "
+             "Ignored when --script is used.")
+    parser.add_argument(
+        "--script", "-s", nargs=argparse.REMAINDER,
+        help="Run the supplied script within which {output} will be "
+             "substituted for the output filename.")
+    parser.add_argument(
+        "--extension", "-e", default=".pdf",
+        help=r"File extension appended to output filenames.")
+    
     parser.add_argument(
         "--dependencies", "-d", action="store_true",
         help=r"List the dependencies of a figure and quit.")
-    parser.add_argument(
-        "--no-includegraphics", "-n", action="store_true", default=False,
-        help=r"Don't print an \includegraphics command to include the "
-             r"compiled PDF.")
     parser.add_argument(
         "--output", "-o",
         help=r"Write the output PDF to the supplied file-name.")
     args = parser.parse_args(args)
     
-    # Fail if the figure does not exist
-    if not os.path.isfile(args.figure):
-        print(r"\PackageError{{buildfig}}"
-              r"{{File not found: {}}}{{}}".format(args.figure))
-        return 0
+    # Sanity check arguments
+    if args.script:
+        args.figure = args.script
+        
+        # Fail if output filename not passed in (and thus will never be
+        # created and cached...)
+        if not any("{output}" in s for s in args.figure):
+            print(r"\PackageError{{buildfig}}"
+                  r"{output} not present in command}{}")
+            return 1
+    else:
+        # Fail if multiple args...
+        if args.figure is None:
+            print(r"\PackageError{buildfig}"
+                  r"{Expected an argument.}{}")
+            return 1
+        
+        args.figure = [args.figure]
+        
+        # Fail if the figure does not exist
+        if not os.path.isfile(args.figure[0]):
+            print(r"\PackageError{{buildfig}}"
+                  r"{{File not found: {}}}{{}}".format(args.figure))
+            return 1
     
     # Enumeration of all files in the directory tree, used by various utilities
     all_files = set(_iter_all_files("."))
@@ -237,23 +276,28 @@ def main(args=None):
     
     # Find out if the figure has been built yet
     filehash = _figure_hash(args.figure, all_files)
-    output_filename = _normalised_filename(args.figure, filehash)
+    output_filename = _normalised_filename(args.figure, filehash,
+                                           args.extension)
     
     # Build the file if it doesn't exist yet
     if not os.path.isfile(output_filename):
         os.makedirs(os.path.dirname(output_filename), exist_ok=True)
-        returncode = _compile_figure(args.figure, output_filename)
+        if args.script:
+            script_args = " ".join(shlex.quote(s.format(output=output_filename))
+                                   for s in args.figure)
+            returncode = subprocess.call(script_args, shell=True)
+        else:
+            returncode = _compile_figure(args.figure[0], output_filename)
         
         # Fail if could not build
         if returncode:
             print(r"\PackageError{{buildfig}}"
                   r"{{Could not build {}}}{{See above}}".format(
-                      args.figure))
+                      " ".join(args.figure)))
             return returncode
     
-    # Produce some LaTeX to display the figure
-    if not args.no_includegraphics:
-        print(r"\includegraphics{{{}}}".format(output_filename))
+    # Define the filename in LaTeX.
+    print(r"\def\filename{{{}}}".format(output_filename))
     
     # Copy the figure to the specified location
     if args.output is not None:

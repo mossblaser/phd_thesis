@@ -1,4 +1,7 @@
 \begin{tikzpicture}[thick]
+	% Preprocess the data for plotting
+	\buildfile{Rscript data/build_connection_log.R {output}}{.csv}
+	
 	\begin{axis}[ ybar stacked
 	            , ymin=0
 	            , xmin=0
@@ -9,11 +12,11 @@
 	            %, tick align=inside
 	            ]
 		\addplot table [x=duration, y=intra_frame, col sep=comma]
-		         {data/connection_log.csv};
+		         {\filename};
 		\addplot table [x=duration, y=inter_frame, col sep=comma]
-		         {data/connection_log.csv};
+		         {\filename};
 		\addplot table [x=duration, y=inter_cabinet, col sep=comma]
-		         {data/connection_log.csv};
+		         {\filename};
 		
 		\legend{Intra-frame,Inter-frame,Inter-cabinet}
 	\end{axis}
