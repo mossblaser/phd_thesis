@@ -1,0 +1,190 @@
+% This file is a library of drawing macros!
+% \begin{tikzpicture}
+%   \input{figures/distance-map.tex}
+%   \meshExample{x}{y}
+%   \torusExample{x}{y}
+%   \hexMeshExample{x}{y}
+%   \hexTorusExample{x}{y}
+% \end{tikzpicture}
+
+\pgfmathsetmacro{\scale}{3.5}
+\pgfmathtruncatemacro{\numrings}{20}
+
+% X marks the origin...
+% #1 tikz location
+\newcommand{\centermark}[1]{
+	\node [red, inner sep=0, font=\large]
+	      at (#1)
+	      {\contour{white}{$\times$}};
+}
+
+% 2D mesh with contour lines
+% #1 origin x
+% #2 origin y
+\newcommand{\meshExample}[2]{
+	\buildfile{python figures/distance_gradient.py {output} --2D --mesh --origin #1 #2}{.png}
+	
+	\begin{scope}[scale=\scale, anchor=center]
+		% Image
+		\pgfmathsetlengthmacro{\height}{\scale cm}
+		\pgfmathsetlengthmacro{\width}{\scale cm}
+		\node [inner sep=0, anchor=south west]
+		      at (0,0)
+		      {\includegraphics[width=\width,height=\height]{\filename}};
+		
+		% Contour Lines
+		\begin{scope}[white]
+			\clip (0,0) -- (1,0) -- (1,1) -- (0,1) -- cycle;
+			\foreach \r in {0.5,1.0,...,20.0}{
+				\node [ draw
+				      , diamond
+				      , inner sep=0
+				      , minimum size=1.3*\r cm
+				      ] at (#1, #2) {};
+			}
+		\end{scope}
+		
+		% Border
+		\draw (0,0) -- (1,0) -- (1,1) -- (0,1) -- cycle;
+		
+		% Center
+		\coordinate (center) at (#1, #2);
+		\centermark{center}
+	\end{scope}
+}
+
+% 2D torus with contour lines
+% #1 origin x
+% #2 origin y
+\newcommand{\torusExample}[2]{
+	\buildfile{python figures/distance_gradient.py {output} --2D --torus --origin #1 #2}{.png}
+	
+	
+	\begin{scope}[scale=\scale, anchor=center]
+		% Image
+		\pgfmathsetlengthmacro{\height}{\scale cm}
+		\pgfmathsetlengthmacro{\width}{\scale cm}
+		\node [inner sep=0, anchor=south west]
+		      at (0,0)
+		      {\includegraphics[width=\width,height=\height]{\filename}};
+		
+		% Contour Lines
+		\begin{scope}[white]
+			\clip (0,0) -- (1,0) -- (1,1) -- (0,1) -- cycle;
+			
+			\foreach \dx in {-1, 0, 1}{
+				\foreach \dy in {-1, 0, 1}{
+					\foreach \r in {0.5,1.0,...,20.0}{
+						\begin{scope}[shift={(\dx, \dy)}]
+							\clip (#1, #2) ++(-0.5, -0.5) --
+							      ++(1, 0) --
+							      ++(0, 1) --
+							      ++(-1, 0) --
+							      cycle;
+							\node [ draw
+							      , diamond
+							      , inner sep=0
+							      , minimum size=1.3*\r cm
+							      ] at (#1, #2) {};
+						\end{scope}
+					}
+				}
+			}
+		\end{scope}
+		
+		% Border
+		\draw (0,0) -- (1,0) -- (1,1) -- (0,1) -- cycle;
+		
+		% Center
+		\coordinate (center) at (#1, #2);
+		\centermark{center}
+	\end{scope}
+}
+
+% Hexagonal mesh with contour lines
+% #1 origin x
+% #2 origin y
+\newcommand{\hexMeshExample}[2]{
+	\buildfile{python figures/distance_gradient.py {output} --hex --mesh --origin #1 #2}{.png}
+	
+	
+	\begin{scope}[scale=\scale, anchor=center]
+		% Image
+		\pgfmathsetmacro{\xshift}{-cos(60)}
+		\pgfmathsetlengthmacro{\height}{\scale cm * sin(60)}
+		\pgfmathsetlengthmacro{\width}{\scale cm * (cos(60) + 1)}
+		\node [inner sep=0] at ([hexagonXYZ]0.5, 0.5)
+		      {\includegraphics[width=\width,height=\height]{\filename}};
+		
+		% Contour Lines
+		\begin{scope}[white]
+			\clip [hexagonXYZ] (0,0) -- (1,0) -- (1,1) -- (0,1) -- cycle;
+			\foreach \r in {0.5,1.0,...,20.0}{
+				\node [ draw
+				      , hexagonXYZ
+				      , hexagonBoard
+				      , inner sep=0
+				      , minimum size=0.9*\r cm
+				      ] at (#1, #2) {};
+			}
+		\end{scope}
+		
+		% Border
+		\draw [hexagonXYZ] (0,0) -- (1,0) -- (1,1) -- (0,1) -- cycle;
+		
+		% Center
+		\coordinate (center) at ([hexagonXYZ]#1, #2);
+		\centermark{center}
+	\end{scope}
+}
+
+% Hexagonal torus with contour lines
+% #1 origin x
+% #2 origin y
+\newcommand{\hexTorusExample}[2]{
+	\buildfile{python figures/distance_gradient.py {output} --hex --torus --origin #1 #2}{.png}
+	
+	\pgfmathsetmacro{\boardtochip}{cos(30)*2/3}
+	
+	\begin{scope}[scale=\scale, anchor=center]
+		% Image
+		\pgfmathsetlengthmacro{\height}{\scale cm * sin(60)}
+		\pgfmathsetlengthmacro{\width}{\scale cm * (cos(60) + 1)}
+		\node [inner sep=0] at ([hexagonXYZ]0.5, 0.5)
+		      {\includegraphics[width=\width,height=\height]{\filename}};
+		
+		% Contour Lines
+		\begin{scope}[white]
+			\clip [hexagonXYZ] (0,0) -- (1,0) -- (1,1) -- (0,1) -- cycle;
+			\foreach \dx in {-1, 0, 1}{
+				\foreach \dy in {-1, 0, 1}{
+					\foreach \r in {0.5,1.0,...,20.0}{
+						\begin{scope}[shift={([hexagonXYZ]#1+\dx, #2+\dy)}]
+							\clip [hexagonBoardXYZ]
+							      ++(0, \boardtochip, 0) --
+							      ++(\boardtochip, 0, 0) --
+							      ++(0, -\boardtochip, 0) --
+							      ++(0, 0, \boardtochip) --
+							      ++(-\boardtochip, 0, 0) --
+							      ++(0, \boardtochip, 0) --
+							      cycle;
+							\node [ draw
+							      , hexagonXYZ
+							      , hexagonBoard
+							      , inner sep=0
+							      , minimum size=0.9*\r cm
+							      ] {};
+						\end{scope}
+					}
+				}
+			}
+		\end{scope}
+		
+		% Border
+		\draw [hexagonXYZ] (0,0) -- (1,0) -- (1,1) -- (0,1) -- cycle;
+		
+		% Center
+		\coordinate (center) at ([hexagonXYZ]#1, #2);
+		\centermark{center}
+	\end{scope}
+}

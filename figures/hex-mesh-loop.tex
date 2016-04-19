@@ -1,0 +1,57 @@
+\begin{tikzpicture}[thick, scale=1.5, hexagonXYZ]
+	\pgfmathtruncatemacro{\width}{4}
+	\pgfmathtruncatemacro{\height}{4}
+	
+	% Clipping
+	\clip (1.5, 1.5) --
+	    ++(2, 0) --
+	    ++(0, 2) --
+	    ++(-2, 0) --
+	      cycle;
+	
+	% Links
+	\begin{scope}[help lines]
+		\foreach \x in {1,...,\width}{
+			\foreach [count=\y] \yy in {2,...,\height}{
+				\draw (\x, \y) -- (\x, \yy);
+			}
+		}
+		\foreach \y in {1,...,\height}{
+			\foreach [count=\x] \xx in {2,...,\width}{
+				\draw (\x, \y) -- (\xx, \y);
+			}
+		}
+		\foreach [count=\x] \xx in {2,...,\width}{
+			\foreach [count=\y] \yy in {2,...,\height}{
+				\draw (\x, \y) -- (\xx, \yy);
+			}
+		}
+	\end{scope}
+	
+	% Nodes
+	\foreach \x in {1,...,\width}{
+		\foreach \y in {1,...,\height}{
+			\node (node\x\y)
+			      [ fill
+			      , circle
+			      , minimum size=0.5em
+			      , inner sep=0
+			      ]
+			      at (\x, \y)
+			      {};
+		}
+	}
+	
+	% Route X+
+	\begin{scope}[ -{>[length=0.5em, width=0.5em]}
+	             , line width=0.2em
+	             , font=\footnotesize
+	             , inner sep=0.2em
+	             ]
+		\draw (node22) -- node [hexagonBoardXYZ,shift={(0, -0.3, 0)}] {X$^+$} (node32);
+		\draw (node32) -- node [hexagonBoardXYZ,shift={(0, 0, -0.3)}] {~Y$^+$} (node33);
+		\draw (node33) -- node [hexagonBoardXYZ,shift={(-0.3, 0, 0)}] {Z$^+$} (node22);
+	\end{scope}
+\end{tikzpicture}
+
+

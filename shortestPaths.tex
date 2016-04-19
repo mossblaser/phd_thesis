@@ -26,88 +26,134 @@
 	
 	\section{Related work}
 		
-		DOR routes follow a shortest-path from source to destination following one
-		dimensions then the next. For mesh topologies this requires computing a
-		vector from the source to the sink and is straightforward:
+		TODO: INTRODUCE SECTION
 		
-		\subsection{Shortest path vectors and routing}
-	
-			A shortest path between two points in a torus topology is a sequence of
-			`hops' between connected nodes which uses the minimum possible number of
-			hops. Figure \ref{fig:shortest-paths} shows four paths between a pair of
-			points in a (non-hexagonal) 2D torus topology. For the two points in the
-			example, no path with fewer than five hops exists making all four examples
-			`shortest paths'.
+		\begin{figure}
+			\center
+			
+			\begin{subfigure}{\linewidth}
+				\center
+				\buildfig{figures/distance-map-mesh.tex}
+				\caption{2D mesh topology}
+				\label{fig:distance-map-mesh}
+			\end{subfigure}
+			
+			\vspace{1em}
+			
+			\begin{subfigure}{\linewidth}
+				\center
+				\buildfig{figures/distance-map-torus.tex}
+				\caption{2D torus topology}
+				\label{fig:distance-map-torus}
+			\end{subfigure}
+			
+			\vspace{1em}
+			
+			\begin{subfigure}{\linewidth}
+				\center
+				\buildfig{figures/distance-map-hex-mesh.tex}
+				\caption{Hexagonal mesh topology}
+				\label{fig:distance-map-hex-mesh}
+			\end{subfigure}
+			
+			\vspace{1em}
+			
+			\begin{subfigure}{\linewidth}
+				\center
+				\buildfig{figures/distance-map-hex-torus.tex}
+				\caption{Hexagonal torus topology}
+				\label{fig:distance-map-hex-torus}
+			\end{subfigure}
+			
+			\caption{Plots showing distance from various locations marked
+			         {\color{red}$\times$}. Darker areas are further away. Contour
+			         lines show equidistant points.}
+			\label{fig:distance-map}
+		\end{figure}
+		
+		\subsection{Mesh Networks}
+			
+			In a mesh network topology, shortest path vectors are computed by taking
+			the element-wise difference between the source and destination nodes'
+			coordinates.
 			
 			\begin{figure}
 				\center
-				\begin{subfigure}[b]{0.24\linewidth}
-					\center
-					\buildfig{figures/shortest-paths-dor.tex}
-					\caption{}
-					\label{fig:shortest-paths-dor}
-				\end{subfigure}%
-				\begin{subfigure}[b]{0.24\linewidth}
-					\center
-					\buildfig{figures/shortest-paths-zig-zag.tex}
-					\caption{}
-					\label{fig:shortest-paths-zig-zag}
-				\end{subfigure}%
-				\begin{subfigure}[b]{0.24\linewidth}
-					\center
-					\buildfig{figures/shortest-paths-wrap-dor.tex}
-					\caption{}
-					\label{fig:shortest-paths-wrap-dor}
-				\end{subfigure}%
-				\begin{subfigure}[b]{0.24\linewidth}
-					\center
-					\buildfig{figures/shortest-paths-wrap-zig-zag.tex}
-					\caption{}
-					\label{fig:shortest-paths-wrap-zig-zag}
-				\end{subfigure}%
-				
-				\caption{Shortest-paths between two points in a 2D torus topology.}
-				\label{fig:shortest-paths}
+				\buildfig{figures/mesh-topology-coordinates.tex}
+				\caption{An example 2D mesh network with example shortest-path routes
+				from `A' to `B' and `B' to `C'.}
+				\label{fig:mesh-topology-coordinates}
 			\end{figure}
 			
-			Shortest paths are typically generated in two steps. In the first step, a
-			`shortest path vector' from the starting node to the destination node is
-			computed. In the second step, a path is generated from this vector.
+			For example, figure \ref{fig:mesh-topology-coordinates} illustrates a 2D
+			mesh topology. In this topology, the nodes labelled `A', `B' and `C' have
+			position vectors $(1, 2)$, $(4, 5)$ and $(6, 1)$ respectively. The
+			shortest path vector from node `A' to `B' is thus simply $(4, 5) - (1, 2)
+			= (3, 3)$ and from `B' to `C' is $(6, 1) - (4, 5) = (2, -4)$.
 			
-			In the example in figure \ref{fig:shortest-paths}, the vectors $(3, 2)$ and
-			$(-3, 2)$ both describe the relationship between the bottom-left and
-			top-right connected nodes. A `Manhattan' path is then constructed according
-			to either of these vectors yields a shortest path. For example, figures
-			\ref{fig:shortest-paths-dor} and \ref{fig:shortest-paths-zig-zag} show
-			shortest paths built from the vector $(3, 2)$ and figures
-			\ref{fig:shortest-paths-wrap-dor} and \ref{fig:shortest-paths-wrap-zig-zag}
-			show shortest paths built from the vector $(-3, 2)$.
+			A route may be produced from a shortest path vector by advancing the
+			number of hops specified for each dimension in the vector. For example
+			any permutation of the hops X$^+\,$X$^+\,$X$^+\,$Y$^+\,$Y$^+\,$Y$^+$, an
+			example of which is included in the figure. Likewise a route from `B' to
+			`C' may be constructed from any permutation of
+			X$^+\,$X$^+\,$Y$^-\,$Y$^-\,$Y$^-\,$Y$^-$.
 			
-			Many simple but popular routing algorithms for torus topologies function by
-			computing a shortest path vector from the source to destination node and
-			then using a particular rule for generating a path from that vector. For
-			example, 
-	
-		\subsection{Mesh Networks}
+			Many popular routing algorithms such as Dimension Order Routing (DOR),
+			Right-Turn Only Routing (RTOR) and Longest Dimension First Routing (LDFR)
+			\cite{dally04,davies12} directly follow the above procedure and just
+			prescribe a specific permutation of hop order. For example, DOR produces
+			routes with X hops first, Y hops second and so on.
 			
-			TODO DESCRIBE MESH CALCULATION
-			
-			For hexagonal toruses, you have three dimensions but they aren't
-			orthogonal... \cite{patel15}
+			The length of routes produced from a shortest path vector have a number
+			of hops proportional to the magnitude of the vector, thus a shortest path
+			vector yields a route with the minimum number of hops. For a two
+			dimensional vector $(a, b)$ the magnitude is given as:
+			\begin{equation}
+				\| (a, b) \| = \lvert a \rvert + \lvert b \rvert
+			\end{equation}
 		
 		\subsection{Hexagonal Mesh Networks}
 			
-			TODO DESCRIBE HEX MESH CALCULATION
+			In a hexagonal mesh topologies it is conventional to define three `axes'
+			X, Y and Z as shown in figure \ref{fig:hex-mesh-topology-coordinates}
+			\cite{patel15}. In this example, the three labelled nodes `A', `B' and
+			`C' may be given position vectors such as $(1, 1, 0)$, $(3, 2, 0)$ and $(0,
+			0, -7)$ respectively. As in other mesh networks, a vector between two
+			nodes is found by subtracting the nodes' vectors. For example, a vector
+			from `A' to `B' is $(3, 2, 0) - (1, 1, 0) = (2, 1, 0)$. This vector can
+			then be converted into a route in the same way as a mesh network
+			by taking any permutation of the three hops  X$^+\,$X$^+\,$Y$^+$.
 			
-			For non-hexagonal toruses you just recenter everything and take the normal
-			mesh vector. For hexagonal toruses this doesn't work.
+			\begin{figure}
+				\center
+				\buildfig{figures/hex-mesh-topology-coordinates.tex}
+				\caption{An example hexagonal mesh network topology.}
+				\label{fig:hex-mesh-topology-coordinates}
+			\end{figure}
+			
+			As explained in detail in appendix \ref{app:minimal-hex-coordinates},
+			there are an infinite number of vectors between any two points. For
+			example, the vectors $(1, 0, -1)$ and $(3, 2, 1)$ also reach node `B'
+			from `A' in the example. However, for a given pair of nodes, there is
+			always a single, unique vector whose magnitude is minimal which is
+			given by the function:
+			%
+			\begin{equation}
+				\operatorname{minimiseVector}(x,y,z)
+					= (x,y,z) - \operatorname{median}(x,y,z) \cdot (1,1,1)
+			\end{equation}
+			%
+			For hexagonal mesh networks, the shortest path vector between two nodes
+			is the unique minimised vector.
 		
 		\subsection{Torus Networks}
 			
-			TODO DESCRIBE HEX TORUS CALCULATION NOT WORKING WHEN RECENTERING
+			
 		
 		\subsection{Hexagonal Torus Networks}
 		
+			TODO DESCRIBE HEX TORUS CALCULATION NOT WORKING WHEN RECENTERING
+			
 			All known existing solutions perform this calculation by trying 12-possible
 			DOR routes and picking the shortest. TODO: CITE SOME IMPLEMENTATIONS
 			

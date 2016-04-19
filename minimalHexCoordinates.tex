@@ -1,0 +1,29 @@
+\chapter{Minimising hexagonal mesh coordinates}
+	\label{app:minimal-hex-coordinates}
+	
+	TODO: THE WHOLE THING REALLY...
+	
+	\begin{figure}
+		\center
+		\buildfig{figures/hex-mesh-loop.tex}
+		\caption{The vector $(1, 1, 1)$ in a hexagonal mesh topology results in
+		no movement.}
+		\label{fig:hex-mesh-loop}
+	\end{figure}
+	
+	Unlike (non-hexagonal) mesh topologies, the dimensions of a hexagonal
+	mesh are \emph{non-orthogonal}, the most notable side-effect of which is
+	that there are an infinite number of vectors (of an infinite number of
+	lengths) between a given pair of points. For example the vector $(3, 2,
+	1)$ also reaches `B' from `A' but does so in six hops. The reason for
+	this phenomenon is illustrated in figure \ref{fig:hex-mesh-loop} which
+	shows how the vector $(1, 1, 1)$ results in no movement. As a result,
+	adding or subtracting any multiple of $(1, 1, 1)$ from a vector yields an
+	equivalent, yet different, vector. For example, given our original vector
+	from `A' to `B', a new vector can be produced like so:
+	%
+	\begin{equation} (2, 1, 0) - (1, 1, 1) = (1, 0, -1) \end{equation}
+	%
+	This new vector yields routes requiring only two hops compared with three
+	for the original vector. Subtracting $(1, 1, 1)$ again, however, produces
+	$(0, -1, -2)$ with a greater magnitude of three.

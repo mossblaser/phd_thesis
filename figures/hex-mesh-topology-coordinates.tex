@@ -1,0 +1,56 @@
+\begin{tikzpicture}[thick, scale=0.5, hexagonXYZ]
+	\pgfmathtruncatemacro{\width}{8}
+	\pgfmathtruncatemacro{\height}{8}
+	
+	% Links
+	\begin{scope}[help lines]
+		\foreach \x in {1,...,\width}{
+			\foreach [count=\y] \yy in {2,...,\height}{
+				\draw (\x, \y) -- (\x, \yy);
+			}
+		}
+		\foreach \y in {1,...,\height}{
+			\foreach [count=\x] \xx in {2,...,\width}{
+				\draw (\x, \y) -- (\xx, \y);
+			}
+		}
+		\foreach [count=\x] \xx in {2,...,\width}{
+			\foreach [count=\y] \yy in {2,...,\height}{
+				\draw (\x, \y) -- (\xx, \yy);
+			}
+		}
+	\end{scope}
+	
+	% Nodes
+	\foreach \x in {1,...,\width}{
+		\foreach \y in {1,...,\height}{
+			\node (node\x\y)
+			      [ fill
+			      , circle
+			      , minimum size=0.5em
+			      , inner sep=0
+			      ]
+			      at (\x, \y)
+			      {};
+		}
+	}
+	
+	% Axes
+	\coordinate (axes) at (-6, \height/2);
+	\draw [->] (axes) -- ++(1.5, 0, 0) node [anchor=west]  {X};
+	\draw [->] (axes) -- ++(0, 1.5, 0) node [anchor=south east] {Y};
+	\draw [->] (axes) -- ++(0, 0, 1.5) node [anchor=north east] {Z};
+	
+	% Annotations
+	\foreach \x/\y/\lab in {2/2/A,4/3/B,8/8/C}{
+		\node [ draw=black
+		      , fill=white
+		      , font=\tiny
+		      , circle
+		      , inner sep=0.1em
+		      ]
+		      at (node\x\y)
+		      {\lab};
+	}
+\end{tikzpicture}
+
