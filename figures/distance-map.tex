@@ -113,8 +113,11 @@
 		\pgfmathsetmacro{\xshift}{-cos(60)}
 		\pgfmathsetlengthmacro{\height}{\scale cm * sin(60)}
 		\pgfmathsetlengthmacro{\width}{\scale cm * (cos(60) + 1)}
-		\node [inner sep=0] at ([hexagonXYZ]0.5, 0.5)
-		      {\includegraphics[width=\width,height=\height]{\filename}};
+		\begin{scope}
+			\clip [hexagonXYZ] (0,0) -- (1,0) -- (1,1) -- (0,1) -- cycle;
+			\node [inner sep=0] at ([hexagonXYZ]0.5, 0.5)
+			      {\includegraphics[width=\width,height=\height]{\filename}};
+		\end{scope}
 		
 		% Contour Lines
 		\begin{scope}[white]
@@ -150,8 +153,11 @@
 		% Image
 		\pgfmathsetlengthmacro{\height}{\scale cm * sin(60)}
 		\pgfmathsetlengthmacro{\width}{\scale cm * (cos(60) + 1)}
-		\node [inner sep=0] at ([hexagonXYZ]0.5, 0.5)
-		      {\includegraphics[width=\width,height=\height]{\filename}};
+		\begin{scope}
+			\clip [hexagonXYZ] (0,0) -- (1,0) -- (1,1) -- (0,1) -- cycle;
+			\node [inner sep=0] at ([hexagonXYZ]0.5, 0.5)
+			      {\includegraphics[width=\width,height=\height]{\filename}};
+		\end{scope}
 		
 		% Contour Lines
 		\begin{scope}[white]
