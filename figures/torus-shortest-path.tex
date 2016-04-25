@@ -1,0 +1,60 @@
+\pgfmathtruncatemacro{\width}{7}
+\pgfmathtruncatemacro{\height}{7}
+
+\pgfmathtruncatemacro{\widthh}{\width+1}
+\pgfmathtruncatemacro{\heightt}{\height+1}
+
+\newcommand{\drawgrid}{
+	\begin{scope}[help lines]
+		% Links
+		\foreach \x in {1,...,\width}{
+			\foreach [count=\y] \yy in {2,...,\height}{
+				\draw (\x, \y) -- (\x, \yy);
+			}
+		}
+		\foreach \y in {1,...,\height}{
+			\foreach [count=\x] \xx in {2,...,\width}{
+				\draw (\x, \y) -- (\xx, \y);
+			}
+		}
+		
+		% Wrapping Links
+		\foreach \x in {1,...,\width}{
+			\draw (\x, \height) -- ++(0, 0.5);
+			\draw (\x, 1) -- ++(0, -0.5);
+		}
+		\foreach \y in {1,...,\height}{
+			\draw (\width, \y) -- ++(0.5, 0);
+			\draw (1, \y) -- ++(-0.5, 0);
+		}
+	\end{scope}
+	
+	% Nodes
+	\foreach \x in {1,...,\width}{
+		\foreach \y in {1,...,\height}{
+			\node (node\x\y)
+			      [ fill
+			      , circle
+			      , minimum size=0.5em
+			      , inner sep=0
+			      ]
+			      at (\x, \y)
+			      {};
+		}
+	}
+}
+
+% #1 x
+% #2 y
+% #3 label
+\newcommand{\drawnode}[3]{
+	\node [ draw=black
+	      , fill=white
+	      , font=\tiny
+	      , circle
+	      , inner sep=0.1em
+	      ]
+	      at (node#1#2)
+	      {#3};
+}
+

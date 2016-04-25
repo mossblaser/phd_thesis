@@ -1,0 +1,12 @@
+\begin{tikzpicture}[thick, scale=0.5]
+	\input{figures/torus-shortest-path.tex}
+	\begin{scope}[xshift=1.5*\width cm]
+		\drawgrid
+		\draw [line width=0.3em]
+		      (4, 4) --
+		    ++(-2, 0) --
+		    ++(0, -3);
+		\drawnode{4}{4}{A}
+		\drawnode{2}{1}{B}
+	\end{scope}
+\end{tikzpicture}

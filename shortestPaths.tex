@@ -73,9 +73,9 @@
 		
 		\subsection{Mesh Networks}
 			
-			In a mesh network topology, shortest path vectors are computed by taking
-			the element-wise difference between the source and destination nodes'
-			coordinates.
+			In a (non-hexagonal) mesh network topology, shortest path vectors are
+			computed by taking the element-wise difference between the source and
+			destination nodes' coordinates.
 			
 			\begin{figure}
 				\center
@@ -108,21 +108,66 @@
 			of hops proportional to the magnitude of the vector, thus a shortest path
 			vector yields a route with the minimum number of hops. For a two
 			dimensional vector $(a, b)$ the magnitude is given as:
+			%
 			\begin{equation}
 				\| (a, b) \| = \lvert a \rvert + \lvert b \rvert
 			\end{equation}
 		
+		\subsection{Torus Networks}
+			
+			Computing shortest path vectors in (non-hexagonal) torus topologies is
+			also straight forward. As an example, lets find the shortest path vector
+			from node `A' to `B' in the 2D torus topology shown in figure
+			\ref{fig:torus-shortest-path-example}. First, both nodes are translated
+			such that the source node, `A', is at the centre of the network (figure
+			\ref{fig:torus-shortest-path-translate}). Note that this translation may
+			result in the destination node `wrapping around' the network. After
+			translation, the shortest path vector is computed as in a mesh topology.
+			As illustrated in \ref{fig:torus-shortest-path-routed}, the computed
+			shortest path vector may be used to produce routes between the two nodes
+			in their original positions.
+			
+			\begin{figure}
+				\center
+				\begin{subfigure}{0.3\linewidth}
+					\center
+					\buildfig{figures/torus-shortest-path-example.tex}
+					\caption{Original}
+					\label{fig:torus-shortest-path-example}
+				\end{subfigure}
+				\begin{subfigure}{0.3\linewidth}
+					\center
+					\buildfig{figures/torus-shortest-path-translate.tex}
+					\caption{Translated}
+					\label{fig:torus-shortest-path-translate}
+				\end{subfigure}
+				\begin{subfigure}{0.3\linewidth}
+					\center
+					\buildfig{figures/torus-shortest-path-routed.tex}
+					\caption{Routed}
+					\label{fig:torus-shortest-path-routed}
+				\end{subfigure}
+				
+				\caption{Finding shortest paths in a 2D torus topology.}
+				\label{fig:torus-shortest-path}
+			\end{figure}
+			
+			This process works because vectors from the centre (though not other
+			locations) of a torus topology are identical to those in mesh topologies
+			(see figures \ref{fig:distance-map-mesh} and
+			\ref{fig:distance-map-torus}).
+		
 		\subsection{Hexagonal Mesh Networks}
 			
-			In a hexagonal mesh topologies it is conventional to define three `axes'
-			X, Y and Z as shown in figure \ref{fig:hex-mesh-topology-coordinates}
+			In hexagonal mesh topologies it is conventional to define three `axes' X,
+			Y and Z as shown in figure \ref{fig:hex-mesh-topology-coordinates}
 			\cite{patel15}. In this example, the three labelled nodes `A', `B' and
-			`C' may be given position vectors such as $(1, 1, 0)$, $(3, 2, 0)$ and $(0,
-			0, -7)$ respectively. As in other mesh networks, a vector between two
-			nodes is found by subtracting the nodes' vectors. For example, a vector
-			from `A' to `B' is $(3, 2, 0) - (1, 1, 0) = (2, 1, 0)$. This vector can
-			then be converted into a route in the same way as a mesh network
-			by taking any permutation of the three hops  X$^+\,$X$^+\,$Y$^+$.
+			`C' may be given position vectors such as $(1, 1, 0)$, $(3, 2, 0)$ and
+			$(0, 0, -7)$ respectively. As in other mesh networks, a vector between
+			two nodes is found by subtracting the nodes' vectors. For example, a
+			vector from `A' to `B' is $(3, 2, 0) - (1, 1, 0) = (2, 1, 0)$. This
+			vector can then be converted into a route in the same way as a mesh
+			network by taking any permutation of the three hops  X$^+\,$X$^+\,$Y$^+$.
 			
 			\begin{figure}
 				\center
@@ -143,24 +188,132 @@
 					= (x,y,z) - \operatorname{median}(x,y,z) \cdot (1,1,1)
 			\end{equation}
 			%
-			For hexagonal mesh networks, the shortest path vector between two nodes
-			is the unique minimised vector.
-		
-		\subsection{Torus Networks}
+			An important side-effect of this function is that a minimised vector will
+			always contain at least one zero element meaning that shortest path
+			routes will use at most two of the three available dimensions.
 			
-			
+			To aid the reader's intuition, figure \ref{fig:distance-map-hex-mesh}
+			illustrates how distances grow in a hexagonal mesh topology.
 		
 		\subsection{Hexagonal Torus Networks}
-		
-			TODO DESCRIBE HEX TORUS CALCULATION NOT WORKING WHEN RECENTERING
 			
-			All known existing solutions perform this calculation by trying 12-possible
-			DOR routes and picking the shortest. TODO: CITE SOME IMPLEMENTATIONS
+			Unfortunately, unlike non-hexagonal torus topologies, the translation
+			technique cannot be used to compute shortest path vectors. As illustrated
+			in figures \ref{fig:distance-map-hex-mesh} and
+			\ref{fig:distance-map-hex-torus}, shortest path vectors from the center
+			of a hexagonal mesh network are not equivalent to those of a hexagonal
+			torus network.
 			
-			TODO DESCRIBE THE 12 ROUTES
+			Prior research into routing in SpiNNaker's network has been based on the
+			INSEE \cite{navaridas09,ghasempour15} interconnect simulator. Internally
+			INSEE tries a set of twelve candidate vectors and picks the shortest as
+			the shortest path vector to use for routing.
 			
-			As we'll show later this mechanism is not very elegant/efficient and more
-			importantly does not reveal all possible routes, e.g. those that spiral.
+			\begin{figure}
+				\center
+				\begin{subfigure}{0.45\linewidth}
+					\center
+					\buildfig{figures/insee-vector-candidates-no-wrap.tex}
+					\caption{$(\Delta_\textrm{X}, \Delta_\textrm{Y}) = (5,3)$}
+					\label{fig:insee-vector-candidates-no-wrap}
+				\end{subfigure}
+				\begin{subfigure}{0.45\linewidth}
+					\center
+					\buildfig{figures/insee-vector-candidates-wrap-x.tex}
+					\caption{$(\Delta'_\textrm{X}, \Delta_\textrm{Y}) = (-3,3)$}
+					\label{fig:insee-vector-candidates-wrap-x}
+				\end{subfigure}
+				
+				\vspace{1em}
+				
+				\begin{subfigure}{0.45\linewidth}
+					\center
+					\buildfig{figures/insee-vector-candidates-wrap-y.tex}
+					\caption{$(\Delta_\textrm{X}, \Delta'_\textrm{Y}) = (5,-5)$}
+					\label{fig:insee-vector-candidates-wrap-y}
+				\end{subfigure}
+				\begin{subfigure}{0.45\linewidth}
+					\center
+					\buildfig{figures/insee-vector-candidates-wrap.tex}
+					\caption{$(\Delta'_\textrm{X}, \Delta'_\textrm{Y}) = (-3,-5)$}
+					\label{fig:insee-vector-candidates-wrap}
+				\end{subfigure}
+				
+				\vspace{1em}
+				
+				% Key
+				\begin{tikzpicture}[thick]
+					\coordinate (last);
+					
+					% #1 colour
+					% #2 label
+					\newcommand{\colourkeyentry}[2]{
+						\node [#1] [right=of last, fill, rectangle, minimum size=1em] (last) {};
+						\node [right=0 of last] (last) {#2};
+					}
+					
+					\colourkeyentry{cb3class0}{$(\textrm{X}, \textrm{Y}, 0)$}
+					\colourkeyentry{cb3class1}{$(\textrm{X} - \textrm{Y}, 0, - \textrm{Y})$}
+					\colourkeyentry{cb3class2}{$(0, \textrm{Y} - \textrm{X}, - \textrm{X})$}
+					
+				\end{tikzpicture}
+				
+				\caption{The twelve candidate shortest-path vectors considered by INSEE
+				represented as dimension-order routes. $W=H=8$,
+				$(\Delta_\textrm{X},\Delta_\textrm{Y}) = (5, 3)$ and
+				$(\Delta'_\textrm{X},\Delta'_\textrm{Y}) = (-3, -5)$.}
+				\label{fig:insee-vector-candidates}
+			\end{figure}
+			
+			The twelve vectors considered are constructed as follows.
+			
+			First a shortest path vector from the source to target node are
+			constructed as if the network was a 2D mesh yielding a vector
+			$(\Delta_\textrm{X},\Delta_\textrm{Y})$. From this, another vector
+			$(\Delta'_\textrm{X},\Delta'_\textrm{Y})$, is defined:
+			%
+			\begin{align}
+				\Delta'_\textrm{X} &= \Delta_\textrm{X} - \operatorname{sign}(\Delta_\textrm{X})W
+				\\
+				\Delta'_\textrm{Y} &= \Delta_\textrm{Y} - \operatorname{sign}(\Delta_\textrm{Y})H
+			\end{align}
+			%
+			Where $W$ and $H$ are the width and height of the network respectively
+			(in nodes). This new vector yields routes from the source to destination
+			node that in a torus topology that \emph{always} wrap around the `X' and
+			`Y' dimensions.
+			
+			From the pair of vectors defined, four possible 2D vectors can be
+			produced: $(\Delta_\textrm{X},\Delta_\textrm{Y})$,
+			$(\Delta'_\textrm{X},\Delta_\textrm{Y})$,
+			$(\Delta_\textrm{X},\Delta'_\textrm{Y})$ and
+			$(\Delta'_\textrm{X},\Delta'_\textrm{Y})$. Further, each 2D vector may be
+			converted into one of three 3D vectors where either X, Y or Z are zero
+			for a total of twelve candidate vectors.  Figure
+			\ref{fig:insee-vector-candidates} illustrates all twelve candidate
+			vectors for an example pair of nodes.
+			
+			\begin{figure}
+				\center
+				\buildfig{figures/xyz-protocol-regions.tex}
+				
+				\caption{The four regions defined by the XYZ-protocol.}
+				\label{fig:xyz-protocol-regions}
+			\end{figure}
+			
+			A more efficient technique is proposed by Hoffmann and D\'es\'erable
+			called the XYZ-Protocol \cite{hoffmann15,hoffmann11}. If the source and
+			destination nodes are translated such that the source node lies at the
+			center of the topolgoy, the destination will lie in one of four regions
+			illustrated in figure \ref{fig:xyz-protocol-regions}.
+			
+			If the destination lies in regions 1 or 4, a route may be constructed as
+			if in a hexagonal mesh topology.
+			
+			Alternatively, if the destination lies in regions 2 or 3, the algorithm
+			tests whether taking a mesh-like route within the region or
+			wrapping-around either the X or Y dimension yields the shorter vector.
+			The shortest of these vectors is then chosen.
 			
 			TODO DESCRIBE SPIRAL ROUTES.
 			

@@ -186,11 +186,24 @@
 			}
 		\end{scope}
 		
+		% Define coordinates of useful locations
+		\coordinate (bottom left) at ([hexagonXYZ]0, 0, 0);
+		\coordinate (bottom right) at ([hexagonXYZ]1, 0, 0);
+		\coordinate (top right) at ([hexagonXYZ]1, 1, 0);
+		\coordinate (top left) at ([hexagonXYZ]0, 1, 0);
+		
+		\coordinate (bottom) at ([hexagonXYZ]0.5, 0, 0);
+		\coordinate (top) at ([hexagonXYZ]0.5, 1, 0);
+		\coordinate (left) at ([hexagonXYZ]0, 0.5, 0);
+		\coordinate (right) at ([hexagonXYZ]1, 0.5, 0);
+		
+		\coordinate (center) at ([hexagonXYZ]0.5, 0.5, 0);
+		
 		% Border
 		\draw [hexagonXYZ] (0,0) -- (1,0) -- (1,1) -- (0,1) -- cycle;
 		
-		% Center
-		\coordinate (center) at ([hexagonXYZ]#1, #2);
-		\centermark{center}
+		% Origin
+		\coordinate (origin) at ([hexagonXYZ]#1, #2);
+		\centermark{origin}
 	\end{scope}
 }

@@ -1,0 +1,10 @@
+\begin{tikzpicture}[thick, scale=0.5, hexagonXYZ]
+	\input{figures/insee-vector-candidates.tex}
+	\drawtorus
+	\drawroute{cb3class0}{(3, 4) -- ++(5, 0, 0)   -- ++(0, -5, 0)}  % XY
+	\drawroute{cb3class2}{(3, 4) -- ++(0, -10, 0) -- ++(0, 0, -5)}  % YZ
+	\drawroute{cb3class1}{(3, 4) -- ++(10, 0, 0)  -- ++(0, 0, 5)}   % XZ
+	\underdrawroute{cb3class2}{(3, 4) -- ++(0, -10, 0) -- ++(0, 0, -5)}  % YZ
+	\overdrawroute{cb3class0}{(3, 4) -- ++(5, 0, 0)   -- ++(0, -5, 0)}  % XY
+	\drawnodes
+\end{tikzpicture}

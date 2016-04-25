@@ -1,0 +1,82 @@
+\pgfmathtruncatemacro{\width}{8}
+\pgfmathtruncatemacro{\height}{8}
+\pgfmathtruncatemacro{\widthh}{\width+2}
+\pgfmathtruncatemacro{\heightt}{\height+2}
+
+% Clipping
+\newcommand{\drawtorus}{
+	\clip (1.5, 1.5) --
+	    ++(\width, 0) --
+	    ++(0, \height) --
+	    ++(-\width, 0) --
+	      cycle;
+	
+	% Links
+	\begin{scope}[help lines]
+		\foreach \x in {1,...,\widthh}{
+			\foreach [count=\y] \yy in {2,...,\heightt}{
+				\draw (\x, \y) -- (\x, \yy);
+			}
+		}
+		\foreach \y in {1,...,\heightt}{
+			\foreach [count=\x] \xx in {2,...,\widthh}{
+				\draw (\x, \y) -- (\xx, \y);
+			}
+		}
+		\foreach [count=\x] \xx in {2,...,\widthh}{
+			\foreach [count=\y] \yy in {2,...,\heightt}{
+				\draw (\x, \y) -- (\xx, \yy);
+			}
+		}
+	\end{scope}
+	
+	% Nodes
+	\foreach \x in {1,...,\widthh}{
+		\foreach \y in {1,...,\heightt}{
+			\node (node\x\y)
+			      [ fill
+			      , circle
+			      , minimum size=0.5em
+			      , inner sep=0
+			      ]
+			      at (\x, \y)
+			      {};
+		}
+	}
+}
+
+\newcommand{\drawnodes}{
+	% Annotations
+	\foreach \x/\y/\lab in {3/4/A,8/7/B}{
+		\node [ draw=black
+		      , fill=white
+		      , font=\tiny
+		      , circle
+		      , inner sep=0.1em
+		      ]
+		      at (node\x\y)
+		      {\lab};
+	}
+}
+
+% #1 colour/style
+% #2 \draw-like list of coordinates
+\newcommand{\drawroute}[2]{
+	\foreach \dx in {-1, 0, 1}{
+		\foreach \dy in {-1, 0, 1}{
+			\begin{scope}[shift={(\width*\dx, \height*\dy)}]
+				\draw [line width=0.3em] [#1] #2;
+			\end{scope}
+		}
+	}
+}
+% #1 colour/style
+% #2 \draw-like list of coordinates
+\newcommand{\overdrawroute}[2]{
+	\drawroute{#1] [line width=0.15em, shift={(0, 0, -0.18em/1cm)}}{#2}
+}
+% #1 colour/style
+% #2 \draw-like list of coordinates
+\newcommand{\underdrawroute}[2]{
+	\drawroute{#1] [line width=0.15em, shift={(0, -0.18em/1cm, 0)}}{#2}
+}

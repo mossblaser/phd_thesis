@@ -111,9 +111,10 @@ x1, y1 = args.origin
 w, h = args.dimensions
 for px in range(width):
     for py in range(height):
-        x2 = px / float(width)
-        y2 = py / float(height)
-        distances[(px, py)] = dist_fn(x1, y1, x2, y2, w, h)
+        x2 = px / args.resolution
+        y2 = py / args.resolution
+        d = dist_fn(x1, y1, x2, y2, w, h)
+        distances[(px, py)] = d
 
 # Normalise distances to range 0.0-1.0
 max_dist = max(distances.values())
