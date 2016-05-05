@@ -1,0 +1,125 @@
+\begin{tikzpicture}
+	\pgfmathtruncatemacro{\width}{15}
+	\pgfmathtruncatemacro{\height}{4}
+	\pgfmathtruncatemacro{\widthh}{\width+2}
+	\pgfmathtruncatemacro{\heightt}{\height+2}
+	
+	% Clipping
+	\newcommand{\drawtorus}{
+		\clip (1.5, 1.5) --
+		    ++(\width, 0) --
+		    ++(0, \height) --
+		    ++(-\width, 0) --
+		      cycle;
+		
+		% Links
+		\begin{scope}[help lines]
+			\foreach \x in {1,...,\widthh}{
+				\foreach [count=\y] \yy in {2,...,\heightt}{
+					\draw (\x, \y) -- (\x, \yy);
+				}
+			}
+			\foreach \y in {1,...,\heightt}{
+				\foreach [count=\x] \xx in {2,...,\widthh}{
+					\draw (\x, \y) -- (\xx, \y);
+				}
+			}
+			\foreach [count=\x] \xx in {2,...,\widthh}{
+				\foreach [count=\y] \yy in {2,...,\heightt}{
+					\draw (\x, \y) -- (\xx, \yy);
+				}
+			}
+		\end{scope}
+		
+		% Nodes
+		\foreach \x in {1,...,\widthh}{
+			\foreach \y in {1,...,\heightt}{
+				\node (node\x\y)
+				      [ fill
+				      , circle
+				      , minimum size=0.5em
+				      , inner sep=0
+				      ]
+				      at (\x, \y)
+				      {};
+			}
+		}
+	}
+	
+	\newcommand{\drawnodes}{
+		% Annotations
+		\foreach \x/\y/\lab in {3/3/A,14/4/B}{
+			\node [ draw=black
+			      , fill=white
+			      , font=\tiny
+			      , circle
+			      , inner sep=0.1em
+			      ]
+			      at (node\x\y)
+			      {\lab};
+		}
+	}
+	
+	% #1 colour/style
+	% #2 \draw-like list of coordinates
+	\newcommand{\drawroute}[2]{
+		\foreach \dx in {-2,...,2}{
+			\foreach \dy in {-2,...,2}{
+				\begin{scope}[shift={(\width*\dx, \height*\dy)}]
+					\draw [line width=0.3em] [#1] #2;
+				\end{scope}
+			}
+		}
+	}
+	% #1 colour/style
+	% #2 \draw-like list of coordinates
+	\newcommand{\overdrawroute}[2]{
+		\drawroute{#1] [line width=0.15em, shift={(0, 0.18em/1cm, 0)}}{#2}
+	}
+	% #1 colour/style
+	% #2 \draw-like list of coordinates
+	\newcommand{\overthirddrawroute}[2]{
+		\drawroute{#1] [line width=0.1em, shift={(0, 0.24em/1cm, 0)}}{#2}
+	}
+	% #1 colour/style
+	% #2 \draw-like list of coordinates
+	\newcommand{\underdrawroute}[2]{
+		\drawroute{#1] [line width=0.15em, shift={(0, -0.18em/1cm, 0)}}{#2}
+	}
+	% #1 colour/style
+	% #2 \draw-like list of coordinates
+	\newcommand{\underthirddrawroute}[2]{
+		\drawroute{#1] [line width=0.1em, shift={(0, -0.24em/1cm, 0)}}{#2}
+	}
+	
+	\begin{scope}[thick, scale=0.5, hexagonXYZ]
+		\drawtorus
+		\drawroute{cb3class1}{(3,3,0) -- ++(6,0,0) -- ++(0,0,-5)}
+		\drawroute{cb3class2}{(3,3,0) -- ++(2,0,0) -- ++(0,0,-9)}
+		\drawroute{cb3class0}{(3,3,0) -- ++(10,0,0)}
+		\drawroute{cb3class2}{(14,4,2) -- ++(0,0,-2)}
+		
+		\underthirddrawroute{cb3class1}{(3,3,0) -- ++(6,0,0) -- ++(0,0,-5)}
+		\overthirddrawroute{cb3class2}{(3,3,0) -- ++(2,0,0) -- ++(0,0,-6)}
+		
+		\overdrawroute{cb3class2}{(3,3,0) ++(2,0,-1) -- ++(0,0,-5)}
+		\underdrawroute{cb3class1}{(3,3,0) ++(2,0,0) -- ++(4,0,0) -- ++(0,0,-4)}
+		
+		\overthirddrawroute{cb3class0}{(13,4,1) -- ++(1, 0, 0) -- ++(0,0,-1)}
+		\drawnodes
+	\end{scope}
+	
+	% #1 colour
+	% #2 location
+	% #3 label
+	\newcommand{\colourkeyentry}[3]{
+		\node [#1] at (#2) [fill, rectangle, minimum size=1em] (swatch) {};
+		\node [right=0 of swatch] {#3};
+	}
+	
+	\coordinate (location) at ([xshift=1.5cm]$(node163)!0.5!(node164)$);
+	
+	\colourkeyentry{cb3class0}{[yshift=1.5em]location}{$(10,0,-1)$}
+	\colourkeyentry{cb3class1}{location}{$(6,0,-5)$}
+	\colourkeyentry{cb3class2}{[yshift=-1.5em]location}{$(2,0,-9)$}
+\end{tikzpicture}

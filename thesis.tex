@@ -82,9 +82,8 @@
 	% total wordcount.
 	\tableofcontents
 	\vfill
-	\noindent This thesis contains
-		\immediate\write18{texcount -1 -sum -inc thesis.tex > thesis.wordcount}%
-		\input{thesis.wordcount}words.
+	\noindent\immediate\write18{./wordcount.sh > thesis.wordcount}%
+		\input{thesis.wordcount}
 	
 	\clearpage
 	\listoffigures

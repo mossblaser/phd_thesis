@@ -1,0 +1,60 @@
+\begin{tikzpicture}[thick,scale=0.95]
+	\input{figures/distance-map.tex}
+	
+	% #1 Ratio left
+	% #2 Ratio right
+	\newcommand{\addnums}[2]{
+		\node [anchor=north] at ($(bottom left)!0.5!(bottom right)$)
+		      {$#1:#2$};
+		
+		\pgfmathsetmacro{\ratio}{#1/#2}
+		
+		\ifthenelse{\lengthtest{\ratio pt > 2pt}}{
+			% 2 < ratio
+			\coordinate (num 1) at ($(bottom left)!0.5!(top)$);
+			\coordinate (num 2) at ([shift={(150:1cm)}]bottom right);
+			\coordinate (num 3) at ([shift={(-30:1cm)}]top left);
+			\coordinate (num 4) at ($(bottom)!0.5!(top right)$);
+		}{\ifthenelse{\lengthtest{\ratio pt > 0.5pt}}{
+			% 0.5 < ratio <= 2
+			\coordinate (num 1) at ($(bottom left)!0.25!(top right)$);
+			\coordinate (num 2) at ([shift={(150:1cm)}]bottom right);
+			\coordinate (num 3) at ([shift={(-30:1cm)}]top left);
+			\coordinate (num 4) at ($(bottom left)!0.75!(top right)$);
+		}{
+			% ratio <= 0.5
+			\coordinate (num 1) at ([shift={(75:0.7cm)}]bottom left);
+			\coordinate (num 2) at ([shift={(150:0.55cm)}]bottom right);
+			\coordinate (num 3) at ([shift={(-30:0.55cm)}]top left);
+			\coordinate (num 4) at ([shift={(255:0.7cm)}]top right);
+		}}
+		
+		\node at (num 1) {\contour{white}{1}};
+		\node at (num 2) {\contour{white}{2}};
+		\node at (num 3) {\contour{white}{3}};
+		\node at (num 4) {\contour{white}{4}};
+	}
+	
+	\begin{scope}\hexTorusRatioExample{0}{0}{1.2}{1}{1}\end{scope}
+	\addnums{6}{5}
+	\coordinate (tl 12 1) at (top left -| bottom left);
+	\coordinate (br 12 1) at (bottom right);
+	\begin{scope}[shift={([xshift=1em]br 12 1)}]\hexTorusRatioExample{0}{0}{2.32}{1}{1}\end{scope}
+	\addnums{23}{10}
+	
+	\begin{scope}[shift={([yshift=3em]tl 12 1)}]\hexTorusRatioExample{0}{0}{0.4}{1}{1}\end{scope}
+	\addnums{2}{5}
+	\coordinate (br 04 1) at (bottom right);
+	
+	\begin{scope}[shift={([xshift=2.35em]br 04 1)}]\hexTorusRatioExample{0}{0}{0.5}{1}{1}\end{scope}
+	\addnums{1}{2}
+	\coordinate (br 05 1) at (bottom right);
+	
+	\begin{scope}[shift={([xshift=2.35em]br 05 1)}]\hexTorusRatioExample{0}{0}{0.9}{1}{1}\end{scope}
+	\addnums{9}{10}
+	\coordinate (br 09 1) at (bottom right);
+	
+	\begin{scope}[shift={([xshift=2.35em]br 09 1)}]\hexTorusRatioExample{0}{0}{1}{1}{1}\end{scope}
+	\addnums{1}{1}
+	
+\end{tikzpicture}

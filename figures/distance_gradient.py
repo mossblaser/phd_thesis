@@ -32,10 +32,10 @@ parser.add_argument("--origin", "-o", type=float, nargs=2,
                     help="origin from which distances should be measured")
 
 parser.add_argument("--near-colour", type=hex_colour,
-                    default=hex_colour("#f7fbff"),
+                    default=hex_colour("#f7f7f7"),
                     help="colour near the origin")
 parser.add_argument("--far-colour", type=hex_colour,
-                    default=hex_colour("#083675"),
+                    default=hex_colour("#0571b0"),
                     help="colour furthest from the origin")
 
 axis_type = parser.add_mutually_exclusive_group(required=True)

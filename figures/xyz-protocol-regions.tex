@@ -1,8 +1,8 @@
 \begin{tikzpicture}[thick]
 	\input{figures/distance-map.tex}
-	\hexTorusExample{0.5}{0.5}
-	\draw (top) -- (bottom);
-	\draw (left) -- (right);
+	\hexTorusRatioExample{0.5}{0.5}{1}{1}{0}
+	\draw [boundry] (top) -- (bottom);
+	\draw [boundry] (left) -- (right);
 	
 	\node at ($(bottom left)!0.5!(center)$) {\contour{white}{1}};
 	\node at ($(bottom right)!0.5!(center)$) {\contour{white}{2}};

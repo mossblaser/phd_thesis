@@ -7,6 +7,7 @@
 
 % More advanced mathematical typesetting
 \usepackage{amsmath}
+\usepackage{amssymb}
 
 % Nice printing of URLs
 \usepackage{url}
@@ -36,6 +37,10 @@
 % For printing of 'code' etc.
 \usepackage{verbatim}
 
+% For syntax highlighting said code.
+\usepackage{minted}
+\usemintedstyle{lovelace}
+
 % Used to draw labels with a white outline to make them stand-out in diagrams
 \usepackage[outline]{contour}
 
@@ -58,6 +63,7 @@
                , shapes
                , patterns
                , spy
+               , intersections
                }
 \usepgfplotslibrary{statistics}
 
@@ -90,7 +96,14 @@
 % A colour to use when drawing the back of a sheet of paper
 \colorlet{paperback}{black!10!white}
 
-% Colorbrewer2.org 3-class Dark2
+% Colorbrewer2.org 3-class qualatative Dark2
 \definecolor{cb3class0}{RGB}{27,158,119}
 \definecolor{cb3class1}{RGB}{217,95,2}
 \definecolor{cb3class2}{RGB}{117,112,179}
+
+% Colorbrewer2.org 5-class diverging RdBu
+\definecolor{cb5class0}{RGB}{202,0,32}
+\definecolor{cb5class1}{RGB}{244,165,130}
+\definecolor{cb5class2}{RGB}{247,247,247}
+\definecolor{cb5class3}{RGB}{146,197,222}
+\definecolor{cb5class4}{RGB}{5,113,176}
