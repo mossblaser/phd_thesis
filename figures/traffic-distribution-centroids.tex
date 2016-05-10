@@ -1,0 +1,72 @@
+\begin{tikzpicture}[thick, hexagonXYZ, scale=4]
+	
+	\colorlet{high}{cb5class2}
+	\colorlet{low}{cb5class4}
+	
+	\fill [low]
+	      (0, 0) --
+	      (1, 0) --
+	      (1, 1) --
+	      (0, 1) --
+	      cycle;
+	
+	% #1 center
+	% #2 radius
+	% #3 intensity
+	\newcommand{\centroid}[3]{
+		\begin{scope}
+			\clip (0, 0) --
+			      (1, 0) --
+			      (1, 1) --
+			      (0, 1) --
+			      cycle;
+			
+			\foreach \x in {-1,0,1}{
+				\foreach \y in {-1,0,1}{
+					\coordinate (center) at ([shift={(\x,\y)}]#1);
+					\pgfmathsetlengthmacro{\radius}{#2 cm}
+					\pgfmathsetmacro{\intensity}{#3}
+					
+					\begin{scope}
+						\clip (center)
+						      +(30:\radius) --
+						      +(90:\radius) --
+						      +(150:\radius) --
+						      +(210:\radius) --
+						      +(270:\radius) --
+						      +(330:\radius) --
+						      cycle;
+						\shade [inner color=high!\intensity!low, outer color=low]
+						       (center) ellipse [radius=\radius];
+					\end{scope}
+					\foreach \angle in {0,60,...,300}{
+						\begin{scope}[transform canvas={rotate=\angle,shift={(center)}}]
+							\shade [ shading=axis
+							       , left color=high!\intensity!low
+							       , right color=low
+							       ]
+							       (0, 0) --
+							       +(+30:\radius) --
+							       +(-30:\radius) --
+							       cycle;
+						\end{scope}
+					}
+				}
+			}
+		\end{scope}
+	}
+	
+	\centroid{0.5, 0.5}{0.3}{100}
+	\centroid{0.2, 0.7}{0.1}{60}
+	\centroid{0.4, 0.95}{0.1}{60}
+	\centroid{0.8, 0.2}{0.1}{60}
+	
+	\node [cb5class0] at (0.5, 0.5) {$\times$};
+	
+	\draw (0, 0) --
+	      (1, 0) --
+	      (1, 1) --
+	      (0, 1) --
+	      cycle;
+	
+\end{tikzpicture}

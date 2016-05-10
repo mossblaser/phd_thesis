@@ -1,24 +1,48 @@
 \chapter{Routing packets in large SpiNNaker machines}
 	
-	In large networks, faults are inevitable and routing algorithms are required
-	to work around them. TODO: GIVE SOME MOTIVATING FAULT NUMBERS, E.G. FROM
-	BLUEGENE OR SPINNAKER. This chapter hopes to extend the state of the art by
-	defining a new fault-tolerant routing algorithm for SpiNNaker which can route
-	around arbitrary permanent link failures.
+	So far, this thesis has focused on tackling the practical challenges
+	resulting from SpiNNaker's hexagonal torus network topology. In this chapter,
+	I adjust my focus towards the practical challenges resulting from SpiNNaker's
+	large scale. Faults in large systems are inevitable and in the half-million
+	core, \num{28800} chip SpiNNaker machine recently completed at the University
+	of Manchester, around \SI{1}{\percent} of chips exhibited faults\footnote{Of
+	the faulty chips discovered, the vast majority of faults are attributed to a
+	currently unknown SDRAM failure}. These faults result in gaps and broken
+	links in the network topology which routing algorithms must avoid in order to
+	ensure correct system operation.
 	
-	Numerous heuristic algorithms exist which target different network
-	technologies but many techniques are not portable. In this work we care
-	about SpiNNaker which has a table-based router, packet dropping flow control,
-	and applications which deal with multicast. So far all proposed routing
-	algorithms for SpiNNaker have been fault-intolerant and in this chapter, a
-	new fault-tolerant algorithm is proposed.
+	In this chapter I tackle the problem of extending existing routing algorithms
+	for SpiNNaker's network to enable them to route-around known, static faults.
+	Though dynamic or transient faults may also occur, in this work such faults
+	are ignored and other techniques, such as protocol-level fault tolerance, are
+	relied on instead.
+	
+	Numerous heuristic-based fault-tolerant routing algorithms exist which target
+	different network topologies and router architectures. Unfortunately as I
+	will show, these algorithms are not portable and rely on or attempt to work
+	around specific features of their target network architecture. In particular,
+	existing work is dominated by the challenge of developing routing schemes
+	which avoid or defuse network deadlocks. Due to SpiNNaker's unconventional
+	use of timeout-based flow-control, it is not subject to the routing
+	restrictions present in other architectures intended to cope with deadlocks.
+	
+	In this chapter I introduce a graph-search based post-processing step for
+	non-fault-tolerant routing algorithms which guarantees routability in
+	SpiNNaker systems without disconnected subregions. I also demonstrate that
+	this technique introduces both negligible computational overhead to the
+	routing algorithm runtime and resulting network performance.
 	
 	\section{Related work}
 		
-		TODO: PROPER SECTION INTRODUCTION...
+		Existing work on routing in SpiNNaker's network has ignored the challenge
+		of avoiding faults and instead focused on producing efficient multicast
+		routes. As a result this section is broken into two halves. In the first
+		half I survey the existing non-fault-tolerant approaches to routing used in
+		SpiNNaker to-date. In the second I discuss the approaches to fault tolerant
+		routing taken in other systems.
 		
 		\subsection{Multicast routing in SpiNNaker}
-		
+			
 			Various fault-intolerant multicast routing algorithms exist for many
 			networks and a number have been proposed and evaluated specifically in the
 			context of SpiNNaker.
@@ -259,7 +283,7 @@
 			applications such as SpiNNaker where users' applications tend to be
 			short-lived and thus routing should not be allowed to dominate runtime.
 	
-	\section{Fault-tolerant multicast routing}
+	\section{Fault-tolerant routing}
 		
 		Existing solutions bend over backwards to avoid deadlocks. We don't need to
 		do this on SpiNNaker since we already use timeout based deadlock
@@ -279,18 +303,35 @@
 			topologies, alternative routes may be generated which may be able to
 			avoid a fault.
 			
+			\begin{figure}
+				\center
+				\begin{subfigure}{0.45\linewidth}
+					\center
+					\buildfig{figures/simple-fault-avoidance-order.tex}
+					
+					\caption{Alternative dimension order}
+					\label{fig:simple-fault-avoidance-order}
+				\end{subfigure}
+				\begin{subfigure}{0.45\linewidth}
+					\center
+					\buildfig{figures/simple-fault-avoidance-zigzag.tex}
+					
+					\caption{`Zig-zag'}
+					\label{fig:simple-fault-avoidance-zigzag}
+				\end{subfigure}
+				
+				\caption{Simple fault-avoidance mechanisms}
+				\label{fig:simple-fault-avoidance}
+			\end{figure}
+			
 			The most straight-forward technique involves using alternative dimension
 			orders.
-			
-			TODO: FIGURE SHOWING ALTERNATIVE DIMENSION ORDERS
 			
 			Only limited flexibility is afforded by such a technique (generally two
 			alternatives are available though sometimes 0 or sometimes many if
 			spiralling). An alternative is to follow a non-dimension-order but still
 			minimal route by 'zig-zagging'. We proceed according to LDFR until the
 			route hits a fault at which point we attempt to switch dimension.
-			
-			TODO: FIGURE SHOWING ZIGZAG ROUTES WORKING AND FAILING
 			
 			This can obviously still fail and, like alternative dimension orders,
 			this is more likely to fail the closer to the source or destination you
@@ -306,14 +347,40 @@
 			ridiculously slow so lets not do that. On the plus side, you can use BFS
 			rather than Dijkstras for most networks where all links are the same.
 			
-			TODO: FIGURE ILLUSTRATING COST OF GRAPH SEARCH FOR TORUS NET
-			
 			If we presume that errors are typically isolated, it is unlikely that
 			avoiding such an error would require a significantly different route. As
 			such I propose starting with an existing known-effective routing
 			algorithm such as NER and patching up the resulting routes if they
 			attempt to use a dead link. This technique is called Partial Graph Search
 			(PGS) repair and proceeds as follows:
+			
+			\begin{figure}
+				\center
+				\begin{subfigure}{0.32\linewidth}
+					\hspace*{-1.5em}
+					\buildfig{figures/pgs-repair-colouring.tex}
+					
+					\caption{}
+					\label{fig:pgs-repair-colouring}
+				\end{subfigure}
+				\begin{subfigure}{0.32\linewidth}
+					\hspace*{-1.5em}
+					\buildfig{figures/pgs-repair-colouring-fix1.tex}
+					
+					\caption{}
+					\label{fig:pgs-repair-colouring-fix1}
+				\end{subfigure}
+				\begin{subfigure}{0.32\linewidth}
+					\hspace*{-1.5em}
+					\buildfig{figures/pgs-repair-colouring-fix2.tex}
+					
+					\caption{}
+					\label{fig:pgs-repair-colouring-fix2}
+				\end{subfigure}
+				
+				\caption{PGS repair process example.}
+				\label{fig:pgs-repair-colouring-steps}
+			\end{figure}
 			
 			Route as normal and record the locations of all hops which use dead
 			links/nodes and thus need to be repaired. If no dead links/nodes are
@@ -332,15 +399,21 @@
 			disconnected subtrees (and thus colours) by exactly 1 (we stop the search
 			when we hit *any* other colour). After N iterations we thus have 1 tree
 			which is the fully connected routing tree.
-			
-			TODO: DIAGRAMS ILLUSTRATING PGS REPAIR EXAMPLE
 		
 	\section{Evaluation \& Results}
 		
 		We generated routes for two standard traffic distributions: uniform as a
 		worst-case and centroids as a "typical" case.
 		
-		TODO: EXAMPLE IMAGES OF TRAFFIC PATTERNS
+		\begin{figure}
+			\center
+			\buildfig{figures/traffic-distribution-centroids.tex}
+			
+			\caption{An example centroid distribution with four centroids. The
+			$\times$ marks the location of the origin node. Lighter colours indicate
+			greater likelihood of a connection.}
+			\label{fig:traffic-distribution-centroids}
+		\end{figure}
 		
 		We generated faults based on the assumption that hardware failures are
 		likely uniform randomly distributed and can affect either chip-to-chip
@@ -348,7 +421,26 @@
 		plan to use since those nodes would never get booted in a real system and
 		so we never need to route to them. Faults thus look like this:
 		
-		TODO: FIGURE SHOWING TWO EXAMPLE FAULTS OF EACH TYPE
+		\begin{figure}
+			\center
+			\begin{subfigure}{0.48\linewidth}
+				\hspace*{-1.5cm}
+				\buildfig{figures/fault-example-uniform.tex}
+				
+				\caption{Uniform}
+				\label{fig:fault-example-uniform}
+			\end{subfigure}
+			\begin{subfigure}{0.48\linewidth}
+				\hspace*{-1.5cm}
+				\buildfig{figures/fault-example-hss.tex}
+				
+				\caption{HSS Link}
+				\label{fig:fault-example-hss}
+			\end{subfigure}
+			
+			\caption{Fault models.}
+			\label{fig:fault-example}
+		\end{figure}
 		
 		We consider two representative general cases: one typical, one extreme in
 		terms of fan-out and fault rate.

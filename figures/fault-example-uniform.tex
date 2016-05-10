@@ -1,0 +1,20 @@
+\begin{tikzpicture}
+	\input{figures/simple-fault-avoidance.tex}
+	
+	\begin{scope}[thick, scale=0.5, hexagonXYZ]
+		\drawtorus{12}{12}
+		
+		\pgfmathsetseed{1}
+		
+		\foreach \n in {1,...,16}{
+			\pgfmathtruncatemacro{\d}{(random() * 2.99}
+			\pgfmathtruncatemacro{\dx}{1 - mod(\d, 2)} % \d != 1
+			\pgfmathtruncatemacro{\dy}{ceil(\d/2)} % \d >= 1
+			
+			\pgfmathtruncatemacro{\x}{(random() * (\width - 1)}
+			\pgfmathtruncatemacro{\y}{random() * (\height - 1)}
+			\drawdeadlink{2+\x+0.5*\dx, 2+\y+0.5*\dy}
+		}
+		
+	\end{scope}
+\end{tikzpicture}

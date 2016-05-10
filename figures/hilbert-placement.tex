@@ -1,0 +1,45 @@
+\input{figures/hilbert.tex}%
+\begin{tikzpicture}[thick, rotate=90, scale=0.1]
+	% #1 value
+	% #2 max_value
+	% defines colour "col"
+	\newcommand{\pickcolour}[2]{
+		\pgfmathtruncatemacro{\perc}{(\i / \numsteps) * 100}
+		\ifthenelse{\perc > 75}{
+			% 75 - 100
+			\pgfmathtruncatemacro{\perc}{((\i / \numsteps) - 0.75) * 4 * 100}
+			\colorlet{col}{cb5class4!\perc!cb5class3}
+		}{\ifthenelse{\perc > 50}{
+			% 50 - 75
+			\pgfmathtruncatemacro{\perc}{((\i / \numsteps) - 0.5) * 4 * 100}
+			\colorlet{col}{cb5class3!\perc!cb5class2}
+		}{\ifthenelse{\perc > 25}{
+			% 25 - 50
+			\pgfmathtruncatemacro{\perc}{((\i / \numsteps) - 0.25) * 4 * 100}
+			\colorlet{col}{cb5class2!\perc!cb5class1}
+		}{
+			% 0 - 25
+			\pgfmathtruncatemacro{\perc}{(\i / \numsteps) * 4 * 100}
+			\colorlet{col}{cb5class1!\perc!cb5class0}
+		}}}
+	}
+	
+	\hilbert((0mm,0mm),5)
+	
+	%% Draw nodes
+	%\foreach \i in {0,...,\numsteps}{
+	%	\node at (step\i)
+	%	      [ fill
+	%	      , circle
+	%	      , minimum size=0.3em
+	%	      , inner sep=0
+	%	      ] {};
+	%}
+	
+	% Draw the hilbert curve
+	\foreach \i in {1,...,\numsteps}{
+		\pgfmathtruncatemacro{\ii}{\i-1}
+		\pickcolour{\i}{\numsteps}
+		\draw [line cap=rect, col] (step\i) -- (step\ii);
+	}
+\end{tikzpicture}

@@ -1,0 +1,47 @@
+% A heavily hacked version of a rather nice hilbert curve example for TikZ by
+% Marc van Dongen
+%
+%:Author: `Marc van Dongen`_
+%:Source: `pgf-users mailing list`_
+%
+%.. _Hilbert curve: http://mathworld.wolfram.com/HilbertCurve.html
+%.. _Marc van Dongen: http://csweb.ucc.ie/~dongen/
+%.. _pgf-users mailing list: http://sourceforge.net/mailarchive/forum.php?thread_name=20070516084358.GA2855%40bordewijk.ucc.ie&forum_name=pgf-users
+
+\newdimen\HilbertLastX
+\newdimen\HilbertLastY
+\newcounter{HilbertOrder}
+\newcounter{HilbertStep}
+
+\def\DrawToNext#1#2{%
+   \addtocounter{HilbertStep}{1}%
+   \advance \HilbertLastX by #1
+   \advance \HilbertLastY by #2
+   \coordinate (step\arabic{HilbertStep}) at (\HilbertLastX, \HilbertLastY);
+}
+
+% \Hilbert[right_x,right_y,left_x,left_x,up_x,up_y,down_x,down_y]
+\def\Hilbert[#1,#2,#3,#4,#5,#6,#7,#8] {
+  \ifnum\value{HilbertOrder} > 0%
+     \addtocounter{HilbertOrder}{-1}
+     \Hilbert[#5,#6,#7,#8,#1,#2,#3,#4]
+     \DrawToNext {#1} {#2}
+     \Hilbert[#1,#2,#3,#4,#5,#6,#7,#8]
+     \DrawToNext {#5} {#6}
+     \Hilbert[#1,#2,#3,#4,#5,#6,#7,#8]
+     \DrawToNext {#3} {#4}
+     \Hilbert[#7,#8,#5,#6,#3,#4,#1,#2]
+     \addtocounter{HilbertOrder}{1}
+  \fi
+}
+
+
+% \hilbert((x,y),order)
+\def\hilbert((#1,#2),#3){%
+   \advance \HilbertLastX by #1
+   \advance \HilbertLastY by #2
+   \coordinate (step0) at (\HilbertLastX, \HilbertLastY);
+   \setcounter{HilbertOrder}{#3}
+   \Hilbert[1cm,0cm,-1cm,0cm,0cm,1cm,0cm,-1cm]
+   \pgfmathtruncatemacro{\numsteps}{\arabic{HilbertStep}}
+}

@@ -1,0 +1,106 @@
+\newcommand{\cliptorus}{
+	\clip (1.5, 1.5) --
+	    ++(\width, 0) --
+	    ++(0, \height) --
+	    ++(-\width, 0) --
+	      cycle;
+}
+
+% #1 width
+% #2 height
+\newcommand{\drawtorus}[2]{
+	\pgfmathtruncatemacro{\width}{#1}
+	\pgfmathtruncatemacro{\height}{#2}
+	\pgfmathtruncatemacro{\widthh}{\width+1}
+	\pgfmathtruncatemacro{\heightt}{\height+1}
+	\pgfmathtruncatemacro{\widthhh}{\width+2}
+	\pgfmathtruncatemacro{\heighttt}{\height+2}
+	
+	\begin{scope}
+		\cliptorus
+		% Links
+		\begin{scope}[help lines]
+			\foreach \x in {1,...,\widthhh}{
+				\foreach [count=\y] \yy in {2,...,\heighttt}{
+					\draw (\x, \y) -- (\x, \yy);
+				}
+			}
+			\foreach \y in {1,...,\heighttt}{
+				\foreach [count=\x] \xx in {2,...,\widthhh}{
+					\draw (\x, \y) -- (\xx, \y);
+				}
+			}
+			\foreach [count=\x] \xx in {2,...,\widthhh}{
+				\foreach [count=\y] \yy in {2,...,\heighttt}{
+					\draw (\x, \y) -- (\xx, \yy);
+				}
+			}
+		\end{scope}
+		
+		% Nodes
+		\foreach \x in {1,...,\widthhh}{
+			\foreach \y in {1,...,\heighttt}{
+				\node (node\x\y)
+				      [ fill
+				      , circle
+				      , minimum size=0.5em
+				      , inner sep=0
+				      ]
+				      at (\x, \y)
+				      {};
+			}
+		}
+	\end{scope}
+}
+
+% #1 x/y/label,...
+\newcommand{\drawnodes}[1]{
+	% Annotations
+	\foreach \x/\y/\lab in {#1}{
+		\node [ draw=black
+		      , fill=white
+		      , font=\tiny
+		      , circle
+		      , inner sep=0.1em
+		      ]
+		      at (\x, \y)
+		      {\lab};
+	}
+}
+
+% #1 colour/style
+% #2 \draw-like list of coordinates
+\newcommand{\drawroute}[2]{
+	\begin{scope}
+		\cliptorus
+		\foreach \dx in {-1,...,1}{
+			\foreach \dy in {-1,...,1}{
+				\begin{scope}[shift={(\width*\dx, \height*\dy)}]
+					\draw [line width=0.3em] [#1] #2;
+				\end{scope}
+			}
+		}
+	\end{scope}
+}
+
+% #1 coordinate of middle of dead link segment
+\newcommand{\drawdeadlink}[1]{
+	\node [red] at (#1) {\contour{white}{$\times$}};
+}
+
+% #1 key entries
+\newcommand{\key}[1]{
+	\node [below=1em of $(node2\heightt|-node22)!0.5!(node\widthh2)$] {
+		\begin{tikzpicture}
+			\coordinate (last);
+			#1
+		\end{tikzpicture}
+	};
+}
+
+% #1 colour
+% #2 label
+\newcommand{\keyentry}[2]{
+	\node [#1] [right=1em of last, fill, rectangle, minimum size=1em] (last) {};
+	\node [right=0 of last] (last) {#2};
+}

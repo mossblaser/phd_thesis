@@ -1,0 +1,30 @@
+\begin{tikzpicture}
+	\input{figures/simple-fault-avoidance.tex}
+	
+	\begin{scope}[thick, scale=0.5, hexagonXYZ]
+		\drawtorus{7}{7}
+		
+		% Root block
+		\drawroute{cb3class0}{(2,2,0) -- ++(0, 2, 0) -- ++(0, 0, -1) -- ++(-1, 0, 0) -- ++(0, 1, 0)}
+		\drawroute{cb3class0}{(2,2,0) -- ++(4, 0, 0)}
+		\drawroute{cb3class0}{(2,2,0) -- ++(2, 0, 0) -- ++(0, 0, -1)}
+		
+		% Top left block (now merged)
+		\drawroute{cb3class0}{(2,5,0) -- ++(0, 3, 0)}
+		\drawroute{cb3class0}{(2,5,0) -- ++(0, 1, 0) -- ++(0, 0, -1)}
+		
+		% Bottom right block (now merged)
+		\drawroute{cb3class0}{(6,2,0) -- ++(0, 3, 0)}
+		\drawroute{cb3class0}{(4,2,-2) -- ++(0, 0, -2)}
+		
+		\drawdeadlink{4, 2, -1.5}
+		\drawdeadlink{2, 4.5, 0}
+		
+		\drawnodes{2/2/A,%
+		           6/2/B,%
+		           6/5/C,%
+		           8/6/D,%
+		           3/7/E,%
+		           2/8/F}
+	\end{scope}
+\end{tikzpicture}

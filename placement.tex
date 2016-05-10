@@ -28,6 +28,9 @@ important.
 			
 			\subsubsection{Application-specific approaches (manual placement)}
 				
+				% Apparently relevent citations from short report
+				% \cite{clausen10}
+				
 				In the case of some applications, such as finite element modelling, the
 				computation proceeds by breaking a physical space into regular pieces
 				and simulating each piece on an individual compute node. The compute
@@ -56,9 +59,15 @@ important.
 				Some manufacturers such as Cray supply extensions to SLURM which
 				allocate applications along a Hilbert curve and following a greedy
 				algorithm to decide the order in which applications are placed on the
-				curve.
+				curve \cite{yoo03}.
 				
-				TODO: FIGURE SHOWING CONSTRUCTION OF HILBERT CURVE
+				\begin{figure}
+					\center
+					\buildfig{figures/hilbert-placement.tex}
+					
+					\caption{A Hilbert curve.}
+					\label{fig:hilbert-placement}
+				\end{figure}
 				
 				Hilbert curves map a 1D spaces into 2D spaces, attempting to preserve
 				the property that things which are close in 1D will also be close in
@@ -68,6 +77,9 @@ important.
 				the 2D nature of the network topology.
 			
 			\subsubsection{Optimisation-based Placement}
+				
+				% Citations from short report about optimisation in placement...
+				% \cite{chen06,jeannot14} and \cite{jeannot10} ("subsets of apps")
 				
 				In the academic community, a number of attempts have been made to use
 				various optimisation algorithms for the placement of applications.
@@ -90,7 +102,7 @@ important.
 			a chip such that the connection lengths are controlled to reduce
 			congestion and increase performance. As such, these algorithms are
 			ideally suited to future super computer placement work since they already
-			operate at the scales required.
+			operate at the scales required \cite{nam07}.
 			
 			\subsubsection{Cost functions}
 				
