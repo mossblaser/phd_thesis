@@ -32,6 +32,8 @@
 	this technique introduces both negligible computational overhead to the
 	routing algorithm runtime and resulting network performance.
 	
+	TODO: NOTE THE FAULT RATES ENCOUNTERED IN PRACTICE...
+	
 	\section{Related work}
 		
 		Existing work on routing in SpiNNaker's network has ignored the challenge
@@ -274,34 +276,43 @@
 			Outside the field of computer networks, routing algorithms used to route
 			wires across the surfaces of chips are required to solve similar problems
 			to fault-tolerant network routing problems in mesh networks. Like mesh
-			networks, the routes must be defined within a regular Manhattan geometry
-			and congested areas, rather than faults must be avoided by the algorithms
+			networks, the routes are defined within a regular Manhattan geometry and
+			congested areas, rather than faults must be avoided by the algorithms
 			\cite{kahng11}.  Unfortunately, these algorithms are designed for
 			occasional batch operation prior to the multi-month process of chip
 			manufacturing and so runtimes of hours or days are commonplace
-			\cite{nam08}. As such these algorithms would be inappropriate for use with
-			applications such as SpiNNaker where users' applications tend to be
+			\cite{nam08}. As such these algorithms would be inappropriate for use
+			with applications such as SpiNNaker where users' applications tend to be
 			short-lived and thus routing should not be allowed to dominate runtime.
 	
-	\section{Fault-tolerant routing}
+	\section{Fault-tolerant routing in SpiNNaker}
 		
-		Existing solutions bend over backwards to avoid deadlocks. We don't need to
-		do this on SpiNNaker since we already use timeout based deadlock
-		resolution. As a result we have great freedom over the routes we can chose
-		when avoiding faults. We first explore the effectiveness of a set of
-		heuristics which simply try other shortest-path routes. Though some
-		improvement is achieved, not all faults can be handled. I have developed a
-		post-processing process for fault-oblivious algorithms which uses a
-		graph-search procedure to route-around dead links.
+		% Existing solutions bend over backwards to avoid deadlocks. We don't need to
+		% do this on SpiNNaker since we already use timeout based deadlock
+		% resolution. As a result we have great freedom over the routes we can chose
+		% when avoiding faults. We first explore the effectiveness of a set of
+		% heuristics which simply try other shortest-path routes. Though some
+		% improvement is achieved, not all faults can be handled. I have developed a
+		% post-processing process for fault-oblivious algorithms which uses a
+		% graph-search procedure to route-around dead links.
+		
+		I propose a number of extensions for existing SpiNNaker routing algorithms
+		which aim to make these algorithms fault tolerant. These extensions may be
+		grouped into two categories: algorithms which consider alternative
+		point-to-point routes during route generation and algorithms which
+		post-process routes to avoid faults. These processes exploit SpiNNaker's
+		use of timeouts for handling deadlocks, allowing arbitrary routing
+		decisions to be made without triggering deadlocks.
 		
 		\subsection{Alternative routing heuristics}
 			
-			Many routing algorithms, including ESPR and NER use LPFR or DOR to
-			generate point-to-point paths in a network. Such routes, though minimal,
-			are not always the *only* minimal path available. By exploiting the
-			diversity of equivalent-length paths provided by hexagonal torus
-			topologies, alternative routes may be generated which may be able to
-			avoid a fault.
+			As described earlier, routing algorithms developed for SpiNNaker such as
+			ESPR and NER internally use simple point-to-point routing algorithms such
+			as DOR to generate routes which are assembled into multicast routing
+			trees. The point-to-point algorithms described above all generate routes
+			which are of minimal length but are just one of many possible routes of
+			equivilent length. I present two heuristics which attempt to exploit this
+			route diversity to avoid faults.
 			
 			\begin{figure}
 				\center
@@ -316,7 +327,7 @@
 					\center
 					\buildfig{figures/simple-fault-avoidance-zigzag.tex}
 					
-					\caption{`Zig-zag'}
+					\caption{Zig-zag}
 					\label{fig:simple-fault-avoidance-zigzag}
 				\end{subfigure}
 				
@@ -324,35 +335,78 @@
 				\label{fig:simple-fault-avoidance}
 			\end{figure}
 			
-			The most straight-forward technique involves using alternative dimension
-			orders.
+			The \emph{alternative dimension order} heuristic switches the dimension
+			order used for routing when a path is blocked as illustrated in figure
+			\ref{fig:simple-fault-avoidance-order}. In this exapmle, a fault has
+			blocked the intended route which follows the X and then Z axes. An
+			alternative route which follows the Z axis and then the X axis however
+			avoids this fault.
 			
-			Only limited flexibility is afforded by such a technique (generally two
-			alternatives are available though sometimes 0 or sometimes many if
-			spiralling). An alternative is to follow a non-dimension-order but still
-			minimal route by 'zig-zagging'. We proceed according to LDFR until the
-			route hits a fault at which point we attempt to switch dimension.
+			Rather than using a particular dimension ordered route, the
+			\emph{zig-zag} heuristic instead advances towards the destination node
+			switching the dimension it advances in whenever a faulty link obstructs
+			its path. The initial route is chosen according to the original routing
+			algorithm as usual. For example in figure
+			\ref{fig:simple-fault-avoidance-zigzag} the route initially proceeds
+			along the X axis but is blocked by a fault after one hop and switches to
+			moving along the Z axis. The algorithm then proceeds on this axis for two
+			hops until it encounters a second fault causing it to switch back to the
+			X axis. After one hop, no further hops along the X axis are required and
+			so the algorithm switches back to the Z axis for the remaining two hops
+			of the route.
 			
-			This can obviously still fail and, like alternative dimension orders,
-			this is more likely to fail the closer to the source or destination you
-			get since there is less and less route diversity. Additionally there are
-			fault patterns which can require non-shortest-path routes.
+			These two heuristics are able to work-around certain classes of faults
+			without increasing the number of hops in the final route. Of the two
+			heuristics the zig-zag heuristic offers the greatest flexibility in its
+			ability to avoid faults since it is able to select from more than just
+			the two possible dimension orders possible in a hexagonal torus topology
+			and thus possibly avoid a greater range of faults. The disadvantage of
+			the zig-zag technique is that it may introduce a larger number of `turns'
+			in a route. In SpiNNaker's table based router, turns require a routing
+			table entry while straight-through routes do not meaning that routes with
+			more turns consume more of this finite resource.
+			
+			Unfortunately neither heuristic can avoid faults in all scenarios. For
+			example, faults between nodes which lie along one axis are unroutable by
+			either heuristic.
 		
-		\subsection{Graph search based repair}
+		\subsection{Partial graph search repair}
 			
-			Graph search algorithms are expensive compared with DOR but are
-			guaranteed to find a minimal valid route if one exists. Unlike other
-			architectures, however, SpiNNaker could happily use such a routing
-			scheme! Using graph-search for the full routing process would make things
-			ridiculously slow so lets not do that. On the plus side, you can use BFS
-			rather than Dijkstras for most networks where all links are the same.
+			An alternative to modifying the base routing algorithm is to use a
+			post-processing step to repair routes which rely on faulty links. Below I
+			introduce the Partial Graph Search (PGS) repair technique which uses
+			graph search algorithms to route around faults.
 			
-			If we presume that errors are typically isolated, it is unlikely that
-			avoiding such an error would require a significantly different route. As
-			such I propose starting with an existing known-effective routing
-			algorithm such as NER and patching up the resulting routes if they
-			attempt to use a dead link. This technique is called Partial Graph Search
-			(PGS) repair and proceeds as follows:
+			General-purpose graph search algorithms such as Breadth First Search
+			(BFS), Dijkstra's Algorithm or A* are guaranteed to find shortest-path
+			routes between pairs of points in arbitrary graphs. Unfortunately the
+			computation complexity of these algorithms makes them unsuitable as
+			routing algorithms in many networks, especially those with highly regular
+			topologies.
+			
+			Real world super computer architectures are designed to ensure that
+			faults are isolated \cite{gara05,alverson12} and thus tend to only impact
+			a localised region of the network. As such, modifying a route to avoid a
+			fault requires only limited deviation from the original route. Due to the
+			limited searching required, graph search algorithms run efficiently under
+			such circumstances. Additionally, due to the rarity of faults the
+			overhead introduced by this post-processing stage should be limited. As a
+			result this process is referred to as a \emph{partial} graph search.
+			
+			The PGS repair post-processing technique starts with a route produced by
+			a non-fault-tollerant routing algorithm such as ESPR or NER. If this
+			route is not obstructed by a fault, the algorithm terminates immediately
+			without modifying the route. If the route attempts to use a faulty link,
+			the algorithm proceeds as follows.
+			
+			The routing tree produced by the underlying routing algorithm is broken
+			into subtrees wherever it attempts to route through a broken link and
+			each subtree is assigned a unique colour, as illustrated in figure
+			\ref{fig:pgs-repair-colouring}. From each disconnected subtree's root
+			node in turn, a graph search is performed to find a short, fault-free
+			route to a subtree node of a different colour. The subtree is then
+			attached to the tree discovered by the graph search and re-coloured to
+			match the tree it is connected to.
 			
 			\begin{figure}
 				\center
@@ -378,29 +432,31 @@
 					\label{fig:pgs-repair-colouring-fix2}
 				\end{subfigure}
 				
-				\caption{PGS repair process example.}
+				\caption{PGS repair process example showing a disconnected multicast
+				route from A to B, C, D, E and F. $\times$ indicates a broken link.}
 				\label{fig:pgs-repair-colouring-steps}
 			\end{figure}
 			
-			Route as normal and record the locations of all hops which use dead
-			links/nodes and thus need to be repaired. If no dead links/nodes are
-			used, the algorithm terminates. If dead links/nodes exist, colour the
-			routing tree such that all disconnected subtrees are a unique colour. For
-			each disconnection point, perform a graph-search starting from this point
-			looking for any node in a subtree of a different colour. Add the
-			discovered route and colour our subtree with that of the subtree we just
-			attached ourselves to.
+			For example in figure \ref{fig:pgs-repair-colouring-fix1} a path from the
+			root of the subtree containing nodes E and F is found which connects it
+			to the subtree rooted at A. Simillarly in figure
+			\ref{fig:pgs-repair-colouring-fix2} a path is also found connecting the
+			subtree containing nodes C and D back to the subtree rooted at node A.
 			
-			TODO: EXPLAIN THE FIDDLINESS HERE TO ENSURE WE DON'T CREATE LOOPS. 
+			If the routing tree was broken into $N+1$ subtrees by faults there will
+			be $N$ subtrees disconnected from the root node. Each of the $N$
+			iterations of the algorithm connect a disconnected subtree to another
+			subtree reducing the number of subtrees by $1$ each time. After $N$
+			iterations, therefore, exactly $1$ subtree remains which connects every
+			node in the original routing tree without traversing faulty links.
 			
-			Proof of connectivity: A routing tree which was broken by N faults will
-			be partitioned into N+1 subtrees and thus will be coloured with N+1
-			colours. Each iteration over the N faults reduces the number of
-			disconnected subtrees (and thus colours) by exactly 1 (we stop the search
-			when we hit *any* other colour). After N iterations we thus have 1 tree
-			which is the fully connected routing tree.
+			TODO: EXPLAIN THE FIDDLINESS HERE TO ENSURE WE DON'T CREATE LOOPS.
 		
 	\section{Evaluation \& Results}
+		
+		To assess the efficiency and effectiveness of the PGS repair technique,
+		a number of experiments have been run.
+		
 		
 		We generated routes for two standard traffic distributions: uniform as a
 		worst-case and centroids as a "typical" case.
