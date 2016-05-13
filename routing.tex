@@ -371,103 +371,294 @@
 		
 	\section{Evaluation \& Results}
 		
-		To assess the efficiency and effectiveness of the PGS repair technique,
-		a number of experiments have been run.
+		The PGS repair technique, by design, is able to work around all possible
+		fault patterns which don't completely disconnect parts of the network. This
+		result this evaluation focuses on the impact on performance PGS repair
+		imposes. The metrics of interest in this evaluation are:
 		
+		\begin{itemize}
+			\item Algorithm runtime
+			\item Network congestion
+			\item Routing table utilisation
+		\end{itemize}
 		
-		We generated routes for two standard traffic distributions: uniform as a
-		worst-case and centroids as a "typical" case.
-		
-		\begin{figure}
-			\center
-			\buildfig{figures/traffic-distribution-centroids.tex}
+		\subsection{Traffic Patterns}
 			
-			\caption{An example centroid distribution with four centroids. The
-			$\times$ marks the location of the origin node. Lighter colours indicate
-			greater likelihood of a connection.}
-			\label{fig:traffic-distribution-centroids}
-		\end{figure}
-		
-		We generated faults based on the assumption that hardware failures are
-		likely uniform randomly distributed and can affect either chip-to-chip
-		links or HSS links. We do not consider faults which disconnect nodes we
-		plan to use since those nodes would never get booted in a real system and
-		so we never need to route to them. Faults thus look like this:
-		
-		\begin{figure}
-			\center
-			\begin{subfigure}{0.48\linewidth}
-				\hspace*{-1.5cm}
-				\buildfig{figures/fault-example-uniform.tex}
+			In this evaluation, two standard benchmark multicast traffic patterns are
+			used which have been used in previous research into SpiNNaker's network:
+			
+			\begin{figure}
+				\center
+				\buildfig{figures/traffic-distribution-centroids.tex}
 				
-				\caption{Uniform}
-				\label{fig:fault-example-uniform}
-			\end{subfigure}
-			\begin{subfigure}{0.48\linewidth}
-				\hspace*{-1.5cm}
-				\buildfig{figures/fault-example-hss.tex}
+				\caption{An example 4-centroid distribution with four centroids. The
+				$\times$ marks the location of the origin node. Lighter colours
+				indicate greater likelihood of a connection.}
+				\label{fig:traffic-distribution-centroids}
+			\end{figure}
+			
+			\begin{description}
 				
-				\caption{HSS Link}
-				\label{fig:fault-example-hss}
-			\end{subfigure}
+				\item[Uniform] Destinations are chosen with uniform probability
+				anywhere in the machine.
+				
+				\item[$N$-Centroids] Destinations are clustered around one of $N$
+				randomly chosen `centroids' as illustrated in figure
+				\ref{fig:traffic-distribution-centroids}.
+				
+			\end{description}
 			
-			\caption{Fault models.}
-			\label{fig:fault-example}
-		\end{figure}
+			The uniform traffic pattern is widely used in networks research
+			\cite{dally04,davies12} while the centroids model was developed
+			specifically to reproduce the traffic patterns found in the neural
+			applications SpiNNaker is designed for \cite{navaridas14}. In this work
+			we consider XXX centroids.
 		
-		We consider two representative general cases: one typical, one extreme in
-		terms of fan-out and fault rate.
+		\subsection{Fault model}
+			
+			In addition two different fault models are used which are representative of
+			the faults found in real SpiNNaker systems:
+			
+			\begin{figure}
+				\center
+				\begin{subfigure}{0.48\linewidth}
+					\hspace*{-1.5cm}
+					\buildfig{figures/fault-example-uniform.tex}
+					
+					\caption{Uniform}
+					\label{fig:fault-example-uniform}
+				\end{subfigure}
+				\begin{subfigure}{0.48\linewidth}
+					\hspace*{-1.5cm}
+					\buildfig{figures/fault-example-hss.tex}
+					
+					\caption{HSS Link}
+					\label{fig:fault-example-hss}
+				\end{subfigure}
+				
+				\caption{The two link fault models considered.}
+				\label{fig:fault-example}
+			\end{figure}
+			
+			\begin{description}
+				
+				\item[Uniform] Links are selected and disabled at random (figure
+				\ref{fig:fault-example-uniform}).
+				
+				\item[HSS Link] Groups of links corresponding with randomly selected
+				single High-Speed Serial (HSS) link between SpiNNaker boards are disabled
+				together (figure \ref{fig:fault-example-uniform}).
+				
+			\end{description}
+			
+			The uniform link failure model models isolated failures resulting from
+			isolated manufacturing defects in individual links. The HSS Link failure
+			model models faults arising from failing or disconnected board-to-board
+			links which carry several chip-to-chip traffic flows via a single cable in
+			SpiNNaker systems. Though SpiNNaker-specific, the later fault model is
+			analogous to failure modes arising in other architectures where a single
+			fault may render several links impassable in a single area.
+			
+			A range of failure rates are explored in this section. My measurements of
+			current large-scale SpiNNaker installations the link failure rate is about
+			\SI{0.03}{\percent} with failures due to both individual chip-to-chip links
+			and board-to-board HSS links. Exact link failure statistics for commercial
+			super computer installations are not widely available, however, published
+			Mean-Time-Between-Failure (MTBF) statistics place an upper bound on link
+			failure rates at a similar \SI{0.03}{\percent} in one-year-old BlueGene/Q
+			systems \cite{chiu11}.
+			
+			Unfortunately presently undiagnosed problem with the SDRAM packaged with
+			approximately \SI{1}{\percent} of SpiNNaker chips has rendered these chips
+			unusable for most applications. The gaps in the network resulting from the
+			loss of these chips currently dominate true link failures leaving just over
+			\SI{1}{\percent} of links inoperable.
+			
+			Surprisingly, research into fault tolerant routing in super computers
+			appears to focus on benchmarks with even higher fault rates ranging from
+			\SI{3}{\percent} to as high as \SI{7}{\percent}
+			\cite{ho04,gomez04,mejia06}.
+			
+			In this evaluation, fault rates ranging from \SI{0.01}{\percent} to
+			\SI{5}{\percent} are considered to cover both realistic fault levels
+			along with the more extreme cases considered in related work.
 		
-		\subsection{Baseline}
+		\subsection{Base routing algorithm}
+			
+			Since the PGS repair process is routing algorithm agnostic all
+			experiments use the NER algorithm which has been found to be appropriate
+			for SpiNNaker applications \cite{navaridas14}.
 		
-			We discover how many faults you hit when doing DOR, LPFR, ESPR and NER
-			as a baseline. We find that as well as being better in other ways NER
-			also inherently avoids some faults due to the NE thing. As a result
-			we'll just look at NER from now-on.
+		\subsection{Algorithm runtime}
 			
-			TODO: PLOTS
-		
-		\subsection{Heuristic performance}
+			To assess the impact of the PGS repair process on routing algorithm
+			runtime, the algorithm was used to process a large number of randomly
+			generated routing problems and the runtime recorded.
 			
-			Not many faults remain but there are still some. Using DOR and zig-zag
-			heuristics helps mop up some of these but still some remain.
+			XXX 1-to-XXX multicast routing problems were generated in a
+			$256\times256$ hexagonal torus topology, the largest size possible for a
+			SpiNNaker system. Though not reported here, other numbers of multicast
+			destinations were also tested did not result in any behaviours not
+			illustrated in the experiments presented below.
 			
-			TODO: PLOTS
-		
-		\subsection{Runtime}
+			TODO: APPENDIX WITH OTHER RUNS?
 			
-			Using PGS guarantees connectivity (if actually possible) but obviously
-			uses graph search, at some expense, as overhead over existing
-			algorithm... FGS is inherently fault tolerant but awfully slow so we
-			quickly discount that. We can see that using a heuristic (and thus
-			reducing usage of PGS) is good for performance but although
-			statistically significant, the performance difference of [TODO: WORK OUT
-			TINY PERCENTAGE] is not likely worth the trade off of greater code
-			complexity on performance grounds alone.
+			The NER and PGS repair algorithms were written in C and compiled with GCC
+			XXX with \verb|-OXXX| level optimisations and executed on a cluster of
+			idle workstations with Intel Core-i5 XXX CPUs.
 			
-			TODO: PLOTS
-		
-		\subsection{Route congestion}
+			Figure \ref{fig:XXX} shows the average runtimes recorded for both the NER
+			and PGS repair algorithms. In fault-free networks the PGS-repair
+			post-processing step is not required and incurs no penalty while the
+			runtime of the algorithm grows with the fault rate for both fault and
+			traffic models.
 			
-			Unlike the heuristics above, PGS is guaranteed to increase the number
-			of hops in a route to ensure connectivity. This in turn can cause
-			congestion hot-spots. We generate a large number of random routes using
-			our algorithms and compare congestion before and after PGS to see how
-			it compares.
+			Notably the HSS fault model results in longer runtimes for the PGS repair
+			process compared with an equivalent fault-density of uniform faults.
+			Because the HSS fault model produces contiguous lines of faults the PGS
+			repair algorithm must construct a longer path to avoid the fault.  Since
+			the space explored by a graph algorithm typically grows with $O(H^2)$
+			with respect to the hops in the discovered route, $H$, this increase in
+			search distance has a large impact on the runtime of the PGS repair
+			process.
 			
-			TODO: COMPARE CONGESTION BEFORE AND AFTER PGS REPAIR
+			The runtime of the PGS repair algorithm remains roughly in proportion to
+			the runtime of the underlying routing algorithm with respect to different
+			traffic models. The centroid traffic pattern tends to result in routes
+			with fewer hops than a uniform traffic pattern with the same number of
+			destination nodes as segments of routes are often shared between
+			destination nodes. Since the NER algorithm's runtime is strongly related
+			to the number of hops in the output route the runtime of the algorithm is
+			greater for uniform traffic. Likewise the probability of PGS repair being
+			required increases with the number of hops in route and hence the runtime
+			of the PGS repair algorithm increases roughly in proportion.
 		
 		\subsection{Routing table usage}
 			
-			No measured difference observed between approaches.
+			In order to gain a realistic measure of routing table usage it is
+			necessary to determine the effect of many routes being generated for a
+			single set of faults. To enable a sufficiently large number of sample to
+			be collected the experimental setup considered previously is reduced to a
+			network containing $48\times48$ nodes.
 			
-			TODO: MEASURE ROUTING TABLE USAGE
+			XXX $48\times48$ node network models are produced according to the HSS
+			link and uniform fault models. For each of these models XXX 1-to-XXX
+			routes are generated using the centroid and uniform traffic models.  As
+			is convention in SpiNNaker, routing table entries are inserted for each
+			route at the source of the route, at each destination and at each corner
+			or fork. The number of routing table entries at each node in the model is
+			counted and the maximum number of entries in a single node is reported
+			for each network model.  The \emph{maximum} number of routing entries of
+			any router was chosen since the number of entries available per SpiNNaker
+			router is bounded by hardware.
+			
+			Figure \ref{fig:XXX} shows the distributions of the largest routing table
+			sizes for each fault and traffic model.
+			
+			\begin{figure}
+				\center
+				\begin{subfigure}{0.48\linewidth}
+					\center
+					\buildfig{figures/hss-link-routing-table-usage.tex}
+					
+					\caption{Routing table entries}
+					\label{fig:hss-link-routing-table-usage}
+				\end{subfigure}
+				\begin{subfigure}{0.48\linewidth}
+					\center
+					\buildfig{figures/hss-link-resource-usage.tex}
+					
+					\caption{Routes passing through chip}
+					\label{fig:hss-link-resource-usage}
+				\end{subfigure}
+				
+				\caption{The impact of a HSS link fault on routing table usage and
+				congestion. Each hexagon represents a single chip, the red line
+				indicates the chip-to-chip connections broken by the HSS link fault.}
+				\label{fig:hss-link-usage}
+			\end{figure}
+			
+			The HSS link failure model has a much greater impact on peak routing
+			table resource usage than uniform link failures for a given fault rate.
+			This is because HSS link faults result in a large concentration of routes
+			being disrupted and then re-routed around the same obstacle in a single
+			location. Figure \ref{fig:hss-link-routing-table-usage} shows how routing
+			table usage varies around a HSS link fault in one instance of the
+			experiment. There are clear peaks in routing table usage around the ends
+			of the line of faults which result from routes produced by PGS repair
+			finding shortest paths around the edge of the faults.
+		
+		\subsection{Network congestion}
+			
+			To measure the impact of PGS repair on network congestion, two
+			experiments were performed, one using the same model used to measure
+			routing table usage and one based on tests run on SpiNNaker hardware.
+			
+			For each of the network fault and traffic pattern described previously,
+			the paths taken for the XXX 1-to-XXX routes generated are used to compute
+			the number of times each link in the network is used. The number of
+			routes passing through the most-used link is then recorded, giving an
+			indication of the level of congestion in the network.
+			
+			The results are presented in figure \ref{fig:XXX} and follow the same
+			trends as the results previously shown for routing table usage. Again,
+			HSS link faults result in routes with the greatest congestion due to the
+			concentration of routes finding shortest paths around an obstacle (see
+			\ref{fig:hss-link-resource-usage}).
+			
+			To verify that the results above, an additional experiment has been
+			carried out which attempts to mimic the model used previously in actual
+			SpiNNaker hardware. In these experiments a large SpiNNaker machine is
+			divided into independent 48-board (2304-chip) sections. Because the
+			48-board systems used in these experiments are cut out of a larger
+			machine, they lack wrap-around links and thus form hexagonal mesh
+			topologies, rather than hexagonal toruses.
+			
+			Due to the SDRAM issue described above, fault rates below
+			\SI{1}{\percent} cannot be modelled.  To simulate higher fault rates,
+			additional links are disabled in software according to the fault models
+			described used previously. Since some faults are due to genuine hardware
+			faults, these faults cannot be placed randomly in each experiment. To
+			reduce, bias each combination of fault rate, fault model and traffic
+			pattern is repeated XXX times across randomly chosen physical machines.
+			
+			XXX 1-to-XXX routes are generated in both uniform and XXX-centroid
+			distributions as used throughout this evaluation. Synthetic network
+			traffic is generated at the source of each route following a Bernoulli
+			distribution. Traffic consumers running on all destination nodes accept
+			packets as quickly as possible from the network and log their arrival.
+			The Bernoulli probability is set the same for every route's traffic
+			generator and increased in steps of XXX and the number of packets dropped
+			in an XXX second period logged. The network is considered saturated once
+			less than \SI{99}{\percent} of packets successfully arrive at their
+			destination.
+			
+			Figure \ref{XXX} shows the distributions of the saturation points for
+			each experimental configuration.
+			
+			TODO: ANALYSIS
 		
 	\section{Conclusions}
 		
-		(PENDING CONGESTION RESULTS) As such, though the simple heuristics do
-		provide a measurable improvement it is so small as to suggest the
-		implementation effort is probably not worthwhile.
+		In this chapter I described how SpiNNaker's unconventional network and
+		router architecture render existing fault tolerant routing algorithms
+		unsuitable. I introduced PGS repair, a post-processing technique for
+		existing non-fault tolerant routing algorithms designed for SpiNNaker such
+		as NER.
 		
-		Recommendation: use NEF and PGS repair since it is fast and works
-		reliably on SpiNNaker.
+		Unlike some other fault tolerant routing algorithms for other
+		architectures, PGS repair is able to work-around arbitrary fault patterns
+		by exploiting SpiNNaker's inbuilt deadlock avoidance mechanisms. In the
+		presence of realistic failure rates of up to \SI{1}{\percent}, only small
+		overheads of up to XXX, XXX and XXX for in algorithm runtime, routing table
+		usage and network performance are incurred respectively. This low
+		performance overhead makes PGS repair appropriate for use in real
+		applications. At the time of writing the algorithm has been successfully
+		used in a number of neural and non-neural SpiNNaker applications.
+		
+		At more extreme fault rates not expected in real-world systems, the
+		algorithm still functions correctly but the results incur much greater
+		routing table and congestion overheads, particularly when faults are
+		concentrated. Future extensions to this algorithm might aim to reduce this
+		overhead by producing longer and more varied routes around faults to even
+		out the load.

@@ -1,0 +1,76 @@
+% To use this, define:
+%    \selectval{x}{y}{entries}{resources}{faults}
+%       which defines the macro \val to be the value to be plotted.
+%    \minval and \maxval
+%       which define the possible range of values \val may take.
+% Then input this file.
+
+\pgfmathsetmacro{\width}{15}
+\pgfmathsetmacro{\height}{12}
+
+\begin{scope}
+	% Crop to just the region of interest
+	\clip ([hexagonXYZ]160,176.5)
+	      +(-0.5*\width, -0.5*\height) coordinate (bottom left)
+	       rectangle
+	      +(0.5*\width, 0.5*\height) coordinate (top right);
+	
+	\pgfmathsetmacro{\radius}{(0.5/cos(30))}
+	\pgfmathsetmacro{\drawradius}{\radius*1.05}
+	
+	% #1 x
+	% #2 y
+	% #3 table entries
+	% #4 resources
+	% #5 faults
+	\newcommand{\plotpoint}[5]{
+		\coordinate (point) at ([hexagonXYZ]#1,#2);
+		
+		% Scale the table entries to between 0 and 100
+		\selectval{#1}{#2}{#3}{#4}{#5}
+		\pgfmathsetmacro{\perc}{((\val - \minval) / (\maxval - \minval)) * 100}
+		
+		\fill [cb5class3!\perc!cb5class4]
+		      (point)
+		     +(90:\drawradius) --
+		     +(150:\drawradius) --
+		     +(210:\drawradius) --
+		     +(270:\drawradius) --
+		     +(330:\drawradius) --
+		     +(30:\drawradius) --
+		     cycle;
+	}
+	
+	% This file calls \plotpoint repeatedly
+	\input{figures/hss-link-heatmap-data.tex}
+	
+	% Draw the dead link boundary
+	\draw [cb5class0, ultra thick]
+	      ([hexagonXYZ]158,174)
+	     ++(150:\radius) --
+	     ++(30:\radius) --
+	     ++(90:\radius) --
+	     ++(30:\radius) --
+	     ++(90:\radius) --
+	     ++(30:\radius) --
+	     ++(90:\radius) --
+	     ++(30:\radius) --
+	     ++(90:\radius);
+\end{scope}
+
+% Draw the colour bar
+\coordinate (cb center) at ([yshift=-1.7cm]$(bottom left)!0.5!(top right |- bottom left)$);
+\shade [ shading=axis
+       , left color=cb5class4
+       , right color=cb5class3
+       ]
+       ([shift={(-0.3cm * \width, -0.5cm)}]cb center)
+       rectangle
+       ++(0.6 * \width, 1.0cm);
+
+\node [anchor=east]
+      at ([xshift=-0.3cm * \width] cb center)
+      {\minval};
+\node [anchor=west]
+      at ([xshift=0.3cm * \width] cb center)
+      {\maxval};
