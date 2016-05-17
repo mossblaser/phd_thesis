@@ -412,7 +412,7 @@
 			\cite{dally04,davies12} while the centroids model was developed
 			specifically to reproduce the traffic patterns found in the neural
 			applications SpiNNaker is designed for \cite{navaridas14}. In this work
-			we consider XXX centroids.
+			we consider 3 centroids.
 		
 		\subsection{Fault model}
 			
@@ -495,23 +495,34 @@
 			runtime, the algorithm was used to process a large number of randomly
 			generated routing problems and the runtime recorded.
 			
-			XXX 1-to-XXX multicast routing problems were generated in a
+			\num{10000} one-to-sixteen multicast routing problems were generated in a
 			$256\times256$ hexagonal torus topology, the largest size possible for a
-			SpiNNaker system. Though not reported here, other numbers of multicast
-			destinations were also tested did not result in any behaviours not
-			illustrated in the experiments presented below.
+			SpiNNaker system. Other quantities of multicast destinations were also
+			evaluated but are omitted for brevity since the pattern of results are
+			similar to those outlined here.
 			
 			TODO: APPENDIX WITH OTHER RUNS?
 			
 			The NER and PGS repair algorithms were written in C and compiled with GCC
-			XXX with \verb|-OXXX| level optimisations and executed on a cluster of
-			idle workstations with Intel Core-i5 XXX CPUs.
+			4.8.3 with \verb|-O2| level optimisations and executed on a cluster of
+			idle workstations with 3.10 GHz Intel Core-i5-2400 CPUs.
 			
-			Figure \ref{fig:XXX} shows the average runtimes recorded for both the NER
-			and PGS repair algorithms. In fault-free networks the PGS-repair
-			post-processing step is not required and incurs no penalty while the
-			runtime of the algorithm grows with the fault rate for both fault and
-			traffic models.
+			\begin{figure}
+				\center
+				\buildrplot{figures/routing-runtimes.R}
+				
+				\caption{Mean runtime of routing and PGS repair overhead. PGS repair
+				overhead is stacked above the routing runtime (i.e. bars do not
+				overlap). Error bars indicate 95\% confidence interval. Note different
+				Y-scale for HSS link and uniform fault models.}
+				\label{fig:routing-runtimes}
+			\end{figure}
+			
+			Figure \ref{fig:routing-runtimes} shows the average runtimes recorded for
+			both the NER and PGS repair algorithms. In fault-free networks the
+			PGS-repair post-processing step is not required and incurs no penalty
+			while the runtime of the algorithm grows with the fault rate for both
+			fault and traffic models.
 			
 			Notably the HSS fault model results in longer runtimes for the PGS repair
 			process compared with an equivalent fault-density of uniform faults.
@@ -541,19 +552,32 @@
 			be collected the experimental setup considered previously is reduced to a
 			network containing $48\times48$ nodes.
 			
-			XXX $48\times48$ node network models are produced according to the HSS
-			link and uniform fault models. For each of these models XXX 1-to-XXX
-			routes are generated using the centroid and uniform traffic models.  As
-			is convention in SpiNNaker, routing table entries are inserted for each
-			route at the source of the route, at each destination and at each corner
-			or fork. The number of routing table entries at each node in the model is
-			counted and the maximum number of entries in a single node is reported
-			for each network model.  The \emph{maximum} number of routing entries of
-			any router was chosen since the number of entries available per SpiNNaker
-			router is bounded by hardware.
+			\num{1000} $48\times48$ node network models are produced according to the
+			HSS link and uniform fault models. For each of these models
+			$48\times48\times16=$~\num{36864} one-to-sixteen routes are generated using
+			the centroid and uniform traffic models. This corresponds to one
+			multicast route per application core. As is convention in SpiNNaker,
+			routing table entries are inserted for each route at the source of the
+			route, at each destination and at each corner or fork. The number of
+			routing table entries at each node in the model is counted and the
+			maximum number of entries in a single node is reported for each network
+			model.  The \emph{maximum} number of routing entries of any router was
+			chosen since the number of entries available per SpiNNaker router is
+			bounded by hardware.
 			
-			Figure \ref{fig:XXX} shows the distributions of the largest routing table
-			sizes for each fault and traffic model.
+			\begin{figure}
+				\center
+				\buildrplot{figures/routing-entries.R}
+				
+				\caption{Violin plot showing the distribution of maximum table sizes
+				for \num{1000} random networks. The red line at \num{1024} entries
+				indicates the size of SpiNNaker's routing tables.}
+				\label{fig:routing-entries}
+			\end{figure}
+			
+			
+			Figure \ref{fig:routing-entries} shows the distributions of the largest
+			routing table sizes for each fault and traffic model.
 			
 			\begin{figure}
 				\center
@@ -595,16 +619,26 @@
 			routing table usage and one based on tests run on SpiNNaker hardware.
 			
 			For each of the network fault and traffic pattern described previously,
-			the paths taken for the XXX 1-to-XXX routes generated are used to compute
-			the number of times each link in the network is used. The number of
-			routes passing through the most-used link is then recorded, giving an
-			indication of the level of congestion in the network.
+			the paths taken for the \num{36864} one-to-sixteen multicast routes
+			generated are used to compute the number of times each link in the
+			network is used. The number of routes passing through the most-used link
+			is then recorded, giving an indication of the level of congestion in the
+			network.
 			
-			The results are presented in figure \ref{fig:XXX} and follow the same
-			trends as the results previously shown for routing table usage. Again,
-			HSS link faults result in routes with the greatest congestion due to the
-			concentration of routes finding shortest paths around an obstacle (see
-			\ref{fig:hss-link-resource-usage}).
+			\begin{figure}
+				\center
+				\buildrplot{figures/routing-resource.R}
+				
+				\caption{Violin plot showing the distribution of maximum
+				routes-per-chip for \num{1000} random networks.}
+				\label{fig:routing-resource}
+			\end{figure}
+			
+			The results are presented in figure \ref{fig:routing-resource} and follow
+			the same trends as the results previously shown for routing table usage.
+			Again, HSS link faults result in routes with the greatest congestion due
+			to the concentration of routes finding shortest paths around an obstacle
+			(see \ref{fig:hss-link-resource-usage}).
 			
 			To verify that the results above, an additional experiment has been
 			carried out which attempts to mimic the model used previously in actual

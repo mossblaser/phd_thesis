@@ -84,14 +84,26 @@
 % Definitions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Build (and input) a LaTeX figure, recompiling only if necessary
+% Build (and includegraphics a compiled PDF) a LaTeX figure, recompiling only
+% if necessary
 \newcommand{\buildfig}[1]{%
   \input{|"python buildfig.py #1"}%
-  \includegraphics{\filename}
+  \includegraphics{\filename}%
 }
 
+% Execute a script but only if it (or its dependencies) change.
+% #1 script name (where {output} is substituted for the filename to produce)
+% #2 file extension to add to the output filename
+% Sets \filename to the filename passed as argument.
 \newcommand{\buildfile}[2]{%
   \input{|"python buildfig.py --extension #2 --script #1"}%
+}
+
+% Execute an R script which takes a single argument, a PDF filename, which will
+% then be included in the document.
+\newcommand{\buildrplot}[1]{%
+  \input{|"python buildfig.py --extension .pdf --script Rscript #1 {output}"}%
+  \includegraphics{\filename}%
 }
 
 % A colour to use when drawing the back of a sheet of paper
