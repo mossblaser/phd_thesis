@@ -21,11 +21,11 @@ render_diagram <- function (plot, filename, width=5.4, height=5.4) {
 	cat("\\end{document}")
 	sink()
 	
-	system2("pdflatex", c("plot.tex"), stdout=FALSE)
+	system2("pdflatex", c("plot.tex"), stdout="/dev/stderr")
 	
 	setwd(old_wd);
 	
-	file.copy(paste(working_dir, "plot.pdf", sep="/"), filename)
+	file.copy(paste(working_dir, "plot.pdf", sep="/"), filename, overwrite=TRUE)
 	unlink(working_dir, recursive=TRUE, force=TRUE)
 }
 
@@ -33,7 +33,7 @@ render_diagram <- function (plot, filename, width=5.4, height=5.4) {
 # function which takes numbers/number-strings and produces a string with the
 # number printed with that many decimal places.
 format_decimals <- function(decimals=0){
-    function(x) format(as.double(x),nsmall=decimals,scientific = FALSE)
+	function(x) format(as.double(x),nsmall=decimals,scientific = FALSE)
 }
 
 
@@ -46,17 +46,23 @@ plot_theme = theme_bw() +
              theme(plot.margin = unit(c(0, 0, 0, 0), "lines")) +
              theme(strip.switch.pad.grid = unit(0.5, "lines")) +
              theme(text = element_text(size=11))
+             theme(title = element_text(size=12))
+             theme(axis.title = element_text(size=12))
 
 # Special theme options for bar-charts
 # Remove vertical grid lines on bar charts
-bar_theme = plot_theme +
-            theme(panel.grid.major.x = element_line(linetype=0)) +
-            theme(axis.text.x=element_text(angle=45,hjust=1,vjust=1)) +
-            theme(legend.key = element_rect(linetype=0)) +
-            theme(legend.key.size = unit(1.0, "lines")) +
-            theme(legend.title = element_text(color="white")) +
-            theme(legend.margin = unit(0.1, "lines")) +
-            theme(legend.position="bottom")
+bar_theme_with_grid = plot_theme +
+                      theme(axis.text.x=element_text(angle=45,hjust=1,vjust=1)) +
+                      theme(legend.key = element_rect(linetype=0)) +
+                      theme(legend.key.size = unit(1.0, "lines")) +
+                      theme(legend.title = element_text(color="white")) +
+                      theme(legend.margin = unit(0.1, "lines")) +
+                      theme(legend.position="bottom")
+bar_theme = bar_theme_with_grid +
+            theme(panel.grid.major.x = element_blank()) +
+            theme(panel.grid.minor.x = element_blank())
+
+no_rotate = theme(axis.text.x=element_text(angle=0,hjust=0.5,vjust=1))
 
 # Special theme options for violin-plots
 violin_theme = plot_theme +
