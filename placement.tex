@@ -58,8 +58,11 @@
 			
 			\subsubsection{Sequential placement}
 				
-				Standard super computer software such as SLURM place applications
-				sequentially or even randomly within the super computer topology. When
+				Super computer management software such as SLURM \cite{yoo03} and Blue
+				Gene's system software \cite{gilge14} default to using straight-forward
+				sequential allocation of resources.
+				
+				When
 				network throughput requirements are low or when communication is random
 				or broadcast-based this is also sufficient (since no placement is
 				better than any other). When networks are small this is also probably
