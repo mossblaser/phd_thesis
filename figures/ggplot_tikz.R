@@ -1,4 +1,14 @@
 # GGPlot utilities/themes for generating nice LaTeX figures.
+#
+# Usage:
+#   source("figures/ggplot_tikz.R")
+#   diagram <- ...
+#   diagram <- diagram + plot_theme
+#   render_diagram(processors_over_time, commandArgs(TRUE)[1])
+#
+# See also:
+#   scale_x_discrete(labels = format_decimals(2))
+#     Formats numbers to a fixed two decimal places.
 
 require(ggplot2)
 require(grid)
@@ -14,8 +24,11 @@ render_diagram <- function (plot, filename, width=5.4, height=5.4) {
 	sink("plot.tex")
 	cat("\\documentclass[12pt]{standalone}")
 	cat("\\usepackage{tikz}")
+	cat("\\usepackage{siunitx}")
 	cat("\\begin{document}")
-	tikz(width=width, height=height, console=TRUE)
+	tikz(width=width, height=height, console=TRUE,
+	     packages=c(getOption("tikzLatexPackages"),
+	                "\\usepackage{siunitx}"))
 	print(plot)
 	dev.off()
 	cat("\\end{document}")
@@ -34,6 +47,11 @@ render_diagram <- function (plot, filename, width=5.4, height=5.4) {
 # number printed with that many decimal places.
 format_decimals <- function(decimals=0){
 	function(x) format(as.double(x),nsmall=decimals,scientific = FALSE)
+}
+
+# Number formatting function which prints the number using "\num"
+format_num <- function(x){
+	sprintf("\\num{%.0f}", as.double(x))
 }
 
 

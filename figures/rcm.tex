@@ -1,0 +1,11 @@
+\newcommand{\pixel}[2]{
+	\fill (#1, -#2) rectangle ++(1, 1);
+}
+
+% #1 vertex ordering: original|random|rcm
+\newcommand{\demo}[1]{
+	\begin{scope}[scale=0.04]
+		\input{|"python figures/rcm.py 100 1000 0.03 #1 0"}
+		\draw [thick] (0, 1-100) rectangle ++(100, 100);
+	\end{scope}
+}

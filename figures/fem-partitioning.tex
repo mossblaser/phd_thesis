@@ -1,0 +1,70 @@
+\begin{tikzpicture}
+	% Size of the base cube
+	\pgfmathsetmacro{\width}{2}
+	\pgfmathsetmacro{\height}{2}
+	\pgfmathsetmacro{\depth}{2}
+	
+	% Number of pieces to chop into
+	\pgfmathtruncatemacro{\nx}{3}
+	\pgfmathtruncatemacro{\ny}{4}
+	\pgfmathtruncatemacro{\nz}{2}
+	
+	% Spacing to add between partitioned pieces
+	\pgfmathsetmacro{\spacing}{1.2}
+	
+	
+	% #1 x
+	% #2 y
+	% #3 z
+	\newcommand{\cube}[3]{
+		\draw [thick, fill=white]
+		      (0, 0, 0) --
+		    ++(0, #2, 0) --
+		    ++(0, 0, -#3) --
+		    ++(#1, 0, 0) --
+		    ++(0, -#2, 0) --
+		    ++(0, 0, #3) --
+		      cycle;
+		\draw (#1, #2, 0) -- ++(-#1, 0, 0);
+		\draw (#1, #2, 0) -- ++(0, -#2, 0);
+		\draw (#1, #2, 0) -- ++(0, 0, -#3);
+	}
+	
+	% A full cube
+	\cube{\width}{\height}{\depth}
+	
+	
+	% A chopped up cube
+	\pgfmathsetmacro{\w}{\width / \nx}
+	\pgfmathsetmacro{\h}{\height / \ny}
+	\pgfmathsetmacro{\d}{\depth / \nz}
+	\begin{scope}[xshift=2.0cm*\width,
+	              shift={(0, -\spacing*\h + \h, 0))}]
+		\pgfmathtruncatemacro{\nxx}{\nx - 1}
+		\pgfmathtruncatemacro{\nyy}{\ny - 1}
+		\pgfmathtruncatemacro{\nzz}{\nz - 1}
+		\pgfmathtruncatemacro{\nzzz}{\nz - 2}
+		\foreach \z in {\nzz,\nzzz,...,0}{
+			\foreach \y in {0,1,...,\nyy}{
+				\foreach \x in {0,1,...,\nxx}{
+					\begin{scope}[shift={(\spacing*\w*\x,
+					                      \spacing*\h*\y,
+					                      -\spacing*\d*\z)}]
+						\cube{\w}{\h}{\d}
+					\end{scope}
+				}
+			}
+		}
+	\end{scope}
+	
+	
+	\coordinate (center y) at ($(0,0,0)!0.5!(\width,\height,-\depth)$);
+	
+	\coordinate (left x) at (\width,\height,-\depth);
+	\coordinate (right x) at (2.0cm*\width, 0);
+	
+	% An arrow between the two
+	\draw [->]
+	      ([xshift=0.3em]center y -| left x) --
+	      ([xshift=-0.3em]center y -| right x);
+\end{tikzpicture}

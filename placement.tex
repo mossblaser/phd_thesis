@@ -12,91 +12,263 @@
 	neurons onto nodes in a SpiNNaker system, attempting maximise communication
 	locality.
 	
-	Unfortunately, constructing optimal placements is, in general, an NP-complete
-	problem and intractable beyond a few tens of nodes leading researchers to
-	develop numerous heuristic-driven algorithms for finding `good-enough'
-	placement solutions, a number of which I will introduce in the `related work'
-	section of this chapter. The placement problem is far from unique to neural
-	applications and is widely studied in the context of super computer job
-	scheduling though, as I will show, these techniques target applications
-	smaller in scale than those intended for SpiNNaker. In the field of chip
-	design the placement problem also appears in the form of placing billions of
-	transistors while controlling the length of wires between them. In this
-	chapter I adapt the techniques used for chip placement for the placement of
-	applications for SpiNNaker and achieve XXX?
+	In this chapter I re-evaluate the suitability of simulated annealing as a
+	technique for finding high quality placements for large parallel
+	applications. Though this technique had fallen out of fashion in the field of
+	application placement by the early 1990s, it has found wide use for placing
+	components in computer chip and FPGA designs. In the intervening years,
+	placement problems in super computers have grown in size from tens or
+	hundreds of nodes to millions, a scale at which chip placement techniques
+	were operating in the mid 1990s. I adapt the simulated annealing algorithm
+	used by the VPR academic circuit placement software to produce placements for
+	applications running on SpiNNaker. In that in a range of real and synthetic
+	benchmarks simulated annealing produces high quality placements enabling
+	efficient use of SpiNNaker's network resources.
+	
+	
+	%In the field of chip design, Moore's `Law' \cite{moore65,moore75} observes a
+	%similar exponential growth in the number of components within a single chip.
+	%Today modern processors contain billions of components and an analagous
+	%placement problem exists in attempting to place interconnected components
+	%near to eachother. In this chapter I explore the techniques used for circuit
+	%placement and adapt one such technique, Simulated Annealing (SA)
+	%\cite{kirkpatrick83}, for use in application placement. Despite some early
+	%interest in SA for application placement in the 1980s and early 1990s, the
+	%technique has since fallen out of favour. I find that at the scales of modern
+	%placement problems SA-based placement is able to produce solutions of
+	%superiour quality to contemporary methods.
+	%
+	%TODO: SUMMARISE RESULTS...
 	
 	\section{Related work}
 		
-		Placement in super computers or high-performance computing systems is often
-		referred to as task scheduling since it involves dealing with temporal
-		issues and handling queues of independent jobs. In SpiNNaker this is not
-		done so instead we explore the subset of one-task placement algorithms
-		used.
+		The placement problem has been tackled independently in the literature by
+		researchers in both the application and chip placement communities. In this
+		survey I cover application and chip placement separately as these two
+		communities have remained largely isolated from one another. First I
+		explore the techniques applied to application placement before moving on to
+		contrast this with the techniques used in circuit placement.
 		
-		\subsection{Super computer application placement algorithms}
+		In the application placement literature, the placement problem is often
+		referred under the umbrella term `mapping'. Unfortunately term is often
+		used more broadly to include other tasks such as routing and application
+		partitioning. To avoid ambiguity I use the term `placement', as preferred
+		by the chip and FPGA design communities, to refer specifically to the
+		problem of assigning nodes in an application's communication graph to nodes
+		in a machine's connectivity graph.
+		
+		\subsection{Application placement algorithms}
 			
-			A number of algorithms are used when placing super computer applications.
-			Indeed many researchers have indicated the significance of the impact of
-			this task on common super computer loads. Surprisingly little is done in
-			industry, despite efforts in academia.
+			TODO: GENERAL INTRO
 			
 			\subsubsection{Application-specific approaches (manual placement)}
 				
-				In the case of some applications, such as finite element modelling
-				\cite{clausen10}, the computation proceeds by breaking a physical space
-				into regular pieces and simulating each piece on an individual compute
-				node. The compute nodes then communicate with nodes simulating
-				neighbouring pieces to allow the model to proceed as one. Such
-				approaches have straight-forward mappings onto popular super computer
-				topologies such as toruses which are essentially optimal.
+				In the case of some applications such as finite element modelling
+				\cite{bermejo13}, the structure of the problem itself leads to a
+				natural placement of the computation on nodes in a machine. For example
+				when simulating a 3D volume in an node super computer with a $3 \times
+				4 \times 2$ 3D torus or mesh topology network, the modelled volume
+				might be divided into as in figure \ref{fig:fem-partitioning}. Each
+				cuboid in the model is then assigned to the corresponding node in the
+				network topology.
 				
-				TODO: FIGURE SHOWING PLACEMENT FOR FINITE ELEMENT MODELLING
+				\begin{figure}
+					\center
+					\buildfig{figures/fem-partitioning.tex}
+					
+					\caption{Example partitioning of a 3D space to fit into a super
+					computer with a $3\times4\times2$ torus or mesh topology.}
+					\label{fig:fem-partitioning}
+				\end{figure}
 				
-				This approach is ideal for applications with obvious mappings but for
-				many applications this simply isn't possible. Neural simulations are
-				especially non-obvious to place.
+				When the number of dimensions in a problem do not match that of the
+				underlying network architecture, the common solution is to either
+				divide only along a subset of the axes or to divide into additional
+				pieces on the existing axes \cite{gilge14}.
 			
 			\subsubsection{Sequential placement}
 				
+				In the case where a placement solution is non-obvious one of the
+				simplest and most popular strategies is to apply a simple sequential
+				placement algorithm. Sequential placement algorithms function by
+				iterating over the vertices in the application's communication graph
+				and assigning them to a free node in the target machine. Sequential
+				placement algorithms are differentiated by the order in which they
+				iterate over vertices in the communication graph and fill nodes in the
+				target machine. A number of widely used orderings are described below.
+				
+				\begin{figure}
+					\center
+					\begin{subfigure}{0.32\linewidth}
+						\center
+						\buildfig{figures/sequential-row-order.tex}
+						\caption{Row-order}
+						\label{fig:sequential-row-order}
+					\end{subfigure}
+					\begin{subfigure}{0.32\linewidth}
+						\center
+						\buildfig{figures/sequential-alternating.tex}
+						\caption{Alternating}
+						\label{fig:sequential-alternating}
+					\end{subfigure}
+					\begin{subfigure}{0.32\linewidth}
+						\center
+						\buildfig{figures/sequential-hilbert.tex}
+						\caption{Hilbert curve}
+						\label{fig:sequential-hilbert}
+					\end{subfigure}
+					
+					\caption{Space-filling curves in 2D mesh and torus topologies.}
+					\label{fig:sequential}
+				\end{figure}
+				
 				Super computer management software such as SLURM \cite{yoo03} and Blue
-				Gene's system software \cite{gilge14} default to using straight-forward
-				sequential allocation of resources.
-				
-				When
-				network throughput requirements are low or when communication is random
-				or broadcast-based this is also sufficient (since no placement is
-				better than any other). When networks are small this is also probably
-				sufficient. Existing SpiNNaker software uses this approach.
-			
-			\subsubsection{Greedy Placement}
-				
-				Some manufacturers such as Cray supply extensions to SLURM which
-				allocate applications along a Hilbert curve and following a greedy
-				algorithm to decide the order in which applications are placed on the
-				curve \cite{yoo03}.
+				Gene's system software \cite{gilge14} by default na\"ively iterate over
+				vertices in an application communication graph in the order they are
+				provided. The nodes in the target machine are then iterated over in a
+				simple space-filling curve through the network topology. Figure
+				\ref{fig:hilbert-placement} illustrates the default patterns available
+				in these software packages. The row-order (figure
+				\ref{fig:sequential-row-order}) and alternating (figure
+				\ref{fig:sequential-alternating}) curves correspond with 2D versions of
+				the default node assignment orders used in SLURM and BlueGene systems.
 				
 				\begin{figure}
 					\center
 					\buildfig{figures/hilbert-placement.tex}
 					
-					\caption{A Hilbert curve.}
+					\caption{A Hilbert curve, coloured from blue to red.}
 					\label{fig:hilbert-placement}
 				\end{figure}
 				
-				Hilbert curves map a 1D spaces into 2D spaces, attempting to preserve
-				the property that things which are close in 1D will also be close in
-				2D. As such this means that by iterating over the nodes in the graph in
-				a sensible (linear) order, a sensible 2D placement should arise. This
-				approach can work well but is easily misled and is essentially ignoring
-				the 2D nature of the network topology.
-			
+				The Cray extensions to SLURM software provide a Hilbert curve
+				\cite{hilbert91} (figure \ref{fig:sequential-hilbert}) node assignment
+				order. Unlike the row-order and alternating space filling curves the
+				Hilbert curve ensures that pairs of vertices close together in the node
+				iteration order are also close together in the target machine's network
+				\cite{moon01, zumbusch99}. Figure \ref{fig:hilbert-placement} shows a
+				5$^\textrm{th}$-order Hilbert curve where each point in the curve is
+				coloured according to its position along the curve. In this figure it
+				is possible to see that nearby positions in the curve (which share
+				similar colours) are also close in 2D space.
+				
+				When the proximity of vertices in the vertex-ordering supplied by an
+				application is a good estimator of those vertices communication
+				requirements, the sequential assignment schemes discussed above can be
+				very effective. These techniques have also proven adequate in
+				small-scale and densely connected applications such as early neural
+				simulations running on prototype SpiNNaker machines with tens of nodes
+				\cite{galluppi10} but growing beyond this scale has proven problematic.
+				
+				\begin{figure}
+					\center
+					\begin{subfigure}{0.45\linewidth}
+						\center
+						\buildfig{figures/rcm-initial.tex}
+						
+						\caption{Original permutation}
+						\label{fig:rcm-initial}
+					\end{subfigure}
+					\begin{subfigure}{0.45\linewidth}
+						\center
+						\buildfig{figures/rcm-sorted.tex}
+						
+						\caption{RCM permutation}
+						\label{fig:rcm-sorted}
+					\end{subfigure}
+					
+					\caption{Adjacency matrix representation of a graph before and after
+					permutation by the RCM algorithm.}
+					\label{fig:rcm}
+				\end{figure}
+				
+				A number of algorithms have been proposed for automatically selecting
+				good vertex iteration orders, typically using a graph-traversal based
+				heuristic. A typical method, described by Hoefler \emph{et al.}
+				\cite{hoefler11} exploits the Reverse-Cuthill-McKee (RCM) algorithm
+				\cite{cuthill69}. An application's communication matrix is represented
+				as an adjacency matrix, $M$, where $M_{i,j}$ is 1 if node $i$ is
+				connected by an edge to node $j$ and 0 otherwise. An example matrix is
+				illustrated in figure \ref{fig:rcm-initial}. The RCM algorithm uses a
+				simple heuristic to permute the matrix (i.e. renumber the nodes in the
+				graph) in order to reduce the bandwidth of the matrix. Figure
+				\ref{fig:rcm-sorted} shows the RCM-permuted version of the example
+				adjacency matrix. When a graph's vertices are ordered as in a
+				bandwidth-reduced sparse matrix, vertices close together in the
+				ordering are likely to communicate while those further apart tend not
+				to communicate.
+				
 			\subsubsection{Optimisation-based Placement}
 				
 				% Citations from short report about optimisation in placement...
 				% \cite{chen06,jeannot14} and \cite{jeannot10} ("subsets of apps")
 				
 				In the academic community, a number of attempts have been made to use
-				various optimisation algorithms for the placement of applications.
+				more sophisticated optimisation algorithms for the placement of
+				applications. In 1985, Steele \cite{steele85} proposed the use of
+				simulated annealing for placing applications in the 6D torus topology
+				of the 64 node `Caltech Cosmic Cube' machine. Simulated annealing,
+				originally developed by Kirkpatrick \emph{et al.} \cite{kirkpatrick83},
+				is a general-purpose optimisation algorithm which works by analogy to
+				the physical process of annealing. In brief simulated annealing
+				functions by randomly swapping vertices in a candidate placement
+				solution, accepting swaps which move connected vertices closer together
+				and rejecting some proportion of swaps which move connected vertices
+				further apart. The simulated annealing algorithm is described in detail
+				later in this chapter.
+				
+				Towards the end of the 1980s, application placement appeared to be
+				becoming less important as super computer network architectures
+				improved:
+				%
+				\begin{displayquote}
+					``Careful placement was necessary because of the slow communication
+					and non-uniform addressing of early concurrent computers. However,
+					the development of message passing machines with fast communications
+					and a uniform global address space  has made placement less of an
+					issue. In such machines a random placement performs nearly as well as
+					an optimum placement.''
+					
+					\noindent --- W. Dally, 1987 \cite{dally87}
+				\end{displayquote}
+				%
+				In addition, network and problem sizes remained small, so small in fact
+				that linear-programming based optimal placement still appeared in
+				benchmarks comparing placement algorithms \cite{xu91}. In this
+				environment, simpler sequential placement algorithms gained favour over
+				more computationally expensive algorithms such as simulated annealing.
+				
+				As problem and machine sizes have grown and network utilisation has
+				once again become an important factor in application performance
+				\cite{navaridas09b} more complex optimisation algorithms have
+				reappeared in the literature. One popular approach employs graph
+				partitioning algorithms such as METIS \cite{karypis98} to perform
+				recursive bipartitioning based placement
+				\cite{phillips14,hoefler11,pellegrini96}.  This placement process is
+				illustrated in figure \ref{fig:partitioning}.
+				
+				In the first step, the application communication graph and machine
+				connectivity graph are bipartitioned such that the number of edges
+				between partitions is minimised. Each half of the communication graph
+				is associated with one of the halves of the machine connectivity graph.
+				The partitioning process is then repeated recursively on each of the
+				two communication and connectivity graph pairs. The process halts when
+				the graphs can no longer be partitioned at which point the vertices in
+				the communication graph are placed on their associated node.
+				
+				\begin{figure}
+					\center
+					\buildfig{figures/partitioning.tex}
+					
+					\caption{Illustration of application placement by recursive
+					partitioning.}
+					\label{fig:partitioning}
+				\end{figure}
+				
+				TODO: PARTITIONING IS GREAT AND ALL BUT QUALITY ISN'T ALWAYS GREAT AND
+				IT DOESN'T DEAL WELL WITH MULTI-CONSTRAINT SCENARIOS E.G. PROCESSOR AND
+				MEMORY RESTRICTIONS.
+				
 				Unfortunately, many of these simply aren't suited to the scale of
 				neural applications running on SpiNNaker (e.g. only cope with tens of
 				nodes while SpiNNaker may contain hundreds of thousands).
@@ -214,43 +386,9 @@
 				
 				TODO: DESCRIBE THE ALGORITHM I IMPLEMENTED.
 	
-	\section{Using chip-placement algorithms for application placement}
-		
-		As described above, chip and FPGA placement algorithms are already able to
-		cope with the scale of the application placement problem but there are a
-		few differences which must be considered.
-		
-		\subsection{Topological restrictions}
-			
-			Chip placement occurs in 2D Euclidean space: the surface of a chip.
-			Unfortunately, super computer network topologies do not often exist in
-			such mundane forms. In the case of SpiNNaker we have a torus network
-			which causes great problems for many analytical techniques. This is
-			because distances in a torus do not increase or decrease monotonically as
-			two points are moved in opposite directions. As a result, solution
-			methods frequently fall apart.
-			
-			TODO: FIGURE ILLUSTRATING DISTANCE DISCONTINUITY
-		
-		\subsection{Placement constraints}
-			
-			At the simplest level, there is usually a non-overlapping constraint for
-			placement of circuit components. In FPGAs there may also be rules about
-			which parts of the chip a particular component may be placed (e.g. block
-			RAMS can only go in certain places...).
-			
-			In application placement there are multiple independent resource
-			constraints on a given chip. For example, CPU resource and memory
-			resource. As a result we're left with a bin packing problem not found in
-			circuit placement.
-			
-			The soft constraints on the placement solution are also similar in that
-			routing resources must be minimised and congestion avoided. Modern
-			placers may also have timing based constraints which are not generally
-			present in software applications due to strongly the non-deterministic
-			nature of network latency.
-	
 	\section{Application placement by simulated annealing}
+		
+		\label{sec:placement-by-annealing}	
 		
 		I have implemented a simplified SA based application placement algorithm
 		based on the approach used in the popular VPR place and route tool chain.
@@ -332,26 +470,9 @@
 				
 				Simply add a net.
 	
-	\section{Hierarchical placement}
-		
-		I have implemented the <TODO WHICH ALGO?> clustering algorithm and used
-		this as part of an experimental placement system. Maybe I'll remove this
-		section...
-		
-		\subsection{Clustering}
-		
-		\subsection{Refinement}
-			
-			Though it is conventional to allow communication between partitions
-			during placement, I've just ignored that and wish to see how it goes...
-		
-		\subsection{Parallelism}
-			
-			Run each refinement in parallel on SpiNNaker. Uniquely the amount of
-			parallelism available will exactly match that available in the problem,
-			by definition!
-	
 	\section{Evaluation}
+		
+		\label{sec:placement-results}
 		
 		Though benchmarks exist for super computer loads and chip placement tasks,
 		such things don't exist for neural applications. As a result I use a
