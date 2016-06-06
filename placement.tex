@@ -237,6 +237,10 @@
 				benchmarks comparing placement algorithms \cite{xu91}. In this
 				environment, simpler sequential placement algorithms gained favour over
 				more computationally expensive algorithms such as simulated annealing.
+				More recently `low temperature' simulated annealing has only been
+				employed as a post-processing stage for other heuristic placers
+				\cite{hoefler11} or reinvented only to be applied on 90s scale problems
+				\cite{chen06}.
 				
 				As problem and machine sizes have grown and network utilisation has
 				once again become an important factor in application performance
@@ -247,144 +251,181 @@
 				\cite{phillips14,hoefler11,pellegrini96}.  This placement process is
 				illustrated in figure \ref{fig:partitioning}.
 				
+				\begin{figure}
+					\center
+					\buildfig{figures/partitioning.tex}
+					
+					\caption{Illustration of application placement by recursive
+					partitioning. Each node has the capacity to hold two vertices.}
+					\label{fig:partitioning}
+				\end{figure}
+				
 				In the first step, the application communication graph and machine
 				connectivity graph are bipartitioned such that the number of edges
 				between partitions is minimised. Each half of the communication graph
 				is associated with one of the halves of the machine connectivity graph.
 				The partitioning process is then repeated recursively on each of the
 				two communication and connectivity graph pairs. The process halts when
-				the graphs can no longer be partitioned at which point the vertices in
-				the communication graph are placed on their associated node.
+				either of the graphs can no longer be partitioned. The vertices in the
+				communication graph are then placed on their associated node in the
+				connectivity graph.
 				
-				\begin{figure}
-					\center
-					\buildfig{figures/partitioning.tex}
-					
-					\caption{Illustration of application placement by recursive
-					partitioning.}
-					\label{fig:partitioning}
-				\end{figure}
+				Unfortunately recursive partitioning-based techniques are known to
+				perform sub-optimally when the number of nodes is not a power of two
+				\cite{simon97}. In addition, placement problems are often subject to
+				multiple orthogonal constraints, for example processor and memory
+				requirements. Since the balance of a partition with multiple orthogonal
+				resources depends on the eventual packing employed by a placement,
+				partitioning-based algorithms may inadvertently become trapped by local
+				minima.
 				
-				TODO: PARTITIONING IS GREAT AND ALL BUT QUALITY ISN'T ALWAYS GREAT AND
-				IT DOESN'T DEAL WELL WITH MULTI-CONSTRAINT SCENARIOS E.G. PROCESSOR AND
-				MEMORY RESTRICTIONS.
-				
-				Unfortunately, many of these simply aren't suited to the scale of
-				neural applications running on SpiNNaker (e.g. only cope with tens of
-				nodes while SpiNNaker may contain hundreds of thousands).
-				
-				Additionally, a number of algorithms have been developed which make
-				assumptions about the topologies of the problem or network. Tree match
-				for example attempts to map tree-shaped problems to tree-shaped
-				networks. Such algorithms can be highly effective but again do not
-				apply to SpiNNaker or its neural applications.
-		
-		\subsection{Chip placement algorithms}
+				Other approaches employ other optimisation techniques but designed for
+				use with networks particular connectivity patterns, for example trees
+				\cite{jeannot14,traff02}. Since SpiNNaker's network structure does not
+				match these architectures, these approaches are unsuitable.
+	
+		\subsection{Circuit placement algorithms}
 			
-			The chip-design industry has, for many years, dealt with problems
-			analogous to the task of placing super computer jobs in a way suited to
-			SpiNNaker. Modern CPUs have millions or billions of components with
-			strictly fixed connectivity. CPU designers must place each of these onto
-			a chip such that the connection lengths are controlled to reduce
-			congestion and increase performance. As such, these algorithms are
-			ideally suited to future super computer placement work since they already
-			operate at the scales required \cite{nam07}.
+			The circuit placement problem in chip and FPGA design is very similar to
+			that of application placement, requiring communicating components to be
+			assigned positions in some topology such that congestion is controlled.
+			Modern CPUs have millions or billions of components and thus present a
+			considerable placement problem often exceeding even the largest
+			application problems. As such, chip placement algorithms may be well
+			suited to tackling modern large-scale problems.
 			
-			\subsubsection{Cost functions}
-				
-				HPWL is popular but a bit crap for high fan-outs. It is, however, quite
-				simple.
-				
-				TODO: SELECT A BETTER COST FUNCTION...
+			A key difference between the circuit and application placement problems
+			is that while super computer network topologies come in many shapes and
+			forms, chips are generally strictly 2D and often constrained to Manhattan
+			geometry (analagous to a 2D mesh topology) to simplify routing. As a
+			result of this circuit placement algorithms often directly exploit
+			geometric propoerties of the problem which may make them difficult to
+			adapt to certain network topologies.
 			
-			\subsubsection{Simulated annealing}
-				
-				One of the oldest techniques used for circuit placement is simulated
-				annealing and this remains popular today thanks to its sheer
-				versatility (see VPR, other open FPGA tools).
-				
-				SA works by analogy with the physical process of annealing.
-				The simulated annealing algorithm works by selecting random pairs of
-				components on a chip, swapping them and evaluating some cost function.
-				If the swap reduces the cost function, it is kept, if not, depending on
-				a function of the current temperature and the cost introduced by the
-				swap.
-				
-				TODO: ILLUSTRATION OF SIMULATED ANNEALING SWAP OPERATION
-				
-				By occasionally allowing costly swaps, the annealing algorithm avoids
-				becoming trapped in local minima. As the algorithm proceeds, the
-				temperature is slowly reduced and with it the proportion of costly
-				swaps which are retained. This causes the placement to move from
-				exploration early on towards refinement later on.
-				
-				The temperature schedule of an annealing algorithm is critical to its
-				success. In general these schedules are computed based on the
-				performance of the algorithm as it runs. In VPR the following schedule
-				is used.
-				
-				TODO: DESCRIBE VPR'S SCHEDULE
-				
-				TODO: FIND AND DESCRIBE ALTERNATIVE SCHEDULE?
-				
-				Unfortunately, SA is very difficult to parallelise, especially in the
-				case of placement. As a result, its scalability has been limited and
-				resulted in significantly reduced usage in recent work.
+			Circuit placement techniques can be grouped into three broad categories
+			\cite{kahng11}:
 			
-			\subsubsection{Partitioning placement}
+			\begin{description}
 				
-				Partitioning based placement solves the placement problem using
-				graph-partitioning recursively on the problem graph to assign each part
-				of the circuit to some area in the super chip. Though a number of
-				algorithms have proven successful in academic placement contests over
-				the years, they are not popular in industrial settings.
+				\item[Partitioning-based] These algorithms function by recursively
+				partitioning the circuit in order to group together related components.
+				
+				\item[Stochastic] These algorithms utilise stochastic search techniques
+				such as simulated annelaing to generate placement solutions.
+				
+				\item[Analytical] These algorithms approximate the placement problem as
+				another problem to which exact, or good, solutions can be found
+				efficiently.
+				
+			\end{description}
+			
+			I assess the suitability of each of these techniques for use in
+			application placement below. For a more detailed survey of circuit
+			placement techniques the reader is referred to `VLSI physical design:
+			from graph partitioning to timing closure' by Kahng \emph{et al.}
+			\cite{kahng11}.
+			
+			\subsubsection{Partitioning-based placement}
+				
+				Partitioning based placement has a long history with early examples
+				dating back to the 1970s \cite{breuer77}. As in partitioning-based
+				application placement the input circuit is recursively partitioned
+				alongside the target topology. Since the target topology is the 2D
+				surface of a chip only simple geometric partitioning is required.
+				
+				Modern partitioning based placers such as Capo \cite{roy05} employ
+				additional heuristics such as terminal propagation where connections
+				between adjacent partitions are are considered to attempt to align
+				components on either side of the cut.
+				
+				As in application placement, however, difficulties in generating good
+				quality many-way partitions can negatively impact the performance of
+				these algorithms. These approaches have since been largely superseded
+				\cite{markov15}.
+			
+			\subsubsection{Stochastic techniques}
+				
+				The simulated annealing algorithm was originally developed specifically
+				for the application of circuit placement \cite{kirkpatrick83} and
+				rapidly gained popularity becoming the dominant circuit placement
+				technique of the late 1980s and early 1990s when the first chips
+				breaching the one-million component mark appeared
+				\cite{betz97,sechen85}. Due to difficulties in scaling beyond
+				tens-of-millions of components, plain simulated-annealing based
+				techniques have dwindled in popularity. Despite this, simulated
+				annealing remains popular in niche fields where flexibility is desired,
+				such as the highly configurable Verilog-To-Routing (VTR) software suite
+				\cite{luu14} and the Open Source Arachne-PNR \cite{cseed} placer.
+				
+				Various efforts continue to be made to speed up the simulated annealing
+				process by attempting to partition the input problem into several
+				independent problems \cite{choong10}, parallelise the search process
+				\cite{ludwin08} and simply carrying out multiple searches starting from
+				different random states \cite{haldar00}. As yet, substantial speed-ups
+				have yet to emerge.
 			
 			\subsubsection{Analytical placement}
 				
-				In analytical placement, cost function for the circuit graph is
-				approximated in a form which is amenable to solutions with standard
-				numerical or symbolic algebraic techniques. Using these techniques,
-				exact minimum cost (in terms of the approximation) configurations can
-				be obtained.
+				The most recent generation of placement algorithms attempt to transform
+				placement problems into approximately equivalent problems with
+				closed-form solutions. One of the common trade-offs of these approaches
+				is modelling components as point-like objects. As circuit designs have
+				grown, this approximation has grown more accurate resulting in a boom
+				in popularity \cite{markov15}.
 				
-				Quadratic placement is a popular analytical placement technique which
-				approximates the cost of a placement as the sum of the squares of the
-				distances between connected circuit elements.
+				A popular analytical method employed by a number of circuit placement
+				algorithms is `quadratic placement' \cite{kahng11,spindler08}. In this
+				algorithm the components in a circuit are modelled as infinitesimal
+				objects with connections between components modelled as spring-like
+				forces. Unlike real springs which obey Hooke's law, the force exerted
+				by a connection is proportional to the \emph{square} of its distance.
 				
-				TODO: FIGURE EXAMPLE QUADRATIC PLACEMENT PROBLEM AND SOLUTION
+				\begin{figure}
+					\center
+					\buildfig{figures/quadratic-placement.tex}
+					
+					\caption{An optimal 1D quadratic placement solution for two fixed
+					vertices ($f_1$ and $f_2$), two movable vertices ($m_1$ and $m_2$)
+					and three weighted edges.}
+					\label{fig:quadratic-placement}
+				\end{figure}
 				
-				As such this gives a quadratic cost function like so which we must
-				minimise.
+				To illustrate this approach, consider the simple one-dimensional
+				placement problem presented in figure \ref{fig:quadratic-placement}.
+				In the quadratic placement technique, the cost of a placement is the
+				weighted sum of the squares of the edge distances. In this case this
+				yields:
+				%
+				\begin{equation*}
+					\textrm{Cost} = 1(f_1 - m_1)^2 + 2(m_1 - m_2)^2 + 1(m_2 - f_2)^2
+				\end{equation*}
+				%
+				An optimal placement is one which minimises this function. To find
+				values which minimise a quadratic, the equation is differentiated
+				yielding a system of linear equations. The linear equations are then
+				solved to find the positions of the movable vertices which minimise the
+				quadratic cost function.
 				
-				TODO: QUADRATIC COST EQN
+				Quadratic placement is extended or 2 (or more dimensions) by simply
+				applying the process for each dimension separately. Unfortunately, a
+				straight-forward extension to non-euclidean geometries such as trees or
+				even toruses is non trivial. For example, quadratic placement relies on
+				cost increasing monotonically as two points are moved in opposite
+				directions while in a torus this is not the case. Likewise in tree
+				topologies, `movement' is not well defined.
 				
-				To minimise the function we differentiate and solve using simple
-				symbolic manipulation.
+				An additional challenge in quadratic placement is that some vertices'
+				locations must be fixed in order to prevent a degenerate solution where
+				all vertices have the same coordinate. In circuit placement, the
+				locations of `pads' used to connect components in a circuit to the
+				outside world are typically fixed and provide convenient anchors during
+				placement. Algorithms such as SimPL \cite{kim12} employ a combination
+				of analytical techniques in order to add virtual `anchor' components
+				which prevent degenerate solutions from forming. Unfortunately this
+				approach further adds to the difficulty of porting the technique to
+				non-euclidean geometries.
 				
-				TODO: QUADRATIC COST SOLUTION
-				
-				Unfortunately, quadratic placement doesn't contain any congestion
-				relief by default so various schemes exist. For example, extra anchor
-				nodes are inserted which gently pull the circuit components apart from
-				each other. As a result, the algorithm generally proceeds by iterating,
-				regenerating anchors each time.
-				
-				Other non-quadratic analytical methods exist too with numerical
-				solutions. The approaches are often similar.
-			
-			\subsubsection{Hierarchical clustering}
-				
-				Many placement algorithms scale super-linearly with problem size and so
-				larger problems become increasingly problematic to handle. To solve
-				this problem clustering techniques are first applied to first simplify
-				the placement problem. A solution is then found at the coarse level and
-				then hierarchically fleshed out.
-				
-				Various clustering algorithms are in use.
-				
-				TODO: TALK ABOUT CLUSTERING IN PLACEMENT...
-				
-				TODO: DESCRIBE THE ALGORITHM I IMPLEMENTED.
+				% TODO: mention viswanathan07 FastPlace 3.0 -- multilevel technique?
 	
 	\section{Application placement by simulated annealing}
 		
