@@ -1,0 +1,36 @@
+% XXX: Padding to expand all the figures to the same max size
+\begin{scope}[white]
+	\draw (-2, 4) -- ++(0,0,7);
+	\draw (-2, 4) -- ++(11,0,0);
+	\draw (-2, 4) -- ++(0,0,-6);
+	\draw (-2, 4) -- ++(0,-11,0);
+\end{scope}
+
+% HPWL XY
+\ifthenelse{\equal{\missedDimension}{2}}{
+	\draw (-2, 4) --
+	      (4, 4) --
+	      (4, -3) -- node [anchor=north] {$w_{xy}$}
+	      (-2, -3) -- node [anchor=east, inner sep=1em] {$h_{xy}$}
+	      cycle;
+}{}
+
+% HPWL XZ
+\ifthenelse{\equal{\missedDimension}{1}}{
+	\draw (-2, 4) -- node [anchor=east, inner sep=0.5em] {$h_{xz}$}
+	      ++(0,0,7) -- node [anchor=north] {$w_{xz}$}
+	      ++(11,0,0) --
+	      ++(0,0,-7) --
+	      cycle;
+}{}
+
+% HPWL YZ
+\ifthenelse{\equal{\missedDimension}{0}}{
+	\draw (-2, 4) -- node [anchor=east, inner sep=0.5em] {$h_{yz}$}
+	      ++(0,-11,0) -- node [anchor=west, inner sep=0.5em] {$w_{yz}$}
+	      ++(0,0,-6) --
+	      ++(0,11,0) --
+	      cycle;
+}{}
+
+\input{figures/cost-function.tex}

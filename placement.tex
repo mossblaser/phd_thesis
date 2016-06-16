@@ -28,7 +28,7 @@
 	
 	%In the field of chip design, Moore's `Law' \cite{moore65,moore75} observes a
 	%similar exponential growth in the number of components within a single chip.
-	%Today modern processors contain billions of components and an analagous
+	%Today modern processors contain billions of components and an analogous
 	%placement problem exists in attempting to place interconnected components
 	%near to eachother. In this chapter I explore the techniques used for circuit
 	%placement and adapt one such technique, Simulated Annealing (SA)
@@ -49,17 +49,17 @@
 		explore the techniques applied to application placement before moving on to
 		contrast this with the techniques used in circuit placement.
 		
-		In the application placement literature, the placement problem is often
-		referred under the umbrella term `mapping'. Unfortunately term is often
-		used more broadly to include other tasks such as routing and application
-		partitioning. To avoid ambiguity I use the term `placement', as preferred
-		by the chip and FPGA design communities, to refer specifically to the
-		problem of assigning nodes in an application's communication graph to nodes
-		in a machine's connectivity graph.
-		
 		\subsection{Application placement algorithms}
 			
 			TODO: GENERAL INTRO
+			
+			In the application placement literature, the placement problem is often
+			referred under the umbrella term `mapping'. Unfortunately term is often
+			used more broadly to include other tasks such as routing and application
+			partitioning. To avoid ambiguity I use the term `placement', as preferred
+			by the chip and FPGA design communities, to refer specifically to the
+			problem of assigning nodes in an application's communication graph to nodes
+			in a machine's connectivity graph.
 			
 			\subsubsection{Application-specific approaches (manual placement)}
 				
@@ -183,64 +183,87 @@
 				\end{figure}
 				
 				A number of algorithms have been proposed for automatically selecting
-				good vertex iteration orders, typically using a graph-traversal based
-				heuristic. A typical method, described by Hoefler \emph{et al.}
-				\cite{hoefler11} exploits the Reverse-Cuthill-McKee (RCM) algorithm
-				\cite{cuthill69}. An application's communication matrix is represented
-				as an adjacency matrix, $M$, where $M_{i,j}$ is 1 if node $i$ is
-				connected by an edge to node $j$ and 0 otherwise. An example matrix is
-				illustrated in figure \ref{fig:rcm-initial}. The RCM algorithm uses a
-				simple heuristic to permute the matrix (i.e. renumber the nodes in the
-				graph) in order to reduce the bandwidth of the matrix. Figure
-				\ref{fig:rcm-sorted} shows the RCM-permuted version of the example
-				adjacency matrix. When a graph's vertices are ordered as in a
-				bandwidth-reduced sparse matrix, vertices close together in the
-				ordering are likely to communicate while those further apart tend not
-				to communicate.
+				good vertex and chip iteration orders, typically using a
+				graph-traversal based heuristic. An example typical of this type of
+				technique is `graph similarity based mapping' described by Hoefler and
+				Snir \emph{et al.} \cite{hoefler11}. This algorithm exploits Reverse
+				Cuthill-McKee (RCM) algorithm \cite{cuthill69} to select a linear
+				ordering of vertices in which connected vertices tend to appear close
+				together. Internally the RCM algorithm uses a breadth-first-search-like
+				algorithm to order vertices.
 				
-			\subsubsection{Optimisation-based Placement}
+				The RCM algorithm was originally designed as a tool for reducing the
+				bandwidth of matrices to improve the performance of linear algebra
+				techniques. Figure \ref{fig:rcm} illustrates how a sparse matrix is
+				permuted by the RCM algorithm to produce a matrix with low bandwidth.
+				The matrix dual of a graph is an adjacency matrix, $M$, where $M_{i,j}$
+				is $w$ if node $i$ is connected by an edge to node $j$ with weight $w$
+				and 0 otherwise. When a graph's adjacency matrix is permuted by the RCM
+				algorithm, the connectivity of the graph is unchanged but the mapping
+				from vertices to rows and columns in the matrix changes. The ordering
+				of vertices in a low-bandwidth adjacency matrix will tend to keep
+				connected vertices closer together in the ordering.
 				
-				% Citations from short report about optimisation in placement...
-				% \cite{chen06,jeannot14} and \cite{jeannot10} ("subsets of apps")
+			\subsubsection{Simulated annealing}
 				
 				In the academic community, a number of attempts have been made to use
 				more sophisticated optimisation algorithms for the placement of
 				applications. In 1985, Steele \cite{steele85} proposed the use of
 				simulated annealing for placing applications in the 6D torus topology
-				of the 64 node `Caltech Cosmic Cube' machine. Simulated annealing,
-				originally developed by Kirkpatrick \emph{et al.} \cite{kirkpatrick83},
-				is a general-purpose optimisation algorithm which works by analogy to
-				the physical process of annealing. In brief simulated annealing
-				functions by randomly swapping vertices in a candidate placement
-				solution, accepting swaps which move connected vertices closer together
-				and rejecting some proportion of swaps which move connected vertices
-				further apart. The simulated annealing algorithm is described in detail
-				later in this chapter.
+				of the 64 node `Caltech Cosmic Cube' machine. The proposed algorithm is
+				described below.
+				
+				Initially, the vertices in the communication graph of the application
+				to be placed are assigned randomly to nodes in the machine's
+				connectivity graph. Two vertices are then chosen at random and swapped.
+				If this swap reduces the \emph{cost} of the placement (as defined
+				later), the vertices are kept in their new locations. If the cost
+				increases as a result of the swap, the vertices are moved back to their
+				original locations with a probability dependent on the cost increase
+				incurred and the current \emph{temperature}.
+				
+				The process of picking and swapping vertices is repeated many times.
+				Initially the temperature is set to a large value causing almost all
+				swaps to be accepted, regardless of their cost. As the algorithm
+				proceeds, the temperature is gradually reduced until eventually only
+				swaps resulting in cost reductions are accepted. By initially accepting
+				some apparently detrimental swaps, the algorithm is able to avoid
+				becoming trapped in local minima. Towards the end of the algorithm's
+				execution the solution is presumed to be close to the global
+				minimum-cost solution and so few or no detrimental swaps are accepted.
+				
+				The cost of a particular placement is defined by some expression
+				approximating the quality of the placement with better quality
+				placements having lower-costs. In Steele's work, this cost is computed
+				by finding the shortest path routes between all connected vertices in
+				the connectivity graph using Dijkstra's algorithm. Rather than
+				repeating this relatively expensive computation after each swap, the
+				cost may be updated by only recomputing the routes connecting with the
+				swapped vertices.
+				
+				The number of swaps to attempt and the way the temperature is reduced,
+				known as the \emph{annealing schedule}, can have a major impact on the
+				eventual quality of the solution. Selection of an annealing schedule is
+				discussed in greater depth later in this chapter.
 				
 				Towards the end of the 1980s, application placement appeared to be
 				becoming less important as super computer network architectures
-				improved:
-				%
-				\begin{displayquote}
-					``Careful placement was necessary because of the slow communication
-					and non-uniform addressing of early concurrent computers. However,
-					the development of message passing machines with fast communications
-					and a uniform global address space  has made placement less of an
-					issue. In such machines a random placement performs nearly as well as
-					an optimum placement.''
-					
-					\noindent --- W. Dally, 1987 \cite{dally87}
-				\end{displayquote}
-				%
-				In addition, network and problem sizes remained small, so small in fact
-				that linear-programming based optimal placement still appeared in
-				benchmarks comparing placement algorithms \cite{xu91}. In this
+				improved appearing to render computationally intensive placement
+				algorithms necessary \cite{dally87}.  In addition, network and problem
+				sizes remained small, so small in fact that exact linear-programming
+				based placement algorithms remained a meaningful point of comparison
+				for simulated annealing based techniques \cite{xu91}.  In this
 				environment, simpler sequential placement algorithms gained favour over
 				more computationally expensive algorithms such as simulated annealing.
-				More recently `low temperature' simulated annealing has only been
-				employed as a post-processing stage for other heuristic placers
-				\cite{hoefler11} or reinvented only to be applied on 90s scale problems
-				\cite{chen06}.
+				
+				In contemporary application placement algorithms, `low temperature'
+				simulated annealing algorithms are occasionally employed as a
+				post-processing step for by other placement algorithms \cite{hoefler11}
+				but has otherwise fallen out of use.
+				
+				% Outside of badly attempting 90s scale problems at least... \cite{chen06}
+			
+			\subsubsection{Recursive partitioning}
 				
 				As problem and machine sizes have grown and network utilisation has
 				once again become an important factor in application performance
@@ -297,7 +320,7 @@
 			A key difference between the circuit and application placement problems
 			is that while super computer network topologies come in many shapes and
 			forms, chips are generally strictly 2D and often constrained to Manhattan
-			geometry (analagous to a 2D mesh topology) to simplify routing. As a
+			geometry (analogous to a 2D mesh topology) to simplify routing. As a
 			result of this circuit placement algorithms often directly exploit
 			geometric propoerties of the problem which may make them difficult to
 			adapt to certain network topologies.
@@ -310,8 +333,7 @@
 				\item[Partitioning-based] These algorithms function by recursively
 				partitioning the circuit in order to group together related components.
 				
-				\item[Stochastic] These algorithms utilise stochastic search techniques
-				such as simulated annelaing to generate placement solutions.
+				\item[Simulated annealing]
 				
 				\item[Analytical] These algorithms approximate the placement problem as
 				another problem to which exact, or good, solutions can be found
@@ -328,10 +350,11 @@
 			\subsubsection{Partitioning-based placement}
 				
 				Partitioning based placement has a long history with early examples
-				dating back to the 1970s \cite{breuer77}. As in partitioning-based
-				application placement the input circuit is recursively partitioned
-				alongside the target topology. Since the target topology is the 2D
-				surface of a chip only simple geometric partitioning is required.
+				dating back to the 1970s \cite{breuer77}. As in recursive partitioning
+				based application placement algorithms, the input circuit is
+				partitioned alongside the target topology. Since the target topology is
+				the 2D surface of a chip only simple geometric partitioning is
+				required.
 				
 				Modern partitioning based placers such as Capo \cite{roy05} employ
 				additional heuristics such as terminal propagation where connections
@@ -342,27 +365,6 @@
 				quality many-way partitions can negatively impact the performance of
 				these algorithms. These approaches have since been largely superseded
 				\cite{markov15}.
-			
-			\subsubsection{Stochastic techniques}
-				
-				The simulated annealing algorithm was originally developed specifically
-				for the application of circuit placement \cite{kirkpatrick83} and
-				rapidly gained popularity becoming the dominant circuit placement
-				technique of the late 1980s and early 1990s when the first chips
-				breaching the one-million component mark appeared
-				\cite{betz97,sechen85}. Due to difficulties in scaling beyond
-				tens-of-millions of components, plain simulated-annealing based
-				techniques have dwindled in popularity. Despite this, simulated
-				annealing remains popular in niche fields where flexibility is desired,
-				such as the highly configurable Verilog-To-Routing (VTR) software suite
-				\cite{luu14} and the Open Source Arachne-PNR \cite{cseed} placer.
-				
-				Various efforts continue to be made to speed up the simulated annealing
-				process by attempting to partition the input problem into several
-				independent problems \cite{choong10}, parallelise the search process
-				\cite{ludwin08} and simply carrying out multiple searches starting from
-				different random states \cite{haldar00}. As yet, substantial speed-ups
-				have yet to emerge.
 			
 			\subsubsection{Analytical placement}
 				
@@ -419,101 +421,482 @@
 				all vertices have the same coordinate. In circuit placement, the
 				locations of `pads' used to connect components in a circuit to the
 				outside world are typically fixed and provide convenient anchors during
-				placement. Algorithms such as SimPL \cite{kim12} employ a combination
+				placement. Algorithms such as SimPL \cite{kim12b} employ a combination
 				of analytical techniques in order to add virtual `anchor' components
 				which prevent degenerate solutions from forming. Unfortunately this
 				approach further adds to the difficulty of porting the technique to
 				non-euclidean geometries.
 				
 				% TODO: mention viswanathan07 FastPlace 3.0 -- multilevel technique?
+			
+			\subsubsection{Simulated annealing}
+				
+				Simulated annealing was originally developed specifically to be applied
+				to the problem of circuit placement \cite{kirkpatrick83}. Throughout
+				the late 1980s and early 1990s simulated annealing became the dominant
+				circuit placement technique when the first chips breaching one-million
+				components appeared \cite{betz97,sechen85}.  Due to difficulties in
+				scaling beyond tens-of-millions of components, simulated-annealing has
+				become less popular large placement problems.  Various efforts continue
+				to be made to speed up the simulated annealing process by attempting to
+				partition the input problem into several independent problems
+				\cite{choong10,haldar00} and parallelise the search process
+				\cite{ludwin08}.
+				
+				Simulated annealing notably remains popular as a stand-alone placement
+				tool in niche applications where flexibility is important. For example,
+				the highly configurable Verilog-To-Routing (VTR) software suite
+				\cite{luu14} and Open Source Arachne-PNR \cite{cseed} use simulated
+				annealing to produce placements for a broad spectrum of FPGA
+				architectures.
 	
 	\section{Application placement by simulated annealing}
 		
 		\label{sec:placement-by-annealing}	
 		
-		I have implemented a simplified SA based application placement algorithm
-		based on the approach used in the popular VPR place and route tool chain.
-		The algorithm is written in C and is optimised for experimentation rather
-		than performance but is production-ready. It has been integrated into the
-		`Rig' SpiNNaker software tools and has been used to place very large
-		simulations. More on that later.
+		As we have seen, existing software placement techniques are either overly
+		reliant on a specific network topology or ill suited to placing the scale
+		applications containing up to the low-millions of communicating processes.
+		
+		In the field of circuit placement, various algorithms have been proposed
+		which are explicitly designed to cope with placement problems of similar or
+		larger sizes. Though analytical placement techniques now dominate the
+		field, these techniques rely on the properties of 2D Euclidean geometry
+		which do not apply to most torus or tree-based super computer network
+		topologies. In addition, while analytical placement algorithms can produce
+		high quality placement solutions for extremely large problems, the
+		modelling assumptions used fit smaller problems poorly resulting in lower
+		quality placements.
+		
+		At the scales present in world-leading current super computers over the
+		next few years (see again figure \ref{fig:top500-num-processors} on page
+		\pageref{fig:top500-num-processors}), simulated annealing is known to be an
+		effective technique. In addition, the flexibility of this algorithm makes
+		it well suited to coping with the diversity of network topologies in
+		existence. This suggests that simulated annealing would be a good choice as
+		a modern application placement algorithm.
+		
+		To determine the suitability of simulated annealing on modern applications
+		I have implemented a simulated annealing based placer for the SpiNNaker
+		architecture. Compared with previous simulated annealing algorithms for
+		application placement, this algorithm is intended to cope with much larger
+		problem instances and thus trades off accuracy in its cost estimation
+		function for execution speed. By contrast with circuit placement algorithms
+		built on simulated annealing, the algorithm represents the problem a little
+		differently. In circuit simulation, for example, exactly one component may
+		be placed in a given space while in application placement, several
+		applications may be placed on the same node (e.g. on different cores within
+		the node). These differences, and the specific annealing schedule used, are
+		described in detail in the remainder of this section.
 		
 		\subsection{Representation}
 			
-			Model each chip as having a quantity of various resources (e.g. Cores,
-			SDRAM) available. The application graph consists of vertices which each
-			consume some quantity of these resources. Vertices must be placed on a
-			single chip such that the resources required on a given chip do not
-			exceed those available. Vertices are then interconnected by 1:N nets with
-			weights which act as hints. The nets are treated as a soft constraint:
-			vertices connected via a net will, ideally, be placed near to each other,
-			with priority being given to nets with higher weights. Additionally there
-			will be a list of placement constraints (see later).
+			A typical SpiNNaker application is made up of a number of processes
+			running on individual cores and communicating via multicast messages sent
+			through the network. This is described as a graph where the
+			\emph{vertices} represent individual processes and the (multi-)edges,
+			referred to here as \emph{nets}, represent directed flows of multicast
+			traffic from one process to many other processes. This part of the
+			description is analogous to that of a circuit placement problem where
+			vertices represent components and nets represent wires from outputs to
+			the inputs of other components.
 			
-			A key observation is that while vertices in an application may frequently
-			have a 1:1 correspondence with application cores, this need-not be the
-			case. For example, a vertex may represent a block of SDRAM which is
-			shared. A vertex may also represent some other resource, for example,
-			external IO availability. By making these resource types user-defined,
-			applications programmers can express flexible hard-constraints on their
-			application.
+			Each vertex in the application graph must be placed onto a specific
+			SpiNNaker chip subject to certain hard and soft constraints. A hard
+			constraint must be met by the placement algorithm for a placement
+			solution to be legal. A soft constraint, however, may be relaxed or
+			ignored at the cost of reduced placement quality without invalidating the
+			result.
 			
-			Another observation is that generic soft constraints can be expressed may
-			be expressed using a net with an appropriate weight.
+			In circuit placement and application placement alike, there is typically
+			a soft constraint that vertices connected by a net should be placed close
+			to each other. In my placement algorithm, nets are assigned
+			\emph{weights} which provide an additional soft constraint that more
+			heavily weighted nets should be given priority over nets with lower
+			weights.
 			
-			As a result of these facilities, application programmers can easily
-			express their own application-specific hard and soft placement
-			constraints without having to modify the algorithm. This representation
-			has become a de-facto standard for placement problem interchange for
-			SpiNNaker applications.
+			A hard constraint on the placement solution is that vertices assigned to
+			a single chip must not consume more on-chip resources than are available.
+			For example, in a typical application a vertex (i.e. a process) may use
+			one or more cores and a block of shared on-chip SDRAM for data storage or
+			shared-memory communication. This is similar to the hard constraint in
+			circuit placement that a given physical space may be occupied by only one
+			component. Unfortunately, the presence of multiple resource types to
+			consider in application placement means that application placement
+			actually encompasses a bin packing problem \cite{korte06}.
+			
+			The SpiNNaker topology is represented as a 2D hexagonal torus topology
+			with homogeneous inter-chip links. Each chip is defined to have a certain
+			quantity of each resource type, for example cores and SDRAM. Different
+			chips may have different quantities of each resource for example due to
+			the presence of defective CPU cores. Individual links and chips may also
+			be flagged as dead imposing a hard constraint that the placement
+			algorithm must not assign vertices to dead chips.
+		
+		\subsection{Generating candidate swaps}
+			
+			In conventional simulated annealing based placement schemes, vertices are
+			moved by picking random pairs of vertices and swapping them. In an
+			application placement problem as described above it is not, in general,
+			possible to swap any pair of vertices. For example, if a small vertex is
+			swapped with a large one, the large vertex may not fit in the space left
+			behind by the smaller vertex.
+				
+			\begin{figure}
+				\center
+				\begin{subfigure}{\linewidth}
+					\center
+					\buildfig{figures/sa-swap-select.tex}
+					\caption{A random vertex, $v_a$ is selected along with a random
+					target chip (right).}
+					\label{fig:sa-swap-select}
+				\end{subfigure}
+				
+				\vspace*{1em}
+				
+				\begin{subfigure}{\linewidth}
+					\center
+					\buildfig{figures/sa-swap-remove.tex}
+					\caption{Vertex $v_a$ is removed from its chip. Vertices are removed
+					from the target chip until enough space is available to fit $v_a$.
+					In this example, vertices $v_b$ and $v_c$ are removed.}
+					\label{fig:sa-swap-remove}
+				\end{subfigure}
+				
+				\vspace*{1em}
+				
+				\begin{subfigure}{\linewidth}
+					\center
+					\buildfig{figures/sa-swap-commit.tex}
+					\caption{Vertex $v_a$ is swapped with vertices $v_b$ and $v_c$, if
+					there is room. If there is not room $v_a$, $v_b$ and $v_c$ are
+					returned to their original locations and the swap is aborted.}
+					\label{fig:sa-swap-commit}
+				\end{subfigure}
+				
+				\caption{Selecting vertices to swap.}
+				\label{fig:sa-swap}
+			\end{figure}
+			
+			\begin{figure}
+				\begin{minted}[autogobble,tabsize=4]{python}
+					def generate_swap(vertices, chips, distance):
+						# Remove a random vertex from its chip
+						vertex_a = pick_random(vertices)
+						chip_a = get_vertex_chip(vertex_a)
+						remove_from_chip(vertex_a, chip_a)
+						
+						# Pick different, nearby chip at random
+						chip_b = pick_random_chip(chips, not=chip_a, within=distance)
+						
+						# Remove vertices from chip_b until there is enough space for
+						# vertex_a.
+						vertices_b = []
+						while (not space_available_for(vertex_a, chip_b)
+						       and has_vertices(chip_b)):
+							vertices_b.append(remove_random_vertex(chip_b)))
+						
+						can_swap = (space_available_for(vertex_a, chip_b) and
+						            space_available_for(vertices_b, chip_a))
+						if can_swap:
+							# Make the swap
+							add_to_chip(vertex_a, chip_b)
+							add_to_chip(vertices_b_b, chip_a)
+							return (vertex_a, chip_a, vertices_b, chip_b)
+						else:
+							# Swap could not be made, restore vertices to original chips
+							add_to_chip(vertex_a, chip_a)
+							add_to_chip(vertices_b, chip_b)
+							raise CouldNotSwap()
+						
+				\end{minted}
+			
+				\caption{Pseudocode for selecting vertices to swap.}
+				\label{fig:swap-pseudocode}
+			\end{figure}
+			
+			Rather than picking pairs of vertices to swap, the process illustrated in
+			figure \ref{fig:sa-swap} (and precisely described by the pseudocode in
+			figure \ref{fig:swap-pseudocode}) is used. This swapping process avoids
+			swaps involving larger vertices being aborted because no single vertex on
+			a target chip frees up enough room to complete a swap. In practice, when
+			using this algorithm few swaps to be aborted.
+			
+			The distance parameter may be used to cause this algorithm to only
+			consider swaps which move vertices small distances. This parameter is
+			controlled such that initially very long-distance swaps are allowed but
+			towards the end of the annealing process, only localised swaps are made
+			which are less likely to have produce a negative change. This parameter's
+			use is explained later in \S\ref{sec:placement-schedule-acceptance}.
 		
 		\subsection{Cost function}
 			
-			At present I've used HPWL despite this being really bad for high-fan-out
-			multicast and totally ignorant to the hexagonal nature of SpiNNaker...
+			For each swap made by the algorithm, the change in the placement's `cost'
+			must also be determined. In principle the ideal `cost' function would
+			measure network congestion by performing routing to determine the
+			resources used. This approach was used by early application placement
+			algorithms \cite{steele85} but incurs a very large performance overhead
+			since simulated annealing relies on being able to test vast numbers of
+			random swaps.
 			
-			To compute bounding boxes for tori I use the following approach. For each
-			dimension, sort the points on that dimension and find the largest gap
-			between them on a ring. The bounding box goes the other way.
+			A common alternative to directly measuring congestion used by many
+			circuit placement algorithms is to measure the length of the routes
+			between connected vertices. Rather than actually computing routes,
+			approximate metrics such as the Half-Perimeter Wire Length (HPWL) and
+			star model are used \cite{kahng11}.
 			
-			TODO: FIGURE ILLUSTRATING BOUNDING BOX COMPUTATION FOR TORI.
-		
-		\subsection{Annealing schedule}
-			
-			The annealing schedule is that used by VPR. Despite being for circuit
-			placement, it seems to work jolly well.
-			
-			TODO: DESCRIBE AND RATIONALISE THE SCHEDULE
-		
-		\subsection{Constraint handling}
-			
-			Various hard and soft constraints may be expressed by software
-			approaches. For each we explain how they may be handled by the placement
-			algorithm:
-			
-			\subsubsection{Location Constraint}
+			\begin{figure}
+				\center
+				\begin{subfigure}[b]{\linewidth}
+					\center
+					\buildfig{figures/cost-function-star.tex}
+					
+					\caption{Star $= a_x + a_y + b_x + b_z + c_x + c_y + d_x + d_y$}
+					\label{fig:cost-function-star}
+				\end{subfigure}
 				
-				The vertex is placed on a chip and removed from the set of movement
-				candidates.
-			
-			\subsubsection{Same-chip constraint}
+				\vspace*{1.5em}
 				
-				When two vertices must always be placed on the same chip they are
-				simply combined into one vertex which consumes the sum of their
-				resources. Placement then treats them as one chip and thus is forced to
-				atomically place the vertices.
-			
-			\subsubsection{Reserve resource constraint}
+				\begin{subfigure}[b]{0.32\linewidth}
+					\center
+					\buildfig{figures/cost-function-hpwl-xy.tex}
+					
+					\caption{HPWL$_{xy}$ $= w_{xy} + h_{xy}$}
+					\label{fig:cost-function-hpwl-xy}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.32\linewidth}
+					\center
+					\buildfig{figures/cost-function-hpwl-xz.tex}
+					
+					\caption{HPWL$_{xz}$ $= w_{xz} + h_{xz}$}
+					\label{fig:cost-function-hpwl-xz}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.32\linewidth}
+					\center
+					\buildfig{figures/cost-function-hpwl-yz.tex}
+					
+					\caption{HPWL$_{yz}$ $= w_{yz} + h_{yz}$}
+					\label{fig:cost-function-hpwl-yz}
+				\end{subfigure}
 				
-				Simply reduce resource availability on that chip.
+				\caption{Net cost functions for hexagonal toruses and meshes.}
+				\label{fig:cost-function}
+			\end{figure}
 			
-			\subsubsection{Keep near Ethernet}
+			\begin{figure}
+				\center
+				\buildrplot{figures/cost-function-error.R}
 				
-				Simply add a net.
+				\caption{Error of net cost functions compared with actual routing
+				solutions. Y-axis limit clipped for clarity. The error for the star
+				cost function's error grows linearly beyond the axis limit.}
+				\label{fig:cost-function-error}
+			\end{figure}
+			
+			In the star model, the cost of a net is found by summing the distances
+			from the net's source vertex to each sink vertex in turn as illustrated
+			in figure \ref{fig:cost-function-star}. In a hexagonal mesh and torus
+			topology, the distance between two points can be cheaply computed (see
+			chapter \ref{sec:shortestPaths}) making this cost function appropriate
+			for SpiNNaker's network topology. This model will over-estimate network
+			resource usage for nets with three or more vertices since in practice
+			routes often overlap.
+			
+			In the HPWL model, a bounding box is drawn around all the vertices
+			connected by the net and the cost of the net is calculated as half of the
+			perimeter of this bounding box. In a non-hexagonal torus or mesh
+			topology, the HPWL model exactly matches the length of an optimal
+			multicast route for nets with two or three vertices. In nets with a
+			greater number of vertices, HPWL under-estimates the length of an optimal
+			route by a factor of $\sqrt{n}$ for nets with $n$ vertices
+			\cite{chung79}.
+			
+			The three non-orthogonal axes of hexagonal mesh and torus topologies mean
+			that there are several ways in which a bounding box may be defined.
+			Specifically, the bounding box may extend along any pair of axes
+			resulting in three possible bounding boxes, and thus three HPWL values
+			for any net as illustrated in \ref{fig:cost-function-hpwl-xy},
+			\ref{fig:cost-function-hpwl-xz} and \ref{fig:cost-function-hpwl-yz}. The
+			relative sizes of these three bounding boxes varies depending on specific
+			arrangement of vertices in the net meaning that no single bounding box is
+			appropriate for all situations.
+			
+			A single HPWL-like metric can be produced by taking the minimum of the
+			half-perimeters of the three bounding boxes. Like the HPWL function for
+			non-hexagonal toruses, this `hexagonal HPWL' cost function exactly
+			predicts the length of optimal routes for nets with two or three
+			vertices.
+			
+			To determine select the most appropriate cost function for use in a
+			hexagonal torus topology, the costs estimated for \num{100000} randomly
+			generated nets. Each net connects between two and thirty randomly chosen
+			vertices in a $30\times30$ hexagonal torus topology. The cost calculated
+			for each net is then compared with the costs of routes generated by the
+			routing algorithm described in chapter \ref{sec:routing} and the error is
+			plotted in figure \ref{fig:cost-function-error}. A 99\% confidence
+			interval is too small to see when plotted and so has been omitted from
+			the plot.
+			
+			These plots confirm that the error introduced is consistently
+			over-estimated by the star model and under-estimated by both the
+			Hexagonal HPWL and HPWL${_{xy}}$ cost models. In addition, the Hexagonal
+			HPWL and HPWL$_{xy}$ scaled by $\sqrt{n}$ are shown. While this
+			correction does appear to reduce the magnitude of the error for these
+			functions, it does not eliminate it. This is likely due to the fact that
+			the error only tends towards $\sqrt{n}$ for very large $n$ \cite{chung79}
+			and also because the error is being computed against a realistic but non
+			optimal placement algorithm.
+			
+			On the basis of these results, the star cost function is rejected on the
+			grounds of poor accuracy. Though the $\sqrt{n}$-scaled Hexagonal HPWL
+			cost function produces the smallest error in general, its runtime is
+			three times greater than the $\sqrt{n}$-scaled HPWL$_{xy}$ whose accuracy
+			is very similar. Since the execution speed of the cost function largely
+			dominates the runtime of the simulated annealing algorithm, I use the
+			$\sqrt{n}$-scaled HPWL$_{xy}$ net cost function as a reasonable trade-off
+			between accuracy and performance.
+			
+		\subsection{Annealing schedule and acceptance function}
+			
+			\label{sec:placement-schedule-acceptance}
+			
+			The annealing schedule  and acceptance function (including all formulae
+			below) is taken directly from that used by the VPR FPGA placement
+			software \cite{betz97}. Due to a combination of time constraints and this
+			schedule and acceptance function being known to work well, alternatives
+			are not considered in this thesis.
+			
+			Starting with an intial random (but valid) placement, $N$ swaps with no
+			distance limit are performed, where $N$ is the number of vertices in the
+			graph. The initial annealing temperature, $T$, is then set to 20 times
+			the standard deviation of the cost changes produced by the $N$ swaps.
+			
+			The annealing algorithm now performs a round of $E \times N^{1.33}$
+			random swaps where $E$ is a tunable parameter controling `effort'. By
+			default $E$ is set to 1. Increasing $E$ roughly linearly increases
+			execution time for diminishing returns in improved placement quality.
+			Each random swap is retained with a probabiltiy:
+			%
+			\begin{align*}
+				P_{\textrm{accept}}=
+					\begin{cases}
+						1 & \textrm{if } \Delta{}C \le 0 \\
+						e^{\nicefrac{-\Delta{}C}{T}} & \textrm{otherwise} \\
+					\end{cases}
+			\end{align*}
+			%
+			Where $\Delta{}C$ is the change in cost resulting from the swap and $e$
+			is Euler's number. This probability is 1 for any beneficial or neutral
+			change. Small cost increases accepted with a greater probability than
+			large cost increases. At higher temperatures, larger cost increases are
+			accepted with a greater probability.
+			
+			After a round of swaps has been performed, the temperature is updated
+			according to $T_\textrm{new} = \alpha T_\textrm{old}$ where $\alpha$ is
+			determined according to
+			%
+			\begin{align*}
+				\alpha=
+					\begin{cases}
+						0.50 & \textrm{if } R_\textrm{accept} > 0.96 \\
+						0.90 & \textrm{if } 0.80 < R_\textrm{accept} \le 0.96 \\
+						0.95 & \textrm{if } 0.15 < R_\textrm{accept} \le 0.80 \\
+						0.80 & \textrm{if }        R_\textrm{accept} \le 0.80 \\
+					\end{cases}
+			\end{align*}
+			%
+			Where $R_\textrm{accept}$ is the proportion of swaps which were accepted
+			by the algorithm in that round. This approach attempts to maximise the
+			time spent at temperatures in which some but not all swaps are accepted
+			since this is likely when the greatest improvement in placement quality
+			is occuring. The next round of annealing is then performed as described
+			above using the newly calculated temperature.
+			
+			The algorithm terminates when $T < \nicefrac{0.005 C}{N_\textrm{nets}}$
+			where $C$ is the estimated current cost of the placement solution and
+			$N_\textrm{nets}$ is the number of nets in the problem.
+			
+			Towards the end of placement the solution will tend to be close to ideal.
+			As a result, it is likely that swapping vertices over long distances will
+			result in large cost increases. As a result towards the end of the anneal
+			reducing the swap distance limit, $D_\textrm{limit}$, tends to increase
+			the proportion of swaps which are accepted. As stated above,
+			$D_\textrm{limit}$ is initially set such that all possible swaps are
+			considered. It is then updated according to the following formula at the
+			end of each round of swaps:
+			%
+			\[
+				D_\textrm{limit}^\textrm{new} =
+					\textrm{max}(1,\quad D_\textrm{limit}^\textrm{old}(1-0.44 + R_\textrm{accept}))
+			\]
+			%
+			This rule attempts to limit swap distance such that the proportion of
+			accepted swaps does not drop below 0.44 for as long as possible.
 	
 	\section{Evaluation}
 		
 		\label{sec:placement-results}
+		
+		To be useful, the simulated annealing based placer must be able to produce
+		placements whose quality matches or exceeds those of conventional
+		techniques and do so in a reasonable amount of time.
+		
+		TODO: INTRODUCE SECTION
+		
+		\subsection{Existing applications}
+			
+			To verify the suitability of simulated annelaing based placement for
+			existing SpiNNaker applications a representaive selection of these
+			applications' communication graphs have been collected as benchmarks.
+			Table \ref{tab:real-benchmarks} describes each of the benchmarks.  While
+			these applications are much smaller than those expected to run on new,
+			large-scale SpiNNaker systems, they provide a realistic model of the
+			patterns of connectivity found in these applications.
+			
+			\begin{table}
+				\center
+				\begin{tabular}{lrrr p{0.4\linewidth}}
+					\toprule
+					Name & Vertices & Nets & Fan-out & Notes \\
+					\midrule
+					Microcircuit   & \num{1338} & \num{760} & \num{94.50} &
+						Spiking neural model of a cortical microcircuit \cite{potjans14}
+						implemented in `PyNN SpiNNaker' \cite{knight16}. \\
+					\addlinespace
+					Sudoku         & \num{299} & \num{109} & \num{15.86} &
+						Spiking neural model which solves Sudoku puzzles implemented in `PyNN
+						SpiNNaker' \cite{knight16}. \\
+					\addlinespace
+					Card-Sorting   & \num{469} & \num{919} & \num{1.06} & 
+						Spiking neural model which solves the Wisconsin card sorting test
+						\cite{aubin15} implemented in `Nengo SpiNNaker' \cite{mundy15}. \\
+					\addlinespace
+					CConv          & \num{2560} & \num{12020} & \num{3.48} &
+						Spiking neural model which performs 512~D circular convolution
+						\cite{eliasmith13} implemented in `Nengo SpiNNaker' \cite{mundy15}. A
+						key component in the SPAUN neural model \cite{eliasmith12}. \\
+					\addlinespace
+					Parse          & \num{855} & \num{3046} & \num{3.26} &
+						Spiking neural model which performs simple sentence parsing
+						implemented in `Nengo SpiNNaker' \cite{mundy15}. \\
+					\addlinespace
+					MU0            & \num{1084} & \num{1084} & \num{1.38} &
+						A digital circuit simulation of a simple computer processor
+						\cite{nutter16} implemented using the digital circuit simulator
+						example program included with `Rig' \cite{rig15}. \\
+					\bottomrule
+				\end{tabular}
+				
+				\caption{SpiNNaker application benchmarks. `Fan-out' refers to the mean
+				fan out of the nets in the communication graph.}
+				\label{tab:real-benchmarks}
+			\end{table}
+		
+		TODO: EXPERIMENTS TO RUN/POINTS TO MAKE
+		* RUNTIME SHOULD BE LINEAR WITH PROBLEM SIZE (SEE BROWN PAPER)
+		* QUALITY SHOULD NOT DEGRADE (TOO MUCH) WITH PROBLEM SIZE
+		* QUALITY SHOULD NOT DEGRADE (TOO MUCH) WITH FAN OUT
+		* SHOULD HELP REAL (IF SMALL) NETWORKS
 		
 		Though benchmarks exist for super computer loads and chip placement tasks,
 		such things don't exist for neural applications. As a result I use a

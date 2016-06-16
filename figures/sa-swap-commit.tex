@@ -1,0 +1,83 @@
+\begin{tikzpicture}[thick, scale=0.7]
+	
+	\input{figures/sa-swap.tex}
+	
+	\begin{scope}
+		\clip (0*\chipspacingx - 1,
+		       1*\chipspacingx - 1)
+		      rectangle
+		      (3*\chipspacingx-\chipgap + 1,
+		       2*\chipspacingy-\chipgap + 1);
+		
+		% Other chips
+		\begin{scope}[help lines]
+			\foreach \x/\y in {0/0,1/0,2/0,1/1,0/2,1/2,2/2,-1/0,-1/1,-1/2,3/0,3/1,3/2}{
+				\begin{scope}[shift={(\x*\chipspacingx, \y*\chipspacingy)}]
+					\chip
+					\randomcores
+				\end{scope}
+			}
+		\end{scope}
+		
+		% Source chip
+		\begin{scope}[shift={(0*\chipspacingx, 1*\chipspacingy)}]
+			\begin{scope}[help lines]
+				\chip
+				\core{0}{1}{1}{}
+				\core{1}{1}{1}{}
+				\core{2}{1}{1}{}
+				\core{3}{1}{1}{}
+			\end{scope}
+			\begin{scope}
+				\core{4}{1}{1}{$v_b$}
+				\coordinate (vertex b4 bottom) at (bottom);
+				\core{5}{1}{1}{$v_c$}
+				\coordinate (vertex b5 bottom) at (bottom);
+			\end{scope}
+		\end{scope}
+		
+		% Sink chip
+		\begin{scope}[shift={(2*\chipspacingx, 1*\chipspacingy)}]
+			\begin{scope}[help lines]
+				\chip
+				\core{0}{1}{1}{}
+				\core{1}{1}{1}{}
+				\core{2}{1}{1}{}
+				\core{3}{1}{1}{}
+				\core{6}{1}{1}{}
+			\end{scope}
+			\begin{scope}
+				\core{4}{2}{2}{$v_a$}
+				\coordinate (vertex a bottom) at (bottom);
+			\end{scope}
+		\end{scope}
+	\end{scope}
+	
+	\begin{scope}[dashed, shift={(0*\chipspacingx, 0*\chipspacingy)}]
+		\core{1}{2}{2}{}
+	\end{scope}
+	\draw [<-]
+	      (vertex a bottom)
+	      .. controls +(0, -2) and +(0, 2) ..
+	      (top);
+	
+	\begin{scope}[dashed, shift={(2*\chipspacingx, 0.5 + 0*\chipspacingy)}]
+		\core{1}{1}{1}{}
+		\coordinate (vertex b4 top) at (top);
+		\core{2}{1}{1}{}
+		\coordinate (vertex b5 top) at (top);
+	\end{scope}
+	
+	\draw [<-]
+	      (vertex b4 bottom)
+	      .. controls +(0, -2) and +(0, 2) ..
+	      (vertex b4 top);
+	\draw [<-]
+	      (vertex b5 bottom)
+	      .. controls +(0, -2) and +(0, 2) ..
+	      (vertex b5 top);
+	
+\end{tikzpicture}
+
+
+

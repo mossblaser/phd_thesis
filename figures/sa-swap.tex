@@ -1,0 +1,48 @@
+
+\pgfmathsetseed{1}
+
+\pgfmathtruncatemacro{\coresx}{3}
+\pgfmathtruncatemacro{\coresy}{3}
+
+\pgfmathsetmacro{\coregap}{0.1}
+\pgfmathsetmacro{\chipgap}{0.4}
+
+\pgfmathsetmacro{\chipwidth}{((1 + \coregap)*\coresx) + \coregap}
+\pgfmathsetmacro{\chipheight}{((1 + \coregap)*\coresy) + \coregap}
+
+\pgfmathsetmacro{\chipspacingx}{\chipwidth + \chipgap}
+\pgfmathsetmacro{\chipspacingy}{\chipheight + \chipgap}
+
+\newcommand{\chip}{
+	\draw (0, 0) rectangle ++(\chipwidth, \chipheight);
+}
+
+% #1 core number
+% #2 width
+% #3 height
+% #4 label
+\newcommand{\core}[4]{
+	\pgfmathtruncatemacro{\corex}{mod(#1, \coresx)}
+	\pgfmathtruncatemacro{\corey}{floor(#1 / \coresy)}
+	
+	\pgfmathsetmacro{\xoffset}{\coregap + (\corex * (1+\coregap))}
+	\pgfmathsetmacro{\yoffset}{\coregap + (\corey * (1+\coregap))}
+	
+	\pgfmathsetmacro{\w}{#2 + (\coregap * (#2 - 1))}
+	\pgfmathsetmacro{\h}{#3 + (\coregap * (#3 - 1))}
+	
+	\draw (\xoffset, \yoffset)
+	      rectangle node {#4}
+	      ++(\w, \h);
+	
+	\coordinate (bottom) at (0.5*\w + \xoffset, \yoffset);
+	\coordinate (top) at (0.5*\w + \xoffset, \h+\yoffset);
+}
+
+% Produce a random number of cores
+\newcommand{\randomcores}{
+	\pgfmathtruncatemacro{\ncores}{floor(random() * (\coresx * \coresy - 1))}
+	\foreach \i in {0,...,\ncores}{
+		\core{\i}{1}{1}{}
+	}
+}

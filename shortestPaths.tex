@@ -1,5 +1,10 @@
 \chapter{Finding shortest path vectors in SpiNNaker's network}
 	
+	\label{sec:shortestPaths}
+	
+	% XXX: Add note explaining shortest path between two points in non-torus
+	% space.
+	
 	Once a SpiNNaker machine has been constructed, as described in the previous
 	chapter, its network forms a large hexagonal torus topology. To exploit this
 	network routing algorithms must generate routes for packets to follow between
@@ -535,7 +540,7 @@
 			The C implementation of the shortest path vector function in INSEE is
 			taken directly from the INSEE source code \cite{navaridas09}. The C
 			implementation of the XYZ-Protocol is a straight-forward implementation
-			of the published pseudo-code \cite{hoffmann15}.
+			of the published pseudocode \cite{hoffmann15}.
 			
 			Each function is called once for every pair of source and destination
 			nodes in a $240\times240$ node hexagonal torus topology (about 3 billion

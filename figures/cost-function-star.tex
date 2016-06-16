@@ -1,0 +1,23 @@
+\begin{tikzpicture}[thick, hexagonXYZ, scale=0.6]
+	
+	\input{figures/cost-function.tex}
+	
+	% Star model
+	\draw (0, 0) -- node [anchor=south] {$a_x$}
+	      ++(-2, 0, 0) -- node [anchor=west] {$a_y$}
+	      ++(0, 4, 0); % da
+	
+	\draw (0, 0.2em) -- node [anchor=south] {$b_x$}
+	      ++(2, 0, 0) -- node [anchor=east] {$b_z$}
+	      ++(0, 0, -1); %db
+	
+	\draw (0, 0) --
+	      ++(2, 0, 0) -- node [anchor=north] {$c_x$}
+	      ++(2, 0, 0) -- node [anchor=west] {$c_y$}
+	      ++(0, -1, 0); %dc
+	
+	\draw (0, -.2em) -- node [anchor=north] {$d_x$}
+	      ++(2, 0, 0) -- node [anchor=east] {$d_y$}
+	      ++(0, -3, 0); %dd
+\end{tikzpicture}
+
