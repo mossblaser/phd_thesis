@@ -186,7 +186,7 @@
 				good vertex and chip iteration orders, typically using a
 				graph-traversal based heuristic. An example typical of this type of
 				technique is `graph similarity based mapping' described by Hoefler and
-				Snir \emph{et al.} \cite{hoefler11}. This algorithm exploits Reverse
+				Snir \cite{hoefler11}. This algorithm exploits Reverse
 				Cuthill-McKee (RCM) algorithm \cite{cuthill69} to select a linear
 				ordering of vertices in which connected vertices tend to appear close
 				together. Internally the RCM algorithm uses a breadth-first-search-like
@@ -843,6 +843,34 @@
 		
 		TODO: INTRODUCE SECTION
 		
+		TODO: EXPERIMENTS TO RUN/POINTS TO MAKE
+		* RUNTIME SHOULD BE LINEAR WITH PROBLEM SIZE (SEE BROWN PAPER)
+		* QUALITY SHOULD NOT DEGRADE (TOO MUCH) WITH PROBLEM SIZE
+		* QUALITY SHOULD NOT DEGRADE (TOO MUCH) WITH FAN OUT
+		* SHOULD HELP REAL (IF SMALL) NETWORKS
+		
+		\subsection{Baseline algorithms}
+			
+			To provide a benchline to compare my simulated annealing based placement
+			algorithm, the following three placement algorithms will be included in
+			experiments:
+			
+			\begin{description}
+				
+				\item[Hilbert] The placement algorithm used by existing SpiNNaker
+				software and provided as a Cray extension to SLURM. Places vertices
+				along a hilbert curve path in breadth-first traversal order of the
+				graph.
+				
+				\item[RCM] The `graph similarity based mapping' algorithm described by
+				Hoefler and Snir \cite{hoefler11}. Assigns vertices to chips in Reverse
+				Cuthill McKee order.
+				
+				\item[Random] A random placement algorithm which places vertices
+				uniform-randomly with no regard for connectivity.
+				
+			\end{description}
+			
 		\subsection{Existing applications}
 			
 			To verify the suitability of simulated annelaing based placement for
@@ -851,7 +879,7 @@
 			Table \ref{tab:real-benchmarks} describes each of the benchmarks.  While
 			these applications are much smaller than those expected to run on new,
 			large-scale SpiNNaker systems, they provide a realistic model of the
-			patterns of connectivity found in these applications.
+			patterns of connectivity found in these types of applications.
 			
 			\begin{table}
 				\center
@@ -872,7 +900,7 @@
 						\cite{aubin15} implemented in `Nengo SpiNNaker' \cite{mundy15}. \\
 					\addlinespace
 					CConv          & \num{2560} & \num{12020} & \num{3.48} &
-						Spiking neural model which performs 512~D circular convolution
+						Spiking neural model which performs 512D circular convolution
 						\cite{eliasmith13} implemented in `Nengo SpiNNaker' \cite{mundy15}. A
 						key component in the SPAUN neural model \cite{eliasmith12}. \\
 					\addlinespace
@@ -891,48 +919,158 @@
 				fan out of the nets in the communication graph.}
 				\label{tab:real-benchmarks}
 			\end{table}
-		
-		TODO: EXPERIMENTS TO RUN/POINTS TO MAKE
-		* RUNTIME SHOULD BE LINEAR WITH PROBLEM SIZE (SEE BROWN PAPER)
-		* QUALITY SHOULD NOT DEGRADE (TOO MUCH) WITH PROBLEM SIZE
-		* QUALITY SHOULD NOT DEGRADE (TOO MUCH) WITH FAN OUT
-		* SHOULD HELP REAL (IF SMALL) NETWORKS
-		
-		Though benchmarks exist for super computer loads and chip placement tasks,
-		such things don't exist for neural applications. As a result I use a
-		selection of real applications for SpiNNaker along with some synthetic
-		benchmarks based on biological data.
-		
-		\subsection{Benchmark networks}
 			
-			First some real networks.
+			TODO: TALK ABOUT RESULTS
 			
-			Some nengo networks: SPAUN: `The world's largest functional brain model'.
-			Word-net network from Jamie: Example of some learning.
+			\begin{figure}
+				\center
+				\begin{subfigure}{\linewidth}
+					\center
+					\buildrplot{figures/application-benchmarks-quality.R}
+					
+					\caption{Placement quality (routed net length, normalised)}
+					\label{fig:application-benchmarks-quality}
+				\end{subfigure}
+				
+				\begin{subfigure}{\linewidth}
+					\center
+					\buildrplot{figures/application-benchmarks-runtime.R}
+					
+					\caption{Placement algorithm runtime}
+					\label{fig:application-benchmarks-runtime}
+				\end{subfigure}
+				
+				\caption{Application benchmark placement performance.}
+				\label{fig:application-benchmarks}
+			\end{figure}
 			
-			TODO: DESCRIBE SHAPE OF NENGO NETWORKS
+		\subsection{Scalability}
 			
-			Some PyNN networks: Microcortical column model from PyNN. Note almost
-			broadcast connectivity but varying weights. Try and extract a vision
-			netlist from Anna. Maybe try and get a netlist for Tom's barrel cortex.
+			Unfortunately, due to the limited scale of existing SpiNNaker
+			applications it is necessary to turn to a synthetic benchmark to
+			demonstrate the scaling properties of the simulated annealing placement
+			algorithm.
 			
-			Now for some artificial networks. Pipeline, noisy pipeline, mesh,
-			Gaussian 2D.
-		
-		\subsection{Experiments}
+			A synthetic application graph consisting of a 2D grid of vertices in
+			which each vertex is connected with its neighbours following a 2D
+			gaussian probability distribution. This application graph is then placed
+			into a hexagonal mesh topology whose aspect ratio matches the application
+			graph and which is exactly the right size to contain the whole graph.
+			This placement problem may be scaled up by increasing the number of
+			vertices or by increasing the number of connections made by each vertex.
 			
-			We compare random, linear, greedy and annealing based placement
-			approaches to placement. We compare static metrics (such as mean/max
-			congestion, table usage) along with experiments based on simulated
-			network traffic in real hardware. Network Tester generates artificial
-			traffic in proportion with the weights given for each model. We compare
-			the relative level of traffic sustainable. We also consider use of
-			machines of various sizes.
-		
-		\subsection{Results}
+			Placement quality is judged by comparing the total number of hops
+			required to route all nets in the placed application graph against the
+			number of hops needed when the vertices are placed `manually' according
+			to their location in the 2D grid their nets are defined with. Better
+			placements should require a similar number of hops to the manual
+			placement while worse placements will require more implying greater
+			network congestion.
 			
-			SA placement is slow but rather effective, especially for some networks.
-			Generally worth doing. Will need to be sped up for very large machines...
+			All experiments were conducted on a cluster of idle workstations with
+			3.10~GHz Intel Core-i5-2400 CPUs and 8~GB of RAM.
 			
-			TODO: EXPERIMENTS!
-	
+			\subsubsection{Scaling with application graph size}
+				
+				\begin{figure}
+					\center
+					\begin{subfigure}{\linewidth}
+						\center
+						\buildrplot{figures/placement-scalability-size-quality.R}
+						
+						\caption{Placement overhead (vs. manual placement)}
+						\label{fig:placement-scalability-size-quality}
+					\end{subfigure}
+					
+					\begin{subfigure}{\linewidth}
+						\center
+						\buildrplot{figures/placement-scalability-size-runtime.R}
+						
+						\caption{Placement algorithm runtime}
+						\label{fig:placement-scalability-size-runtime}
+					\end{subfigure}
+					
+					\caption{Scalability with respect to graph size. Lines give mean
+					values, bands give range of results.}
+					\label{fig:placement-scalability-size}
+				\end{figure}
+				
+				This experiment intends to determine how the runtime and placement
+				quality of each algorithm changes as the size of the application graph
+				is increased. In this experiment, each vertex is connected to four
+				randomly picked neighbours whose distances have a standard-deviation of
+				three vertices.  The experiment was repeated ten times for each
+				combination of graph size and placement algorithm. The results are
+				shown in figure \ref{fig:placement-scalability-size}.
+				
+				In figure \ref{fig:placement-scalability-size-quality} we can see that
+				as the placement problem size grows, existing placement techniques
+				quickly begin to produce solutions requiring many more hops to route
+				than a `manual' solution. While the quality of the simulated annealing
+				approach is reduced for larger graphs, for graphs with \num{1048576}
+				vertices, approximately the number in the largest planned SpiNNaker
+				machine, only twice as many hops are required to route the placement
+				compared with the manual placement.
+				
+				Figure \ref{fig:placement-scalability-size-runtime} shows the runtime
+				of the routing algorithms on each problem size. Once again the
+				simulated annealing algorithm's runtime consistantly dwarves the other
+				algorithms. Notably, however, the annealing algorithm's runtime grows
+				approximately linearly with problem size.
+				
+				Beyond around quarter of a million vertices, the quality of the
+				placements produced by the baseline placement algorithms has dropped
+				significantly. Due to the increased length of the routes required,
+				routing these placed graphs requires more memory than was available in
+				the cluster machines and these results have been omitted.
+				
+				For the largest graph in the experiment, the runtime of the annealing
+				based placer reaches approximately 12~hours. While such long runtimes
+				may not be ideal, for very large placement problems, simulated
+				annealing produces placements with substantially reduced overhead.
+			
+			
+			\subsubsection{Scaling with application graph size}
+			
+				\begin{figure}
+					\center
+					\begin{subfigure}{\linewidth}
+						\center
+						\buildrplot{figures/placement-scalability-fanout-quality.R}
+						
+						\caption{Placement overhead (vs. manual placement)}
+						\label{fig:placement-scalability-fanout-quality}
+					\end{subfigure}
+					
+					\begin{subfigure}{\linewidth}
+						\center
+						\buildrplot{figures/placement-scalability-fanout-runtime.R}
+						
+						\caption{Placement algorithm runtime}
+						\label{fig:placement-scalability-fanout-runtime}
+					\end{subfigure}
+					
+						\caption{Scalability with respect to fan out. Lines give mean values,
+						bands give range of results.}
+					\label{fig:placement-scalability-fanout}
+				\end{figure}
+				
+				Another factor which can have a significant impact on placement runtime
+				is the fan out of the vertices in an application graph. In a second
+				experiment, the size of the synthetic application graph is fixed at
+				\num{16384} and the fan out of the nets connecting these vertices is
+				increased. Again, combination of placement algorithm and fan out was
+				tested ten times and the results are shown in figure
+				\ref{fig:placement-scalability-fanout}.
+				
+				As shown in figure \ref{fig:placement-scalability-fanout-quality}, the
+				quality of the placements produced does not change dramatically as the
+				fan out is increased with the exception of the Hilbert placer which
+				appears to perform better for very small or very large fan outs.
+				
+				In all but the random placer (which does not consider connectivity),
+				all of the placement algorithms' runtimes grow in proportion to the fan
+				out (figure \ref{fig:placement-scalability-fanout-quality}). Once
+				again, simulated annealing is significantly slower than the other
+				algorithms but the runtime continues to grow approximately linearly
+				with problem size.

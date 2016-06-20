@@ -82,6 +82,17 @@ bar_theme = bar_theme_with_grid +
 
 no_rotate = theme(axis.text.x=element_text(angle=0,hjust=0.5,vjust=1))
 
+
+# Special theme for placement benchmark plots
+placement_theme <- plot_theme +
+                   no_rotate +
+                   theme(legend.position="top") +
+                   theme(legend.key = element_rect(linetype=0))
+
+placement_bar_theme <- placement_theme +
+                       theme(panel.grid.major.x = element_blank()) +
+                       theme(panel.grid.minor.x = element_blank())
+
 # Special theme options for violin-plots
 violin_theme = plot_theme +
                theme(axis.text.x=element_text(angle=45,hjust=1,vjust=1))
