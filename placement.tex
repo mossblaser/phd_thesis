@@ -833,6 +833,10 @@
 			This rule attempts to limit swap distance such that the proportion of
 			accepted swaps does not drop below 0.44 for as long as possible.
 	
+		\subsection{Additional constraints}
+			
+			XXX: TODO: TALK ABOUT PLACEMENT/SAME CHIP CONSTRAINTS
+	
 	\section{Evaluation}
 		
 		\label{sec:placement-results}
@@ -842,12 +846,6 @@
 		techniques and do so in a reasonable amount of time.
 		
 		TODO: INTRODUCE SECTION
-		
-		TODO: EXPERIMENTS TO RUN/POINTS TO MAKE
-		* RUNTIME SHOULD BE LINEAR WITH PROBLEM SIZE (SEE BROWN PAPER)
-		* QUALITY SHOULD NOT DEGRADE (TOO MUCH) WITH PROBLEM SIZE
-		* QUALITY SHOULD NOT DEGRADE (TOO MUCH) WITH FAN OUT
-		* SHOULD HELP REAL (IF SMALL) NETWORKS
 		
 		\subsection{Baseline algorithms}
 			
@@ -920,8 +918,6 @@
 				\label{tab:real-benchmarks}
 			\end{table}
 			
-			TODO: TALK ABOUT RESULTS
-			
 			\begin{figure}
 				\center
 				\begin{subfigure}{\linewidth}
@@ -931,6 +927,18 @@
 					\caption{Placement quality (routed net length, normalised)}
 					\label{fig:application-benchmarks-quality}
 				\end{subfigure}
+				
+				\vspace*{1em}
+				
+				\begin{subfigure}{\linewidth}
+					\center
+					\buildrplot{figures/application-benchmarks-tables.R}
+					
+					\caption{Routing table entries (red line at \num{1024} entries)}
+					\label{fig:application-benchmarks-tables}
+				\end{subfigure}
+				
+				\vspace*{1em}
 				
 				\begin{subfigure}{\linewidth}
 					\center
@@ -943,6 +951,163 @@
 				\caption{Application benchmark placement performance.}
 				\label{fig:application-benchmarks}
 			\end{figure}
+			
+			Each benchmark's connectivity graph is placed on an idealised $13 \times
+			13$ hexagonal torus topology and the routed using the router described in
+			chapter \ref{sec:routing}. For each benchmark the placement and routing
+			processes is repeated \num{1000} times and varoius metrics recorded which
+			are aggregated in figure \ref{fig:application-benchmarks}. All
+			experiments were conducted on a cluster of idle workstations with
+			3.10~GHz Intel Core-i5-2400 CPUs and 8~GB of RAM.
+			
+			The first metric attempts to measure the `quality' of the placement
+			solution in terms of the total number of hops taken by the generated
+			routes. A better placement solution should require fewer hops and as a
+			result encounter lower network congestion. Figure
+			\ref{fig:application-benchmarks-quality} shows how the hop counts vary
+			for each placement algorithm and benchmark. Since the actual hop counts
+			vary greatly between benchmarks, these results are normalised by the
+			number of hops produced by the Hilbert placer.
+			
+			In the majority of benchmarks, the simulated annealing based placement
+			algorithm achieves the greatest reduction in hop counts, reducing the
+			total number of hops required to $\frac{2}{7}^\textrm{ths}$ of those
+			required by the Hilbert placer in the `CConv' benchmark. The RCM and
+			Random placement algorithms both consistently produce results similar or
+			worse than those of the Hilbert placement algorithm.
+			
+			Unlike the other benchmarks, the `Microcircuit' benchmark notably shows
+			little difference in placement quality between the four algorithms. This
+			may be explained by the fact that this network is largley all-to-all
+			connected meaning that a placement function can do little more than place
+			the vertices tightly together to improve quality.
+			
+			The second metric considered is the maximum number of routing table
+			entries required on a single chip after placement. Figure
+			\ref{fig:application-benchmarks-tables} shows the size of the largest
+			routing table for each benchmark and placement algorithm. Though many of
+			the benchmarks do not run out of routing tables at any scale, the `CConv'
+			network frequently runs out of routing table entries for all bu the
+			simulated annealing based placer.
+			
+			XXX TODO: ADD FULLY MINIMISED TABLES FOR BENCHMARK RESULTS AND COMMENT ON
+			TABLE USAGE
+			
+			The third metric considered is placement algorithm runtime, shown in
+			figure \ref{fig:application-benchmarks-tables}. The simulated annealing
+			algorithm requires much longer runtimes than the baseline placement
+			algorithms considered, in several cases an order of magnitude longer.
+			This is unsurprising since the baseline algorithms consist of simple
+			greedy approaches.
+			
+			The `Microcircuit' benchmark is notable in that all of the placement
+			algorithms take a long time to execute compared with the other
+			benchmarks. This longer runtime can be attributed to a preprocessing step
+			common to every placement algorithm implementation which handles `same
+			chip' constraints. This pre-processing stage merges together vertices in
+			the communication graph which are labelled as requiring placement on the
+			same chip. Unlike the other application graphs, the `Microcircuit'
+			communication graph is annotated with a large number of these constraints
+			and, due to the na\"ive implementation of the preprocessing step, all of
+			the placement algorithms are slowed down by a constant amount.
+			
+			\subsubsection{Impact of placement on `PyNN SpiNNaker'}
+				
+				The `PyNN SpiNNaker' based neural models behind the `Microcircuit' and
+				`Sudoku' benchmarks are compute bound and produce relatively small
+				quantities of network traffic. Configuring `PyNN SpiNNaker' to use each
+				of the four placement algorithms under consideration did not result in
+				any changes in performance.
+				
+				It is anticipated that future models built on PyNN SpiNNaker will grow
+				in size and, unlike the Microcircuit model, have less dense
+				connectivity. With larger, more structured models, placement is
+				anticipated to be of greater significance.
+			
+			\subsubsection{Impact of placement on `Nengo SpiNNaker'}
+				
+				The `Nengo SpiNNaker' based neural simulations behind the `CConv' and
+				`Parse' benchmark were each run \num{100} times with each of the
+				placement algorithms under test. For each run, the number of packets
+				dropped by the SpiNNaker routers was recorded and displayed in figure
+				\ref{fig:nengo-dropped-packets}.
+				
+				\begin{figure}
+					\center
+					\begin{subfigure}{0.45\linewidth}
+						\buildrplot{figures/cconv-dropped-packets.R}
+						
+						\caption{CConv}
+						\label{fig:cconv-dropped-packets}
+					\end{subfigure}
+					\begin{subfigure}{0.45\linewidth}
+						\buildrplot{figures/parse-dropped-packets.R}
+						
+						\caption{Parse}
+						\label{fig:parse-dropped-packets}
+					\end{subfigure}
+					
+					\caption{Rates of packet dropping in `Nengo SpiNNaker' simulations
+					with different placements. Results shown jittered in the `X'
+					direction for clarity.}
+					\label{fig:nengo-dropped-packets}
+				\end{figure}
+				
+				In the `CConv' neural model when placed using the simulated annealing
+				algortihm, 70\% of simulations resulted in fewer than 100 packets being
+				dropped per second with 41\% dropping no packets at all. In 95 out of
+				the 100 runs of the `CConv' model was placed and routed without
+				exhausting any of SpiNNaker's routing tables. In the `Parse' benchmark
+				when placed by simulated annealing, 93\% of simulations did not drop
+				any packets and all 100 of the 100 simulation runs did not overflow
+				SpiNNaker's routing tables.
+				
+				In both neural models, when placed using each of the baseline placement
+				algorithms significant numbers of packets are dropped in most runs. In
+				the case of the `CConv' model, all of the baseline placement algorithms
+				produce placements which result in packets being dropped. In addition,
+				for the ``CConv`` model only 58\%, 7\% and 9\% of placement solutions
+				resulted in routes which fit in SpiNNaker's routing tables, for the
+				Hilbert, RCM and Random placers respectively.
+				
+				Dropping 6 million packets per second corresponds with roughly 40\% of
+				all packets being dropped. Since packet dropping rates beyond 1\% are
+				fatal to the correctness of most simulations.
+				
+				Unfortunately the `Card Soring' neural simulation was not available for
+				use in these experiments.
+				
+				TODO: MENTION WIGGLY EDGE EXPERIMENT?
+				
+			\subsubsection{Impact of placement on the `Circuit Simulator'}
+				
+				The `MU0' CPU simulation built using the `circuit simulator' SpiNNaker
+				application produces very little traffic in its default mode of
+				operation. The application functions correctly when placed with all
+				four placement algorithms.
+				
+				\begin{figure}
+					\center
+					\buildrplot{figures/mu0-saturation.R}
+					
+					\caption{Simulation speeds at which the circuit simulator becomes
+					network bound when placed by the baseline placers.}
+					\label{fig:mu0-saturation}
+				\end{figure}
+				
+				The circuit simulator may be configured to run at higher speeds,
+				directly increasing the quantity of network traffic generated. The
+				`MU0' simulation was executed at a range of different execution speeds
+				after being placed by each of the four placement algorithms. When
+				placed by the simulated annealing algorithm, at 400$\times$ the default
+				simulation speed, the simulator becomes CPU bound but does not drop any
+				packets. By contrast, when placed by the baseline algorithms, the
+				simulator begins to drop packets at lower simulation speeds. Figure
+				\ref{fig:mu0-saturation} shows the distribution of maximum simulation
+				speeds achieved for each of the 100 runs of the simulator with each
+				placer. As in many of the other benchmarks, the hilbert placer performs
+				better than the Random and RCM placers with the RCM placer producing
+				the placements with the most limited speed.
 			
 		\subsection{Scalability}
 			

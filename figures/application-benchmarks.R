@@ -8,6 +8,8 @@ d <- read.csv("data/application-benchmarks.csv") %>%
     summarize( runtime=mean(runtime)
              , total_cost=mean(total_cost)
              , worst_case_chip_cost=mean(worst_case_chip_cost)
+             , total_entries=mean(total_entries)
+             , max_entries=mean(max_entries)
              ) %>%
     group_by(netlist) %>%
     mutate( total_cost = total_cost / sum(total_cost * (placer=="hilbert"))
