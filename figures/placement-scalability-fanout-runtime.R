@@ -19,11 +19,12 @@ scalability <- ggplot(d,
                  ) +
     placement_theme +
     theme(plot.margin=unit(c(0,1,0,0), "lines")) +
+    theme(legend.position = "none") +
     labs(x="Fan out",
          y="Runtime",
          fill="",
          color="")
 
 render_diagram(scalability, commandArgs(TRUE)[1],
-               height=2.5)
+               height=2.0)
 

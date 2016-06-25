@@ -19,6 +19,7 @@ scalability <- ggplot(d,
                            )
                  ) +
     placement_theme +
+    theme(legend.position = "none") +
     theme(plot.margin=unit(c(0,2,0,0), "lines")) +
     labs(x="Number of vertices",
          y="Runtime",
@@ -26,5 +27,5 @@ scalability <- ggplot(d,
          color="")
 
 render_diagram(scalability, commandArgs(TRUE)[1],
-               height=2.5)
+               height=2.0)
 

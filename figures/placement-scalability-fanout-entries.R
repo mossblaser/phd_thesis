@@ -1,11 +1,12 @@
 source("figures/placement-scalability-fanout.R")
 
-scalability <- ggplot(d, aes(x=fan_out)) +
-    geom_ribbon(aes(ymax=placed_net_length_min/manual_net_length,
-                    ymin=placed_net_length_max/manual_net_length,
+scalability <- ggplot(d,
+       aes(x=fan_out)) +
+    geom_ribbon(aes(ymax=placed_max_entries_min/manual_max_entries_min,
+                    ymin=placed_max_entries_max/manual_max_entries_max,
                     fill=placer),
                 alpha=0.5) +
-    geom_line(aes(y=placed_net_length/manual_net_length, color=placer)) +
+    geom_line(aes(y=placed_max_entries/manual_max_entries, color=placer)) +
     scale_x_log10( breaks=c(1, 2, 4, 8, 16, 32, 64, 128, 256)
                  , expand=c(0,0)
                  ) +
@@ -15,15 +16,16 @@ scalability <- ggplot(d, aes(x=fan_out)) +
                                                "  \\node {\\num{%0.0f}};",
                                                "\\end{tikzpicture}"), l));
                         }
-                      , expand=c(0,0)
                       ) +
-    coord_cartesian(ylim=c(0, 5)) +
     placement_theme +
+    theme(legend.position = "none") +
     theme(plot.margin=unit(c(0,1,0,0), "lines")) +
     labs(x="Fan out",
          y="Overhead ($\\times$)",
-         fill="", color="") 
+         fill="",
+         color="")
 
 render_diagram(scalability, commandArgs(TRUE)[1],
-               height=2.5)
+               height=2.0)
+
 
