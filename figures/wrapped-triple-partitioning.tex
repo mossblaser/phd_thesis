@@ -1,0 +1,131 @@
+\begin{tikzpicture}[thick]
+	\pgfmathsetmacro{\scale}{0.45}
+	
+	\pgfmathtruncatemacro{\layers}{2}
+	\pgfmathsetmacro{\edge}{tan(30)}
+	\pgfmathsetmacro{\hyp}{0.5*cos(30)}
+	
+	\clip [scale=\scale]
+	      (-4.5 - 0.5, -4.5 + \hyp)
+	      rectangle
+	      ++(9, 9);
+	
+	\begin{scope}[scale=\scale,hexagonXYZ]
+		\foreach \xx in {-2,-1,0,1,2}{
+			\foreach \yy in {-2,-1,0,1,2}{
+				\foreach \zz in {0,1,2}{
+					\pgfmathsetmacro{\posx}{(\xx*2) - \yy + floor(\zz/2)}
+					\pgfmathsetmacro{\posy}{\yy + \xx - mod(\zz, 2)}
+					
+					\pgfmathsetmacro{\posx}{\posx * (\layers + 0.2) * 2}
+					\pgfmathsetmacro{\posy}{\posy * (\layers + 0.2) * 2}
+					
+					\coordinate (center) at ([hexagonBoardXYZ]\posx, \posy);
+					
+					% Nodes in partition
+					\foreach [count=\i] \dx/\dy in {0/0,-1/0,0/1,%
+					                     0/2,1/2,1/1,1/0,0/-1,-1/-1,-2/-1,-2/0,-1/1}{
+						\node (node-\xx-\yy-\zz-\i) at ([shift={(\dx,\dy)}]center)
+						      [ minimum width=\scale*1cm
+						      , minimum height=\scale*1cm
+						      , inner sep=0
+						      , hexagon
+						      , draw
+						      , font=\tiny
+						      ]
+						      {};
+					}
+					
+					% Outline
+					\coordinate (center) at ([shift={(-0.5, 0)}]node-\xx-\yy-\zz-11);
+					\draw [ultra thick, hexagonBoardXYZ]
+					      (center) ++(0, -0.5 * \edge)
+					   -- ++(0, \edge, 0)
+					   -- ++(0, 0, -\edge)
+					   -- ++(0, \edge, 0)
+					   -- ++(0, 0, -\edge)
+					   -- ++(0, \edge, 0)
+					   -- ++(0, 0, -\edge)
+					   -- ++(\edge, 0, 0)
+					   -- ++(0, 0, -\edge)
+					   -- ++(\edge, 0, 0)
+					   -- ++(0, -\edge, 0)
+					   -- ++(\edge, 0, 0)
+					   -- ++(0, -\edge, 0)
+					   -- ++(\edge, 0, 0)
+					   -- ++(0, -\edge, 0)
+					   -- ++(0, 0, \edge)
+					   -- ++(0, -\edge, 0)
+					   -- ++(0, 0, \edge)
+					   -- ++(-\edge, 0, 0)
+					   -- ++(0, 0, \edge)
+					   -- ++(-\edge, 0, 0)
+					   -- ++(0, 0, \edge)
+					   -- ++(-\edge, 0, 0)
+					   -- ++(0, \edge, 0)
+					   -- cycle
+					      ;
+				}
+			}
+		}
+		
+		\foreach \xx in {-1,0,1}{
+			\foreach \yy in {-1,0,1}{
+				\foreach \ia/\da/\ib/\db/\za/\zb/\dx/\dy in {%
+						  % North from 2
+						  4/north/10/south/2/1/+1/+1%
+						, 4/north east/9/south west/2/1/+1/+1%
+						, 5/north/9/south/2/1/+1/+1%
+						, 5/north east/8/south west/2/1/+1/+1%
+						  % North from 1
+						, 4/north/10/south/1/0/+0/+0%
+						, 4/north east/9/south west/1/0/+0/+0%
+						, 5/north/9/south/1/0/+0/+0%
+						, 5/north east/8/south west/1/0/+0/+0%
+						  % North from 0
+						, 4/north/10/south/0/2/+0/+1%
+						, 4/north east/9/south west/0/2/+0/+1%
+						, 5/north/9/south/0/2/+0/+1%
+						, 5/north east/8/south west/0/2/+0/+1%
+						  % North east from 2
+						, 5/east/11/west/2/0/+1/+0%
+						, 6/north east/11/south west/2/0/+1/+0%
+						, 6/east/10/west/2/0/+1/+0%
+						, 7/north east/10/south west/2/0/+1/+0%
+						  % North east from 1
+						, 5/east/11/west/1/2/+0/+0%
+						, 6/north east/11/south west/1/2/+0/+0%
+						, 6/east/10/west/1/2/+0/+0%
+						, 7/north east/10/south west/1/2/+0/+0%
+						  % North east from 0
+						, 5/east/11/west/0/1/+1/+1%
+						, 6/north east/11/south west/0/1/+1/+1%
+						, 6/east/10/west/0/1/+1/+1%
+						, 7/north east/10/south west/0/1/+1/+1%
+						  % South west from 2
+						, 7/east/4/west/2/1/+1/+0%
+						, 7/south/12/north/2/1/+1/+0%
+						, 8/east/12/west/2/1/+1/+0%
+						, 8/south/11/north/2/1/+1/+0%
+						  % South west from 1
+						, 7/east/4/west/1/0/+0/-1%
+						, 7/south/12/north/1/0/+0/-1%
+						, 8/east/12/west/1/0/+0/-1%
+						, 8/south/11/north/1/0/+0/-1%
+						  % South west from 0
+						, 7/east/4/west/0/2/+0/+0%
+						, 7/south/12/north/0/2/+0/+0%
+						, 8/east/12/west/0/2/+0/+0%
+						, 8/south/11/north/0/2/+0/+0%
+						}{
+					\pgfmathtruncatemacro{\xb}{\xx + \dx};
+					\pgfmathtruncatemacro{\yb}{\yy + \dy};
+					\draw (node-\xx-\yy-\za-\ia.side \da) --
+					      (node-\xb-\yb-\zb-\ib.side \db);
+				}
+			}
+		}
+	\end{scope}
+	
+\end{tikzpicture}
+

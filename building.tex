@@ -1,159 +1,634 @@
 \chapter{Building large SpiNNaker machines}
 	
-	Like any super computer, physically putting together a large SpiNNaker
+	Like any super computer, physically assembling together a large SpiNNaker
 	machine poses many challenges in terms of organisation, assembly and
-	maintainance. One of the key tasks in this process is the installation of
-	network cables such that a desired overall network topology is constructed.
-	The largest planned SpiNNaker machine will use \num{3600} S-ATA
-	\cite{sata3spec} cables to interconnect its \num{1200} circuit boards,
-	creating a hexagonal torus topology. Since the machine will be installed
-	within standard server room cabinets (which are not available in a
-	giant-doughnut form-factor) a mapping from a board's logical location in the
-	network topology to its physical location must be constructed. In addition,
-	the interconnect technology employed by SpiNNaker restricts the length of
-	S-ATA cables used to $\le$~\SI{1}{\meter}, constraining the possible mappings
-	used. In addition the practical issues of installation complexity and
-	maintainance must be considered since all \num{3600} cables must ultimately
-	be installed and maintained by human operators.
+	maintenance. For conventional architectures and network topologies, the
+	techniques are is well understood and embodied by industry standards such as
+	TAI-942 \cite{tia2006}. SpiNNaker's unconventional architecture departs from
+	convention in its use of the hexagonal torus topology and `wrapped triple'
+	network partitioning render existing mappings insufficient.
 	
-	In this chapter I describe a novel technique for physically laying out
-	machines configured in hexagonal torus topologies, such as SpiNNaker, in
-	commercial machine rooms, building on the techniques used in more
-	conventional torus topologies. In addition, I also propose a new methodology
-	for installing and maintaining super computer cabling which which exploits
-	existing diagnostic features of the SpiNNaker hardware to interactively guide
-	and validate cable installation. Finally, I demonstrate how these new
-	techniques have been used successfully to interconnect a prototype
-	\num{518400} core SpiNNaker machine in substantially less time than the
-	industry norm.
+	In the first part of this chapter I extend existing techniques for mapping
+	network topologies into standard data centre physical infrastructure to
+	support the hexagonal torus topology. This mapping is designed to ensure that
+	all cables are kept short (under \SI{1}{\meter}) in order to reduce costs and
+	simplify the network hardware required. The techniques described introduce
+	little overhead in terms of cable length over existing torus wiring schemes
+	and confirm the suitability of the hexagonal torus topology for real-world
+	applications.
+	
+	The second part of this chapter reports uses SpiNNaker as a case study for
+	the suitability of the mappings introduced in this chapter.  The techniques
+	used been successfully applied in the construction of a number of large
+	SpiNNaker systems including a \num{518400} core half-scale machine and
+	cabling plans for larger machines have also been developed. Because of
+	SpiNNaker's fine-grained connectivity compared with other architectures,
+	SpiNNaker's cabling is unusually dense.  In spite of this, by exploiting
+	SpiNNaker's diagnostic functions to guide cable installation, construction of
+	large SpiNNaker machines takes a matter of hours rather than the days
+	reported for other architectures. In addition, preliminary experiments
+	suggest that the neither the maintainability nor cooling performance of the
+	system are hampered by the dense cabling patterns used.
 	
 	In this chapter, the term \emph{unit} refers to the smallest physical
-	ecomponent between which connections connections are to be made. For example,
-	in a SpiNNaker machine a unit is a 48-chip board while in data center, a unit
-	might be a server blade.
+	component between which network interconnection cables are installed. For
+	example, in a SpiNNaker machine a unit is a 48-chip board while in data
+	centre, a unit might be a server blade.
 	
-	\section{Related work}
+	\section{Cabling non-hexagonal torus topologies}
 		
-		In this section I describe the techniques conventionally employed when
-		laying out and interconnecting the units within super computers. Due to
-		SpiNNaker's hexagonal torus topology and dense physical packing of units,
-		these existing techniques are found to be insufficient. In the remainder of
-		the chapter we will explore solutions to the limitations exposed below.
+		Na\"ive arrangements of torus topologies, hexagonal and otherwise, feature
+		long `wrap-around' connections which connect units at the peripheries of
+		the system. These physically long connections can be problematic for
+		numerous reasons:
 		
-		\subsection{Avoiding long cables}
+		\begin{description}
 			
-			Na\"ive arrangements of torus topologies, including hexagonal torus
-			topologies, feature long `wrap-around' connections which connect units at
-			the peripheries of the system. These connections can be problematic for
-			numerous reasons:
+			\item[Performance] Signal quality diminishes as cables get longer,
+			requiring the use of slower signalling speeds, increased error
+			correction overhead or more complex hardware.
 			
-			\begin{description}
-				
-				\item[Performance] Signal quality diminishes as cables get longer,
-				requiring the use of slower signalling speeds, increased error
-				correction overhead or more complex hardware.
-				
-				\item[Energy] Longer cables require higher drive strengths and/or
-				buffering to maintain signal integrity.
-				
-				\item[Cost] Cost Shorter cables are cheaper than long ones.  Longer
-				cables imply more wire in a given space making the tasks of routing or
-				cable installation more difficult increasing labour costs by as much as
-				$5\times$ \cite{curtis12}.
-				
-			\end{description}
+			\item[Energy] Longer cables require higher drive strengths and/or
+			buffering to maintain signal integrity.
 			
-			In conventional torus topologies the need for long cables is eliminated
-			by folding and interleaving units of the network \cite{dally04}. For
-			example, for a 1D torus topology (a ring network), one long connection
-			exists to connect the two opposite sides of the system. To remove these
-			long connections, half the units are `folded' on top of the others and
-			then this arrangement of units is interleaved as illustrated in figure
-			\ref{fig:ring-folding}.
+			\item[Cost] Cost Shorter cables are cheaper than long ones.  Longer
+			cables imply more wire in a given space making the tasks of routing or
+			cable installation more difficult increasing labour costs by as much as
+			$5\times$ \cite{curtis12}.
+			
+		\end{description}
+		
+		\begin{figure}
+			\center
+			\begin{subfigure}[b]{0.39\linewidth}
+				\center
+				\buildfig{figures/ring-folding-row.tex}
+				\caption{A ring network}
+				\label{fig:ring-folding-row}
+			\end{subfigure}
+			\begin{subfigure}[b]{0.24\linewidth}
+				\center
+				\buildfig{figures/ring-folding-folded.tex}
+				\caption{Folded}
+				\label{fig:ring-folding-folded}
+			\end{subfigure}
+			\begin{subfigure}[b]{0.35\linewidth}
+				\center
+				\buildfig{figures/ring-folding-interleaved.tex}
+				\caption{Folded and interleaved}
+				\label{fig:ring-folding-interleaved}
+			\end{subfigure}
+			
+			\caption{Folding and interleaving a ring network to reduce maximum wire
+			length.}
+			\label{fig:ring-folding}
+		\end{figure}
+		
+		In conventional torus topologies, the need for long cables is eliminated by
+		folding and interleaving units of the network \cite{dally04}. This process
+		is illustrated for a 1D torus topology, a ring network, in
+		\ref{fig:ring-folding}. A na\"ive arrangement of units in this topology
+		results in a long cable connecting the two ends of the ring (figure
+		\ref{fig:ring-folding-row}).  To eliminate these long connections, half the
+		units are `folded' on top of the others (figure
+		\ref{fig:ring-folding-folded}) and then this arrangement of units is
+		interleaved (figure \ref{fig:ring-folding-interleaved}) to yield an
+		arrangement of units without long cables.
+		
+		\begin{figure}
+			\center
+			\begin{subfigure}[b]{0.24\linewidth}
+				\center
+				\buildfig{figures/failing-to-fold-hex-toruses-none.tex}
+				\caption{Not folded}
+				\label{fig:failing-to-fold-hex-toruses-none}
+			\end{subfigure}
+			\begin{subfigure}[b]{0.24\linewidth}
+				\center
+				\buildfig{figures/failing-to-fold-hex-toruses-x.tex}
+				\caption{X}
+				\label{fig:failing-to-fold-hex-toruses-x}
+			\end{subfigure}
+			\begin{subfigure}[b]{0.24\linewidth}
+				\center
+				\buildfig{figures/failing-to-fold-hex-toruses-y.tex}
+				\caption{Y}
+				\label{fig:failing-to-fold-hex-toruses-y}
+			\end{subfigure}
+			\begin{subfigure}[b]{0.24\linewidth}
+				\center
+				\buildfig{figures/failing-to-fold-hex-toruses-z.tex}
+				\caption{Z}
+				\label{fig:failing-to-fold-hex-toruses-z}
+			\end{subfigure}
+			
+			\caption{Schematics showing hexagonal torus topologies folded along
+			each of their dimensions.}
+			\label{fig:failing-to-fold-hex-toruses}
+		\end{figure}
+		
+		The folding and interleaving process may be extended to $N$-dimensional
+		torus topologies by folding each dimension in turn. Since all dimensions
+		are orthogonal, the folding process only moves units in the dimension being
+		folded. Due to the non-orthogonality of the three dimensions of the
+		hexagonal torus topology, this type of folding does not apply to these
+		topologies. As figure \ref{fig:failing-to-fold-hex-toruses} illustrates,
+		folding along any axis results in units on opposing edges not being brought
+		together. Note that folding along the Z axis brings the \emph{wrong} edges
+		closer together.
+	
+	\section{Partitioning hexagonal torus topologies}
+		
+		\begin{figure}
+			\center
+			\begin{subfigure}[b]{0.32\textwidth}
+				\center
+				\buildfig{figures/hypercube-partitioning.tex}
+				\caption{2D Hypercube}
+				\label{fig:hypercube-partitioning}
+			\end{subfigure}
+			\begin{subfigure}[b]{0.32\textwidth}
+				\center
+				\buildfig{figures/parallelogram-partitioning.tex}
+				\caption{Parallelogram}
+				\label{fig:parallelogram-partitioning}
+			\end{subfigure}
+			\begin{subfigure}[b]{0.32\textwidth}
+				\center
+				\buildfig{figures/wrapped-triple-partitioning.tex}
+				\caption{Wrapped triple}
+				\label{fig:wrapped-triple-partitioning}
+			\end{subfigure}
+			
+			\caption{Partitioning of non-hexagonal (a) and hexagonal (b and c) torus
+			topologies into units.}
+			\label{fig:partitioning-options}
+		\end{figure}
+		
+		The nodes in super computer networks are usually relatively small, for
+		example a single chip. Typically tens of nodes are packed together into a
+		single unit such as a circuit board or server blade to simplify assembly
+		and share common power and cooling resources \cite{gilge14,ajima12}. In
+		commercial super computers built on non-hexagonal torus topologies, each
+		unit's nodes represent a hypercube partition of the overall topology as
+		illustrated in figure \ref{fig:hypercube-partitioning}
+		\cite{chen11,ajima12}.
+		
+		An analogous `parallelogram' partitioning scheme exists for hexagonal torus
+		topologies (figure \ref{fig:parallelogram-partitioning}) but this results
+		in imbalanced connectivity requirements between neighbouring boards.
+		Instead, SpiNNaker uses a `wrapped triple' partitioning scheme, as
+		illustrated in figure \ref{fig:wrapped-triple-partitioning}, which is
+		described fully in appendix \ref{sec:partitioning}. In the wrapped triple
+		partitioning scheme, each board connects to its six neighbours with the
+		same number of connections going to each. In SpiNNaker, the connections
+		between neighbouring concentrated onto a single S-ATA cable and so ensuring
+		balanced communications requirements between neighbours simplifies these
+		links. To construct a hexagonal torus topology from wrapped triples,
+		`triads' of three wrapped triples are used.
+		
+		For completeness, both styles of partitioning are considered in this
+		chapter. Though less well suited to SpiNNaker, the parallelogram
+		partitioning scheme may be more appropriate for architectures where links
+		are not concentrated between boards. In addition, if a single node is
+		considered as a $1 \times 1$ parallelogram partition, this special case
+		corresponds with an architecture where each unit contains exactly one node.
+		This special case occurs in coarse grained architectures and Networks on
+		Chip (NoCs) where nodes are not grouped together into multi-node units.
+	
+	\section{Folding \& interleaving hexagonal toruses}
+		
+		In order to exploit the folding technique used by non-hexagonal topologies,
+		the units in a hexagonal torus topology must be mapped into a space with
+		orthogonal coordinates. From this arrangement, the conventional folding and
+		interleaving process may be used. The choice of transformation from
+		hexagonal topology to an orthogonal coordinate system can have an impact on
+		how far apart neighbouring boards are in the final arrangement. A good
+		mapping should attempt to reduce `distortion' which moves boards further
+		apart in the final folded and interleaved arrangement
+		
+		In this section I propose two transformations which map hexagonal
+		arrangements of boards into a 2D orthogonal coordinate space. The first
+		transformation, `shearing', is general purpose and introduces little
+		distortion for hexagonal torus topologies of any aspect ratio and
+		partitioned in either of the styles described previously. The second
+		transformation, `slicing', is less general but for some topologies can
+		achieve lower distortion and thus shorter cable lengths.
+		
+		Both the slicing and shearing transformations are carried out in two steps:
+		
+		\begin{description}
+			
+			\item[1. Parallelogram to rectangle] Units are transformed from being
+			laid out in a parallelogram shape into a rectangular arrangement. The
+			specific transformation used is the key difference between the slicing
+			and shearing transformations.
+			
+			\item[2. Uncrinkle] Units are mapped into a 2D coordinate system without
+			gaps between units.
+			
+		\end{description}
+		
+		\subsection{Parallelogram to rectangle}
+			
+			The hexagonal torus topology is most naturally drawn as a parallelogram
+			as illustrated in figures \ref{fig:hex-to-plane-node-native} for
+			parallelogram-partitioned units and \ref{fig:hex-to-plane-native} for
+			wrapped triple units. As the first step in the folding process, we
+			re-arrange the units such that they form a rectangle using one of two
+			techniques: shearing or slicing.
 			
 			\begin{figure}
 				\center
-				\begin{subfigure}[b]{0.39\linewidth}
+				\begin{subfigure}[b]{0.32\linewidth}
 					\center
-					\buildfig{figures/ring-folding-row.tex}
-					\caption{A ring network}
-					\label{fig:ring-folding-row}
+					\buildfig{figures/hex-to-plane-node-native.tex}
+					
+					\caption{$7 \times 7$ torus}
+					\label{fig:hex-to-plane-node-native}
 				\end{subfigure}
-				\begin{subfigure}[b]{0.24\linewidth}
+				\begin{subfigure}[b]{0.32\linewidth}
 					\center
-					\buildfig{figures/ring-folding-folded.tex}
-					\caption{Folded}
-					\label{fig:ring-folding-folded}
+					\buildfig{figures/hex-to-plane-node-shear.tex}
+					
+					\caption{Sheared}
+					\label{fig:hex-to-plane-node-shear}
 				\end{subfigure}
-				\begin{subfigure}[b]{0.35\linewidth}
+				\begin{subfigure}[b]{0.32\linewidth}
 					\center
-					\buildfig{figures/ring-folding-interleaved.tex}
-					\caption{Folded and interleaved}
-					\label{fig:ring-folding-interleaved}
+					\buildfig{figures/hex-to-plane-node-slice.tex}
+					
+					\caption{Sliced}
+					\label{fig:hex-to-plane-node-slice}
 				\end{subfigure}
 				
-				\caption{Folding and interleaving a ring network to reduce maximum wire
-				length.}
-				\label{fig:ring-folding}
+				\caption{Transformations of hexagonal toruses into a rectangular form.
+				Thin lines show wrap-around links. Pointy-topped hexagons represent
+				units of individual nodes or parallelogram partitioned groups of
+				nodes.}
+				\label{fig:hex-to-plane-node}
+				
+				% XXX: Force these figures together.
+				
+				%\end{figure}
+				%
+				%\begin{figure}
+				
+				\center
+				\begin{subfigure}[b]{0.32\linewidth}
+					\center
+					\buildfig{figures/hex-to-plane-native.tex}
+					
+					\caption{$4 \times 4$ triad torus}
+					\label{fig:hex-to-plane-native}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.32\linewidth}
+					\center
+					\buildfig{figures/hex-to-plane-shear.tex}
+					
+					\caption{Sheared}
+					\label{fig:hex-to-plane-shear}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.32\linewidth}
+					\center
+					\buildfig{figures/hex-to-plane-slice.tex}
+					
+					\caption{Sliced}
+					\label{fig:hex-to-plane-slice}
+				\end{subfigure}
+				
+				\caption{Transformations of hexagonal toruses of triads of wrapped
+				triples into a rectangular form. Thin lines show wrap-around links.
+				Flat-topped hexagons represent a units of wrapped triples of nodes.}
+				\label{fig:hex-to-plane}
 			\end{figure}
 			
-			Folding and interleaving has the effect of approximately doubling the
-			average cable length but also eliminates the need for a cable spanning
-			the entire system. Since the mean cable length is typically already
-			short, doubling it in exchange for a substantially reduced maximum cable
-			length is often preferable.
+			The shearing technique applies a \SI{30}{\degree} shear transformation to
+			distort the arrangement of units such that the X and Y axes of the
+			hexagonal torus topology become orthogonal. This transformation leads to
+			a rectangular arrangement of units as illustrated in figures
+			\ref{fig:hex-to-plane-node-shear} and \ref{fig:hex-to-plane-shear}.
 			
-			The folding and interleaving process may be extended to $N$-dimensional
-			torus topologies by folding each dimension in turn. Since all dimensions
-			are orthogonal, the folding process only moves units in the dimension
-			being folded. In the hexagonal torus topology, however, the three
-			dimensions are non-orthogonal and thus folding in one dimension also
-			moves units in other dimensions, preventing the edges of the torus
-			meeting as illustrated in figure \ref{fig:failing-to-fold-hex-toruses}.
+			The shear transformation introduces some distortion causing connections
+			between units in the Z dimension to become $\sqrt{2} \times$ longer. The
+			transformation does not alter the pattern of wrap-around connections.
+			Long connections remain between units on the extreme left and right sides
+			and the top and bottom and a single connection exists between the bottom
+			left and top right units.
+			
+			The slice transformation aims to avoid the elongation of the Z axis by
+			moving the units protruding from the left-hand-side of the parallelogram
+			into the matching gap on the opposite side as illustrated in figures
+			\ref{fig:hex-to-plane-node-slice} and \ref{fig:hex-to-plane-slice}. This
+			transformation does not introduce any distortion but changes the pattern
+			of wrap-around connections. Connections from left-to-right remain while
+			the connections between the top and bottom units now criss-cross.
+			
+			The proportion of connections going from bottom-left-to-top-right and
+			bottom-right-to-top-left varies depending on the aspect ratio of the
+			topology as shown in figure \ref{fig:slicing-examples}. The exact pattern
+			of connectivity, and therefore the aspect ratio of the network influences
+			how, and if, a network may be folded after the slice transformation.
 			
 			\begin{figure}
 				\center
-				\begin{subfigure}[b]{0.24\linewidth}
+				\buildfig{figures/slicing-examples.tex}
+				\caption{Patterns of wrap-around connections in sliced systems of
+				various sizes.}
+				\label{fig:slicing-examples}
+			\end{figure}
+			
+		\subsection{Uncrinkling}
+			
+			Before folding can occur, the rectangular arrangements of units produced
+			by the previous step must be mapped into a 2D grid without gaps.
+			
+			\begin{figure}
+				\center
+				\begin{subfigure}[b]{0.44\linewidth}
 					\center
-					\buildfig{figures/failing-to-fold-hex-toruses-none.tex}
-					\caption{Not folded}
-					\label{fig:failing-to-fold-hex-toruses-none}
+					\buildfig{figures/uncrinkling-node-sheared.tex}
+					
+					\caption{$7 \times 7$, sheared}
+					\label{fig:uncrinkling-node-sheared}
 				\end{subfigure}
-				\begin{subfigure}[b]{0.24\linewidth}
+				\begin{subfigure}[b]{0.44\linewidth}
 					\center
-					\buildfig{figures/failing-to-fold-hex-toruses-x.tex}
-					\caption{X}
-					\label{fig:failing-to-fold-hex-toruses-x}
-				\end{subfigure}
-				\begin{subfigure}[b]{0.24\linewidth}
-					\center
-					\buildfig{figures/failing-to-fold-hex-toruses-y.tex}
-					\caption{Y}
-					\label{fig:failing-to-fold-hex-toruses-y}
-				\end{subfigure}
-				\begin{subfigure}[b]{0.24\linewidth}
-					\center
-					\buildfig{figures/failing-to-fold-hex-toruses-z.tex}
-					\caption{Z}
-					\label{fig:failing-to-fold-hex-toruses-z}
+					\buildfig{figures/uncrinkling-node-sliced.tex}
+					
+					\caption{$7 \times 7$, sliced}
+					\label{fig:uncrinkling-node-sliced}
 				\end{subfigure}
 				
-				\caption{Schematics showing hexagonal torus topologies folded along
-				each of their non-orthogonal dimensions. Note that folding along
-				the Z axis brings the \emph{wrong} edges closer together.}
-				\label{fig:failing-to-fold-hex-toruses}
+				\vspace{1cm}
+				
+				\begin{subfigure}[b]{0.44\linewidth}
+					\center
+					\buildfig{figures/uncrinkling-sheared.tex}
+					
+					\caption{$4 \times 4$ triads, sheared}
+					\label{fig:uncrinkling-sheared}
+				\end{subfigure}
+				\begin{subfigure}[b]{0.44\linewidth}
+					\center
+					\buildfig{figures/uncrinkling-sliced.tex}
+					
+					\caption{$4 \times 4$ triads, sliced}
+					\label{fig:uncrinkling-sliced}
+				\end{subfigure}
+				
+				\vspace{1em}
+				
+				\caption{Mapping rectangular arrangements of units into a square grid.
+				Thick lines show how crinkled rows and columns of units are uncrinkled.
+				Annotations show how the relative positions of nodes and wrapped
+				triples change after uncrinkling.}
+				\label{fig:uncrinkling}
 			\end{figure}
-		
-		\subsection{Cabling installation}
 			
-			Existing machine room installations feature very repetitive cabling
-			patterns which can easily be memorised by a human technician. For example
-			in BlueGene super computers the connectivity between units is highly
-			regular \cite{lakner07} while in data centre networks cabling often
-			centres around a small number of high-port-count switches
-			\cite{cisco07,csernai15}. Cable installation is usually only aided by
-			the labelling of connectors and sockets in a standardised manner
-			\cite{tia2006} such as in figure \ref{fig:bgWiring}.
+			When applied to parallelogram partitions, the shear transformation
+			results in a natural mapping into a 2D grid with no further distortion.
+			For other combinations of transformation and partitioning scheme, the
+			units do not exactly fit a 2D grid. Instead, the units form `crinkled'
+			rows or columns which may be uncrinkled (straightened out) to fit a
+			regular 2D grid as illustrated in figure \ref{fig:uncrinkling}.
+			
+			In the figure, the labels show the positions of individual units before
+			and after uncrinkling. We will use these later in \S\ref{sec:distortion}
+			to calculate the exact overhead introduced by uncrinkling.
+		
+		\subsection{Folding}
+			
+			\begin{figure}
+				\begin{subfigure}{\linewidth}
+					\center
+					\buildfig{figures/folding-sheared.tex}
+					\caption{Sheared systems and $1:2$ sliced systems}
+					\label{fig:folding-sheared}
+				\end{subfigure}
+				
+				\vspace{1em}
+				
+				\begin{subfigure}{\linewidth}
+					\center
+					\buildfig{figures/folding-sliced.tex}
+					\caption{$1:1$ sliced systems}
+					\label{fig:folding-sliced}
+				\end{subfigure}
+				
+				\caption{Schematic illustrating elimination of long wrap-around links
+				during folding. In each example a single link has been highlighted to
+				aid in following the process.}
+				\label{fig:folding}
+			\end{figure}
+			
+			Once a regular 2D grid of units has been formed, this may be folded in
+			the conventional way as illustrated in \ref{fig:folding-sheared}. Folding
+			once along each dimension eliminates long connections crossing from
+			left-to-right, top-to-bottom and from the bottom-left corner to the
+			top-right corner. Any shear-transformed network may be folded this way
+			since its wrap-around connections always follow this pattern.
+			
+			Slice-transformed networks may only be folded like this when their aspect
+			ratio is $1:2$ and the pattern of wrap-around links follows the above
+			pattern. When `square' networks with a $1:1$ aspect ratio are sliced, the
+			network may be folded \emph{twice} along the Y axis as in
+			\ref{fig:folding-sliced} in order to eliminate the wrap-around links. It
+			is not possible to eliminate wrap-around links from sliced networks with
+			other aspect ratios by folding.
+			
+			After folding, the units are interleaved yielding a 2D arrangement of
+			units in which no connection spans the width or height of the system.
+		
+		\subsection{Choosing a transformation}
+			
+			\label{sec:distortion}
+			
+			In each step of the transformation from hexagonal torus topology to a
+			folded and interleaved 2D grid the distances between connected units
+			may increase. The transformation in which the least distortion is
+			introduced should be used in order to minimise the total length of the
+			cables required to build a system.
+			
+			By using figure \ref{fig:uncrinkling} (refer back to page
+			\pageref{fig:uncrinkling}), it is possible to calculate the overhead
+			introduced by each type of transformation.  For example, to compute the
+			overhead introduced by the slicing transformation when applied to units
+			composed of triads of wrapped-triples we consider figure
+			\ref{fig:uncrinkling-sliced}. The uncrinkling pattern used to transform
+			this topology is a repeating pattern of two units, a pair of which have
+			been labelled $1$ and $2$ respectively. Unit $1$ is immediately
+			surrounded by six units labelled $a$, $b$, $c$, $2$, $g$ and $h$.
+			Similarly, unit $2$ is surrounded by units $1$, $c$, $d$, $e$, $f$ and
+			$g$. Before the transformation, the distance between to each of these
+			units is $1$ but after the transformation is applied, this is not always
+			the case. Folding and interleaving into $f_x$ columns and $f_y$ rows also
+			introduces some additional overhead. For each pair of previously
+			neighbouring units in the example, their distances after folding may be
+			computed as follows:
+			
+			\begin{equation*}
+				\begin{aligned}[c]
+					D_{1\,\leftrightarrow{}\,a} &= \sqrt{f_x^2 + f_y^2} \\
+					D_{1\,\leftrightarrow{}\,b} &= f_y \\
+					D_{1\,\leftrightarrow{}\,c} &= \sqrt{f_x^2 + f_y^2} \\
+					D_{1\,\leftrightarrow{}\,2} &= f_x \\
+					D_{1\,\leftrightarrow{}\,g} &= f_y \\
+					D_{1\,\leftrightarrow{}\,h} &= f_x
+				\end{aligned}
+				\hspace{2cm}
+				\begin{aligned}[c]
+					D_{2\,\leftrightarrow{}\,1} &= f_x \\
+					D_{2\,\leftrightarrow{}\,c} &= f_y \\
+					D_{2\,\leftrightarrow{}\,d} &= f_x \\
+					D_{2\,\leftrightarrow{}\,e} &= \sqrt{f_x^2 + f_y^2} \\
+					D_{2\,\leftrightarrow{}\,f} &= f_y \\
+					D_{2\,\leftrightarrow{}\,g} &= \sqrt{f_x^2 + f_y^2}
+				\end{aligned}
+			\end{equation*}
+			
+			From these values, mean and maximum connection distances may be
+			calculated. The expression for the mean and maximum connection distances
+			for each partitioning scheme and transformation are as follows:
+			
+			\begin{align*}
+				D_{\textrm{mean}}=&
+					\begin{cases}
+						\frac{7f_x + 3\sqrt{f_x^2 + f_y^2} + \sqrt{(2f_x)^2 + f_y^2}}{9} &
+							\textrm{if sheared triads of wrapped-triples}\\
+						\frac{f_x + f_y + \sqrt{f_x^2 + f_y^2}}{3} &
+							\textrm{otherwise}\\
+					\end{cases} \\
+				D_{\textrm{max}}=&
+					\begin{cases}
+						\sqrt{(2f_x)^2 + f_y^2} &
+							\textrm{if sheared triads of wrapped-triples}\\
+						\sqrt{f_x^2 + f_y^2} &
+							\textrm{otherwise}\\
+					\end{cases}
+			\end{align*}
+			
+			Using these formulae it is possible to determine which approach, shearing
+			or slicing, results in the lowest mean and maximum cable lengths and thus
+			which technique should be used. Table \ref{tab:transform-recommended}
+			summarises these recommendations for each partitioning scheme.
+			
+			\begin{table}
+				\center
+				\begin{tabular}{lcc}
+					\toprule
+					                                 & $1:2$  & Other \\
+					\addlinespace
+					\multirow{2}{*}{Parallelogram}   & \textbf{Either} & \textbf{Shear}\\
+					                                 & \footnotesize $D_\textrm{mean}\approx2.28 \quad D_\textrm{max}\approx2.83$
+					                                 & \footnotesize $D_\textrm{mean}\approx2.28 \quad D_\textrm{max}\approx2.83$\\
+					\addlinespace
+					\multirow{2}{*}{Wrapped-Triples} & \textbf{Slice}  & \textbf{Shear}\\
+					                                 & \footnotesize $D_\textrm{mean}\approx2.28 \quad D_\textrm{max}\approx2.83$
+					                                 & \footnotesize $D_\textrm{mean}\approx3.00 \quad D_\textrm{max}\approx4.47$\\
+					\bottomrule
+				\end{tabular}
+				
+				\caption{Recommended transformation for the two partitioning schemes
+				for different aspect ratios.}
+				\label{tab:transform-recommended}
+			\end{table}
+	
+	\section{A SpiNNaker case study}
+		
+		As the only existing large scale hexagonal torus based architecture known
+		to the author, the SpiNNaker represents an ideal case study for the
+		techniques described in the first part of this chapter. SpiNNaker machines
+		are partitioned into units comprising 48-chip SpiNNaker boards making up
+		wrapped-triple partitions. Systems of various sizes and aspect ratios have
+		been constructed ranging from twenty-four board `portable' systems to a
+		five cabinet half-million core installation with plans in place to build a
+		machine of twice this size.
+		
+		In this section I describe how the folded and interleaved arrangement of
+		units produced by the techniques in the previous chapter may be translated
+		into physical arrangements of boards in a machine room. I then describe how
+		the thousands of S-ATA cables are installed and report on the
+		maintainability and cooling impact of the cabling scheme used.
+		
+		\subsection{Mapping into physical cabinets}
+			
+			\begin{figure}
+				\center
+				\buildfig{figures/cabinet-units.tex}
+				
+				\caption{Physical configuration of a SpiNNaker machine.}
+				\label{fig:cabinet-units}
+			\end{figure}
+			
+			In SpiNNaker systems, the configuration used is illustrated in figure
+			\ref{fig:cabinet-units}.  SpiNNaker boards are installed into card frames
+			containing twenty four boards each. Five frames are mounted in to
+			standard 19'' cabinets with further cabinets being added, arranged in a
+			row to scale the system up.
+			
+			\begin{figure}
+				\center
+				\buildfig{figures/cabinetisation.tex}
+				
+				\caption{Mapping from 2D space to cabinets, frames and boards.}
+				\label{fig:cabinetisation}
+			\end{figure}
+			
+			Applied to the SpiNNaker architecture, 2D grid of units produced by the
+			steps described in the previous section, each unit represents a single
+			SpiNNaker board. This 2D grid of boards is mapped into cabinets and frames
+			as shown in figure \ref{fig:cabinetisation}. The 2D grid is divided up into
+			groups of 24 boards which are then assigned a position with a frame.
+			
+			\begin{figure}
+				\center
+				\buildfig{figures/million-core-machine.tex}
+				
+				\caption{Cabling plan for a \num{1036800} core SpiNNaker machine.}
+				\label{fig:million-core-machine}
+			\end{figure}
+			
+			Figure \ref{fig:million-core-machine} illustrates the cabling plan for the
+			largest planned SpiNNaker machine. This system will fill ten 19'' cabinets
+			and will implement a $240 \times 240$ hexagonal torus topology partitioned
+			amongst \num{1200} 48 chip SpiNNaker boards which partition the topology
+			into wrapped triples. Following the cabling plan described in this chapter
+			results in the largest gap to be spanned by any cable being
+			\SI{66}{\centi\meter}, well within the \SI{1}{\meter} limit on SpiNNaker's
+			board-to-board interconnect technology.
+			
+		\subsection{Cable selection and routing}
+			
+			\begin{figure}
+				
+				\center
+				\buildfig{figures/wire-length-histogram.tex}
+				
+				\caption{Histogram of connection distances in a one-million core
+				SpiNNaker machine annotated with the selected cable lengths.}
+				\label{fig:wire-length-histogram}
+				
+			\end{figure}
+			
+			Because of the dense packing of SpiNNaker boards, cables are generally
+			required to connect short distances as shown in figure
+			\ref{fig:wire-length-histogram}. Because of this conventional cable
+			management techniques such as the use of cable trays would not be
+			practical. To ensure the reliability and maintainability of SpiNNaker's
+			wiring, careful attention must be paid to ensure that cable slack is
+			controlled.  If cables are too tight, cables and connectors can become
+			easily damaged and when too slack, the excess cable obstructs other
+			cables and can easily become tangled and damaged \cite{cisco07}.
+			
+			In this case study the `rule of (three-)thumbs' proposed by Mazaris
+			\cite{mazaris97} is used which suggests that a minimum of
+			\SI{5}{\centi\meter} of slack be provided. As SpiNNaker uses
+			off-the-shelf S-ATA cables, only standard lengths of cable are available.
+			For any given span, the shortest length of cable providing the requisite
+			slack is used.
+		
+		\subsection{Installation practicality}
 			
 			\begin{figure}
 				\center
@@ -190,13 +665,18 @@
 				\label{fig:bgWiring}
 			\end{figure}
 			
-			Despite the regularity and careful labelling of cables, the cost of
-			installation and maintenance alone can be significant with costs in the
-			range of \$45-95 per \SI{1}{\meter} cable run and \$100-400 for runs of
-			\SI{10}{\meter} reported in the literature \cite{mudigonda11}. Much of
-			this cost is due to the care required during installation to avoid
-			miswiring and ensure that cooling airflow is not hampered by cable runs
-			\cite{cisco07}.
+			In other large scale architectures, the task of cable installation is
+			completed by a team of technicians aided by the use of standardised
+			labelling for cables and sockets \cite{tia2006} as illustrated in figure
+			\ref{fig:bgWiring}. In these architectures the cabling patterns required
+			are relative straight forward thanks to the coarseness of the units used
+			\cite{lakner07} or the use networks whose cabling centres around
+			high-fan-in switches \cite{cisco07,csernai15}.
+			
+			It has been reported in the literature that large portions of a machine's
+			construction cost result from the cost of cable installation rather than
+			the cables themselves with per-cable installation costs in conventional
+			architectures reaching \$45-95 per \SI{1}{\meter} \cite{mudigonda11}.
 			
 			Many researchers have attempted to control cable installation costs by
 			trying to reduce the number or length of cables required by developing
@@ -204,311 +684,14 @@
 			Unfortunately, these techniques do not apply to SpiNNaker since its
 			network topology is fixed.
 			
-			Some super computers make use of large custom `midplane` PCBs in place of
-			cables to interconnect units within a cabinet and thus simplify the task
-			of cable installation \cite{prickett10}. This scheme can greatly reduce
-			wiring complexity since only coarser-grain cabinet-to-cabinet
-			connectivity is provided by cables. Unfortunately this technique is
-			expensive and also constrains the dimensions of the network topology
-			supported by the machine. Since the SpiNNaker platform is designed to
-			scale from desktop machines to machine-room installations, this scheme is
-			not practical.
-	
-	\section{Folding \& interleaving hexagonal toruses}
-		
-		The first step towards a practical machine-room installation of a large
-		machine using a hexagonal torus topology is to find an arrangement of
-		boards between which cable lengths are minimised. In this section I
-		describe a sequence of transformations which map the positions of units in
-		a hexagonal torus topology onto a regular rectangular grid which may be
-		folded and interleaved to eliminate long wires. It is worth emphasising
-		that this transformation only affects the \emph{physical} positions of
-		units and \emph{not} their connectivity.
-		
-		As described earlier in \S\ref{sec:parititioning} (page
-		\pageref{sec:parititioning}), hexagonal torus topologies may be partitioned
-		into units containing wrapped-triples of nodes. For example, in SpiNNaker,
-		chips (nodes) are partitioned into circuit boards (units) containing 48
-		chips. For completeness, this section describes the process of folding both
-		systems whose units are individual nodes and those whose units are
-		wrapped-triples.
-		
-		The transformation process is divided into two parts, each described
-		separately in this section.
-		
-		\begin{description}
-			
-			\item[Parallelogram to rectangle] Units of the system are transformed
-			from a parallelogram shape to a rectangular shape.
-			
-			\item[Uncrinkle] Units within the rectangle are moved such that they all
-			lie on a regular (and fully packed) 2D grid.
-			
-		\end{description}
-		
-		\subsection{Parallelogram to rectangle}
-			
-			The hexagonal torus topology is most naturally drawn as a parallelogram
-			as illustrated in figures \ref{fig:hex-to-plane-node-native} and
-			\ref{fig:hex-to-plane-native}. Two transformations are presented which
-			transform these arangements of units into a rectangular form: shearing
-			and slicing.
-			
-			A \SI{30}{\degree} shear transformation distorts networks such that the X
-			and Y axes become orthogonal leading to a rectangular arrangement of
-			units as illustrated in figures \ref{fig:hex-to-plane-node-shear} and
-			\ref{fig:hex-to-plane-shear}.
-			
-			The slice transformation slices the units protruding from the
-			left-hand-side of the parallelogram and moves them into the matching gap
-			on the opposite side of the parallelogram as illustrated in figures
-			\ref{fig:hex-to-plane-node-slice} and \ref{fig:hex-to-plane-slice}.
-			 
-			While the shear transformation introduces some distortion causing cables
-			in the Z dimension to become $\sqrt{2}\times$ longer it leaves the
-			pattern of wrap-around connections remains unchanged. By contrast, the
-			slice transformation does not elongate any cables but changes the pattern
-			of wrap-around connections. The exact pattern wrap-around connections
-			produced when slicing depends on the aspect ratio of the network as
-			illustrated in \ref{fig:slicing-examples} and influences the choice of
-			folding technique applied as described later.
-			
-			\begin{figure}
-				\center
-				\begin{subfigure}[b]{0.32\linewidth}
-					\center
-					\buildfig{figures/hex-to-plane-node-native.tex}
-					
-					\caption{$7 \times 7$ node torus}
-					\label{fig:hex-to-plane-node-native}
-				\end{subfigure}
-				\begin{subfigure}[b]{0.32\linewidth}
-					\center
-					\buildfig{figures/hex-to-plane-node-shear.tex}
-					
-					\caption{Sheared}
-					\label{fig:hex-to-plane-node-shear}
-				\end{subfigure}
-				\begin{subfigure}[b]{0.32\linewidth}
-					\center
-					\buildfig{figures/hex-to-plane-node-slice.tex}
-					
-					\caption{Sliced}
-					\label{fig:hex-to-plane-node-slice}
-				\end{subfigure}
-				
-				\caption{Transformations of hexagonal toruses of nodes into a
-				rectangular form. Thin lines show wrap-around links. Pointy-topped
-				hexagons represent individual nodes.}
-				\label{fig:hex-to-plane-node}
-			\end{figure}
-			
-			\begin{figure}
-				
-				\begin{subfigure}[b]{0.32\linewidth}
-					\center
-					\buildfig{figures/hex-to-plane-native.tex}
-					
-					\caption{$4 \times 4$ triad torus}
-					\label{fig:hex-to-plane-native}
-				\end{subfigure}
-				\begin{subfigure}[b]{0.32\linewidth}
-					\center
-					\buildfig{figures/hex-to-plane-shear.tex}
-					
-					\caption{Sheared}
-					\label{fig:hex-to-plane-shear}
-				\end{subfigure}
-				\begin{subfigure}[b]{0.32\linewidth}
-					\center
-					\buildfig{figures/hex-to-plane-slice.tex}
-					
-					\caption{Sliced}
-					\label{fig:hex-to-plane-slice}
-				\end{subfigure}
-				
-				\caption{Transformations of hexagonal toruses of wrapped triples into a
-				rectangular form.  Thin lines show wrap-around links. Flat-topped
-				hexagons represent a wrapped triple of nodes.}
-				\label{fig:hex-to-plane}
-			\end{figure}
-			
-			\begin{figure}
-				\center
-				\buildfig{figures/slicing-examples.tex}
-				\caption{Patterns of wiring in sliced systems of various sizes.}
-				\label{fig:slicing-examples}
-			\end{figure}
-			
-		\subsection{Uncrinkling}
-			
-			Though the transformmation step yields rectangular arrangements of units,
-			these arrangements do not fall onto a regular 2D grid, with the exception
-			of the shear transform on individual nodes. Figure \ref{fig:uncrinkling}
-			illustrates how the various arrangements of hexagons may be moved to
-			`uncrinkle' the units into a regular grid.
-			
-			\begin{figure}
-				\center
-				\begin{subfigure}[b]{0.44\linewidth}
-					\center
-					\buildfig{figures/uncrinkling-node-sheared.tex}
-					
-					\caption{$7 \times 7$ nodes, sheared}
-					\label{fig:uncrinkling-node-sheared}
-				\end{subfigure}
-				\begin{subfigure}[b]{0.44\linewidth}
-					\center
-					\buildfig{figures/uncrinkling-node-sliced.tex}
-					
-					\caption{$7 \times 7$ nodes, sliced}
-					\label{fig:uncrinkling-node-sliced}
-				\end{subfigure}
-				
-				\vspace{1cm}
-				
-				\begin{subfigure}[b]{0.44\linewidth}
-					\center
-					\buildfig{figures/uncrinkling-sheared.tex}
-					
-					\caption{$4 \times 4$ triples, sheared}
-					\label{fig:uncrinkling-sheared}
-				\end{subfigure}
-				\begin{subfigure}[b]{0.44\linewidth}
-					\center
-					\buildfig{figures/uncrinkling-sliced.tex}
-					
-					\caption{$4 \times 4$ triples, sliced}
-					\label{fig:uncrinkling-sliced}
-				\end{subfigure}
-				
-				\vspace{1em}
-				
-				\caption{Mapping rectangular arrangements of units into a square grid.
-				Thick lines show how layers of units are uncrinkled.  Annotations show
-				how the relative positions of nodes and wrapped triples change after
-				uncrinkling.}
-				\label{fig:uncrinkling}
-			\end{figure}
-			
-			In the figure, the numbered units enumerate the different positions on
-			the crinkle and those labelled alphabetically are those that immediately
-			surround them. From this we can observe that uncrinkling largely
-			preserves spatial locality but some distortion is introduced, separating
-			previously neighbouring units. For example, in figure
-			\ref{fig:uncrinkling-sheared}, the units labelled `1' and `i' are
-			neighbours before uncrinkling but are separated by a (Euclidean) distance
-			of $\sqrt{5}$ afterwards. Note that the distortion introduced depends on
-			what part of the crinkle is considered, for example `2' and `a' have
-			distance 2 but are logically connected in the same way.
-		
-		\subsection{Folding and Interleaving}
-			
-			Once a regular grid of units has been formed, this may be folded in the
-			conventional way, eliminating long cables crossing from left-to-right and
-			top-to-bottom as illustrated in \ref{fig:folding-sheared}.
-			
-			Unfortunately, for sliced systems whose dimensions are not of the ratio
-			$1:2$, the pattern of wrap-around cables may also include some cables
-			which do not cross directly to the opposite side of the system (refer
-			back to figure \ref{fig:slicing-examples}). As a result of these
-			connections, folding does not successfully eliminate all long
-			connections. An exception to this rule is sliced systems whose dimensions
-			are in the ratio $1:1$ where folding twice along the Y axis may
-			successfully eliminate all wrap-around connections as illustrated in
-			\ref{fig:folding-sliced}.
-			
-			\begin{figure}
-				\begin{subfigure}{\linewidth}
-					\center
-					\buildfig{figures/folding-sheared.tex}
-					\caption{$N \times M$ sheared systems and $N \times 2N$ sliced systems}
-					\label{fig:folding-sheared}
-				\end{subfigure}
-				
-				\vspace{1em}
-				
-				\begin{subfigure}{\linewidth}
-					\center
-					\buildfig{figures/folding-sliced.tex}
-					\caption{$N \times N$ sliced systems}
-					\label{fig:folding-sliced}
-				\end{subfigure}
-				
-				\caption{Schematic illustrating elimination of long wrap-around links
-				during folding. In each example a single link has been highlighted to
-				aid in following the process.}
-				\label{fig:folding}
-			\end{figure}
-			
-			Once folded, the 2D grid is straight-forwardly interleaved as illustrated
-			previously in figure \ref{fig:ring-folding}. The interleaving process
-			introduces some additional distortion to the layout of units and causes
-			most connections to become twice as long. For sliced $1:1$ systems, the
-			additional fold results in additional overhead during interleaving since
-			four layers of the system are interleaved.
-		
-		\subsection{Mapping to Cabinets}
-			
-			In the final step of the process is to map the 2D grid of units into
-			positions in machine room cabinets as illustrated in figure
-			\ref{fig:million-core-machine}. As illustrated in figure
-			\ref{fig:cabinetisation}, first the grid of units is partitioned into
-			groups of columns, one per cabinet, then groups of rows one per frame per
-			cabinet. The units in each group are then allocated to slots within a
-			frame, interleaving the rows of the groups as shown.
-			
-			\begin{figure}
-				\center
-				\buildfig{figures/cabinet-units.tex}
-				
-				\caption{An illustration of the physical construction of a
-				multi-cabinet SpiNNaker system. (Note: network cables \emph{not}
-				installed.)}
-				\label{fig:cabinet-units}
-			\end{figure}
-			
-			\begin{figure}
-				\center
-				\buildfig{figures/cabinetisation.tex}
-				
-				\caption{Mapping from 2D space to cabinets, frames and boards.}
-				\label{fig:cabinetisation}
-			\end{figure}
-		
-	\section{Cable installation}
-		
-		Cable installation is performed by a team of (human) technicians who must
-		ensure that all network cables are correctly installed. As illustrated in
-		previously in figure \ref{fig:cabinet-units}, the density of SpiNNaker's
-		units, combined with the nature of the hexagonal torus topology, poses a
-		challenge. To address this challenge I propose a semi-automated approach to
-		cable installation which exploits diagnostic facilities available in the
-		majority of super computers in order to guide technicians through the
-		cabling process, interactively guiding installation and maintenance.
-		
-		\subsection{Interactive technician guidance and validation}
-			
-			While automated systems for validating cabling correctness are
-			commonplace, these systems are typically used only after cabling has been
-			completed \cite{lakner07}. As with other large-scale machines, SpiNNaker
-			includes a low-bandwidth system management bus which may be used to
-			interrogate network hardware and control diagnostic LEDs prior to the
-			installation of the main SpiNNaker network interconnect.  Using these
-			facilities I have constructed a tool called SpiNNer which interactively
-			guides a technician, or team of technicians, through the cable
-			installation process, validating each connection in real-time.
-			
-			Diagnostic LEDs mounted on each SpiNNaker board (figure
-			\ref{fig:interactive-wiring-guide-leds}) are used to indicate the
-			endpoints of the cable currently being installed. Simultaneously a
-			Text-To-Speech (TTS) system gives an audible indication of which cable
-			type is to be used and location of each connection.  Additionally, a GUI
-			via a computer display (figure \ref{fig:interactive-wiring-guide-gui}).
-			The centre of the display shows a `big-picture' perspective of the
-			locations of the boards to be connected. The detailed views on the left
-			and right indicate which of the six sockets on each board the cables
-			should connect.
+			Super computer architectures such as BlueGene/Q make use of large custom
+			`midplane' PCBs in place of some cables to interconnect units within a
+			cabinet \cite{prickett10}. This scheme can greatly reduce wiring
+			complexity since only coarser-grain cabinet-to-cabinet connectivity is
+			implemented by cables. Unfortunately this technique is expensive and
+			constrains the dimensions of the network topology supported by the
+			machine. Since the SpiNNaker platform is designed to scale from desktop
+			machines to machine-room installations, this scheme is not practical.
 			
 			\begin{figure}
 				\center
@@ -526,7 +709,7 @@
 						      -- ++(225:1cm);
 					\end{tikzpicture}
 					
-					\caption{Diagnostic LEDs}
+					\caption{Diagnostic LEDs indicate the endpoints of each cable.}
 					\label{fig:interactive-wiring-guide-leds}
 				\end{subfigure}
 				~
@@ -537,289 +720,142 @@
 						\draw (screen.south west) rectangle (screen.north east);
 					\end{tikzpicture}
 					
-					\caption{Interactive wiring guide GUI}
+					\caption{GUI and text-to-speech indicate what type of cable to
+					install.}
 					\label{fig:interactive-wiring-guide-gui}
 				\end{subfigure}
 				
-				\caption{The SpiNNer interactive wiring guide uses a GUI,
-				text-to-speech and diagnostic LEDs to assist during cable
-				installation.}
+				\caption{Interactive wiring software guides cable installation.}
 				\label{fig:interactive-wiring-guide}
 			\end{figure}
 			
-			SpiNNer also validates the connectivity of the system in real-time by
-			polling the diagnostic interfaces of the network hardware at the
-			endpoints of the cable being installed to determine if they are correctly
-			connected. If a miswiring occurs, this is immediately detected and
-			announced via TTS enabling the technician to immediately correct the
-			error. Once a cable has been installed correctly, the software
-			automatically advances to the next cable meaning direct interaction with
-			the software by the technician is minimal. In practice, it is rarely
-			necessary to refer to the GUI.
-		
-			SpiNNer presents the cables in an order intended to maximise ease of
-			installation. Cables are installed in three groups with intra-frame
-			cables being installed first, followed by intra-cabinet cables and
-			inter-cabinet cables. Within each group, the tightest cables are
-			installed first resulting in slacker cables naturally being installed
-			over the top of already installed cables. By grouping cables in this
-			manner, multiple technicians may work independently on the wiring within
-			individual frames and cabinets.
-			
-			SpiNNer may also be used to repair or replace cables in the system.
-			During maintenance, obstructing cables may be blindly removed alongside
-			any cable being replaced. At the conclusion of the process, the wiring
-			guide may be used to interactively guide re-installation of all removed
-			cables.
-		
-		\subsection{Cable selection}
-			
-			Controlling slack is critical to ensuring reliable and maintainable
-			cabling installations. If cables are too tight, cables and connectors can
-			become easily damaged and when too slack, the excess cable obstructs
-			other cables and can easily become tangled and damaged \cite{cisco07}. It
-			has been observed that when ready-made cables are employed technicians
-			frequently over-estimate the cable lengths required preferring to use
-			overly long cables for all connections \cite{mazaris97}. To solve this
-			problem, the SpiNNer wiring guide software dictates the cable lengths to
-			be used by an installer based the rule of (three-)thumbs according to
-			Mazaris \cite{mazaris97}. This rule suggests that an ideal amount of
-			slack is approximately that which can be wrapped around three fingers.
-			Specifically, the shortest available cable is selected which ensures at
-			least \SI{5}{\centi\meter} of slack.
-			
-			The SpiNNer tool allocates cables assuming all cables take a Euclidean
-			straight-line path between the endpoints of the connection. The result is
-			that wiring is not routed through dedicated cable management structures
-			but is simply suspended by its connectors in front of the machine. As
-			demonstrated later, this unconventional approach leads neither to cooling
-			problems nor increased maintenance effort.
-	
-	\section{Results and Evaluation}
-		
-		This stuff has been used and works. In this section I'll go over the
-		overheads introduced by the various transformations and
-		folding/interleaving steps and show a wiring scheme for a large machine
-		which uses only short cables. I'll then show how SpiNNer was used to
-		install this wiring plan into a very large machine without foobaring the
-		cooling and in very little time. I'll also report on difficulty of
-		maintenance.
-		
-		\subsection{Cable length}
-			
-			The transformation from regular hexagonal torus to a folded and
-			interleaved form introduces some overhead to the cable lengths required.
-			Using figure \ref{fig:uncrinkling} (page \pageref{fig:uncrinkling}), it
-			is possible to compute the exact overhead introduced when each type of
-			transformation proposed.
-			
-			For example, to compute the mean overhead introduced by the slicing
-			technique when applied to units composed of wrapped triples, consider
-			figure \ref{fig:uncrinkling-sliced}. The uncrinkling pattern used to
-			transform this topology is a repeating pattern of two units, a pair of
-			which have been labelled $1$ and $2$ respectively. Unit $1$ is
-			immediately surrounded by six units labelled $a$, $b$, $c$, $2$, $g$ and
-			$h$. Similarly, unit $2$ is surrounded by units $1$, $c$, $d$, $e$, $f$
-			and $g$. Before the transformation, the distances, $D$, to each of these
-			units is $1$ but after the transformation is applied, this is not always
-			the case. Additionally, folding and interleaving introduce additional
-			overhead. In this example, if the system is folded into $f_x$ columns and
-			$f_y$ rows, the distances between previously neighbouring units become:
-			
-			\begin{equation*}
-				\begin{aligned}[c]
-					D_{1\,\leftrightarrow{}\,a} &= \sqrt{f_x^2 + f_y^2} \\
-					D_{1\,\leftrightarrow{}\,b} &= f_y \\
-					D_{1\,\leftrightarrow{}\,c} &= \sqrt{f_x^2 + f_y^2} \\
-					D_{1\,\leftrightarrow{}\,2} &= f_x \\
-					D_{1\,\leftrightarrow{}\,g} &= f_y \\
-					D_{1\,\leftrightarrow{}\,h} &= f_x
-				\end{aligned}
-				\hspace{2cm}
-				\begin{aligned}[c]
-					D_{2\,\leftrightarrow{}\,1} &= f_x \\
-					D_{2\,\leftrightarrow{}\,c} &= f_y \\
-					D_{2\,\leftrightarrow{}\,d} &= f_x \\
-					D_{2\,\leftrightarrow{}\,e} &= \sqrt{f_x^2 + f_y^2} \\
-					D_{2\,\leftrightarrow{}\,f} &= f_y \\
-					D_{2\,\leftrightarrow{}\,g} &= \sqrt{f_x^2 + f_y^2}
-				\end{aligned}
-			\end{equation*}
-			
-			From these values, the mean and maximum connection distances after
-			folding and interleaving may be computed. Table
-			\ref{tab:transform-overhead} gives the mean and maximum connection
-			distances for each of the four transformations described in this chapter.
-			
-			\begin{table}
-				\begin{subtable}[b]{\linewidth}
-					\center
-					\begin{tabular}{l c c}
-						\toprule
-						& Shear & Slice \\
-						\addlinespace
-						Nodes &
-							$\frac{f_x + f_y + \sqrt{f_x^2 + f_y^2}}{3}$ &
-							$\frac{f_x + f_y + \sqrt{f_x^2 + f_y^2}}{3}$ \\
-						\addlinespace
-						Triples &
-							$\frac{7f_x + 3\sqrt{f_x^2 + f_y^2} + \sqrt{(2f_x)^2 + f_y^2}}{9}$ &
-							$\frac{f_x + f_y + \sqrt{f_x^2 + f_y^2}}{3}$ \\
-						\bottomrule
-					\end{tabular}
-					
-					\caption{Mean}
-					\label{tab:transform-overhead-mean}
-				\end{subtable}
-				
-				\vspace{1em}
-				
-				\begin{subtable}[b]{\linewidth}
-					\center
-					\begin{tabular}{l c c}
-						\toprule
-						& Shear & Slice \\
-						\addlinespace
-						Nodes &
-							$\sqrt{f_x^2 + f_y^2}$ &
-							$\sqrt{f_x^2 + f_y^2}$ \\
-						\addlinespace
-						Triples &
-							$\sqrt{(2f_x)^2 + f_y^2}$ &
-							$\sqrt{f_x^2 + f_y^2}$ \\
-						\bottomrule
-					\end{tabular}
-					
-					\caption{Maximum}
-					\label{tab:transform-overhead-max}
-				\end{subtable}
-				
-				\caption{Overheads introduced when transforming unit positions onto a
-				regular grid.}
-				\label{tab:transform-overhead}
-			\end{table}
-			
-			From these results it is evident that shearing and slicing networks
-			whose units are nodes result in identical mean and maximum overhead in
-			cable length when folded similarly. Since sliced networks may require
-			folding more than once along each axis the shearing approach is
-			preferable in general.
-			
-			For networks constructed from units of wrapped triples, the slicing
-			approach suffers the same mean and maximum overhead has networks of
-			nodes, and less overhead than shearing for the same number of folds. For
-			systems with an aspect ratio of $1:2$ (where both slicing and shearing
-			require $f_x = f_y = 2$), the slicing transformation yields lower mean
-			and maximum overhead than shearing. For all other aspect ratios (where
-			slicing requires a greater degree of folding) the shearing technique
-			produces lower overhead. The recommended transformations for a given
-			machine are thus given in table \ref{tab:transform-recommended}.
+			Due to the high density of units in a SpiNNaker system, the cabling
+			patterns used can be complex, despite their regularity. To cope with this
+			complexity, I developed a software system which employs diagnostic
+			hardware built into SpiNNaker, and many other architectures, to guide
+			technicians through the process of cable installation. As shown in figure
+			\ref{fig:interactive-wiring-guide}, diagnostic LEDs on each SpiNNaker
+			board are used to indicate which boards to interconnect. The software
+			also provides step-by-step cabling instructions via a graphical user
+			interface and audible instructions delivered via headphones.  These
+			instructions explicitly specify the length of cable to use for each
+			connection avoiding the common problem of technicians over-estimating the
+			cable lengths required \cite{mazaris97}. Diagnostic registers in the
+			board-to-board link hardware are then used to verify the correct
+			installation of each cable with mistakes highlighted immediately allowing
+			corrections to be made immediately.
 			
 			\begin{table}
 				\center
-				\begin{tabular}{lcc}
+				\begin{tabular}{lrll}
 					\toprule
-					                         & $1:2$  & Other \\
-					\addlinespace
-					\multirow{2}{*}{Nodes}   & Either & Shear\\
-					                         & \footnotesize $\mu\approx2.28 \quad \vee\approx2.83$
-					                         & \footnotesize $\mu\approx2.28 \quad \vee\approx2.83$\\
-					\addlinespace
-					\multirow{2}{*}{Triples} & Slice  & Shear\\
-					                         & \footnotesize $\mu\approx2.28 \quad \vee\approx2.83$
-					                         & \footnotesize $\mu\approx3.00 \quad \vee\approx4.47$\\
-					\bottomrule
-				\end{tabular}
-				
-				\caption{Recommended transformation and folding scheme for different
-				system types. $\mu$ and $\vee$ give the mean and maximum wire
-				distortion introduced, respectively.}
-				\label{tab:transform-recommended}
-			\end{table}
-			
-			\begin{figure}
-				\center
-				\buildfig{figures/million-core-machine.tex}
-				
-				\caption{Cabling plan for a \num{1036800} core SpiNNaker
-				machine's \num{3600} cables.}
-				\label{fig:million-core-machine}
-			\end{figure}
-			
-			Following folding and mapping to physical locations, the cabling plans
-			for large machines require no large gaps to be spanned.  The largest
-			planned SpiNNaker machine, illustrated in figure
-			\ref{fig:million-core-machine}, will be \SI{6}{\meter} wide but the
-			largest gap any cable must span is \SI{66}{\centi\meter}. This distance
-			is well within the \SI{1}{\meter} allowed by the hardware and cables.
-			
-		\subsection{Installation practicality}
-			
-			\begin{table}
-				\center
-				\begin{tabular}{lrr@{$\,$}l}
-					\toprule
-						System & Number of Cables & \multicolumn{2}{r}{Installation time} \\
+						Size & Cables & Time & Notes \\
 					\midrule
-						24 boards  & \num{72}   & \num{10} & \si{\minute}         \\
-						1 cabinet  & \num{360}  & \num{4}  & \si{\hour}$^\dagger$ \\
-						2 cabinets & \num{720}  & \num{2}  & \si{\hour}           \\
-						5 cabinets & \num{1800} & ?        &                      \\
+						24 boards  & \num{72}   & \SI{10}{\minute} & \\
+						1 cabinet  & \num{360}  & \SI{4}{\hour} &
+							Real-time validation not used. \\
+						2 cabinets & \num{720}  & \SI{2}{\hour} & \\
+						5 cabinets & \num{1800} & \SI{4}{\hour} \SI{20}{\minute} &
+							Three people working simultaneously. \\
 					\bottomrule
 				\end{tabular}
 				
-				\caption{Installation times for various sizes of machine.
-				$\dagger$~This machine was installed without real-time validation of
-				connectivity.}
+				\caption{Cable installation times for various sizes of SpiNNaker
+				machine.}
 				\label{tab:install-time}
 			\end{table}
-			
-			A number of SpiNNaker machines of various scales have been assembled
-			using the techniques described in this chapter ranging from single frames
-			of 24 boards to a half-scale 5 cabinet machine. Table
-			\ref{tab:install-time} gives the reported installation times of each of
-			these machines.
-			
-			The single cabinet machine's installation time is notably
-			disproportionate to its size. When this system was assembled, real-time
-			connection validation was not yet available. As a result, though cable
-			installation was rapid correcting errors was extremely costly, requiring
-			careful retracing of many installation steps.
-			
-			TODO: TALK ABOUT MULTI-PERSON-WIRING IN PRACTICE ON FIVE CABINET MACHINE.
-			
-			\begin{figure}
-				
-				\center
-				\buildfig{figures/wire-length-histogram.tex}
-				
-				\caption{Histogram of connection distances in a ten-cabinet,
-				one-million core SpiNNaker machine annotated with the suggested cable
-				length.}
-				\label{fig:wire-length-histogram}
-				
-			\end{figure}
-			
-			FIGURE \ref{fig:wire-length-histogram} SHOWS THE DISTRIBUTION OF CABLE
-			LENGTHS REQUIRED. IN PRACTICE THE SLACK ALLOCATED PROVED ADEQUATE. AS
-			SHOWN IN FIGURE \ref{fig:install-histogram}, THE MOST IMPORTANT FACTOR IS
-			WHETHER LEAVING THE FRAME OR NOT. LEAVING THE FRAME TAKES THE LONGEST.
 			
 			\begin{figure}
 				\buildfig{figures/install-histogram.tex}
 				
-				\caption{Histogram of cable installation times}
+				\caption{Histogram of cable installation times for the two cabinet
+				SpiNNaker system.}
 				\label{fig:install-histogram}
 			\end{figure}
 			
-			TODO: COMPARE DIRECTLY WITH INSTALL TIMES REPORTED IN LITERATURE.
-		
-		\subsection{Thermal Impact}
+			As shown in table \ref{tab:install-time}, cable installation times for
+			various sizes of SpiNNaker system. All times reported do not include
+			breaks and, with the exception of the five cabinet system, all times
+			reported are for the one person working alone.  Figure
+			\ref{fig:install-histogram} shows the histogram of cable installation
+			times for the two cabinet machine. These results confirm the observation
+			that cables which span cabinets and frames take longer to install
+			\cite{mudigonda11}.  Compared with commercial installation efforts,
+			per-cable installation times are much shorter for SpiNNaker taking
+			seconds compared with minutes in other architectures \cite{mudigonda11}.
 			
-			TODO: SHOW HOW TEMPERATURE IS CHANGED
+			The positive impact of real-time validation of installed cables can
+			clearly be seen by comparing the installation times of the one and two
+			cabinet systems. Despite containing half as many cables as the two
+			cabinet machine, the one cabinet system took twice as long to complete
+			due to the need to frequently stop and repair earlier mistakes.
+			
+			In the three-person cable installation effort employed for the five
+			cabinet system, the guidance software was configured to assign each
+			technician cables in non-overlapping parts of the machine ensuring
+			minimal interference between the technicians.
+			
+			A video showing the construction and cable installation of the \num{1800}
+			cables in the five cabinet SpiNNaker machine is available on YouTube
+			\cite{heathcote16}.
+			
+		\subsection{Thermal implications}
+			
+			Conventional guidance on data centre cabling suggests that the cooling
+			performance of a system can be seriously impaired by routing cables as
+			used by SpiNNaker. To determine whether cabling had a significant impact
+			on cooling a test program was executed to simulate load before and after
+			cable installation.  The temperatures reported by the temperature sensors
+			on the top of each SpiNNaker board were sampled at regular intervals and
+			once overall system temperature stabilised the mean temperature was
+			recorded.
+			
+			Before the cabling was installed, the temperature stabilised at
+			\SI{49}{\celsius} while after installation it stabilised at
+			\SI{42}{\celsius}.
+			
+			These two data points suggest that the system's temperature is unlikely
+			to have been been seriously impacted by cable installation. Since the two
+			experiments were run on different days (with potentially vastly different
+			ambient temperatures) and are based on a single experiment it is not
+			possible to infer much more from this result.
 			
 		\subsection{Maintenance}
 			
-			TOOD: QUANTIFY CABLE REMOVALS REQUIRED. EXPERIMENT: REMOVE/REPLACE RANDOM
-			BOARDS AND MEASURE TIME TAKEN, CABLES REMOVED. COMPARE WITH STANDARD DATA
-			CENTRE WIRING
+			At the time of writing the five cabinet machine is still being
+			commissioned and so the long term maintenance impact of the system's
+			cabling is not easily assessed. One important factor in the
+			maintainability of the system is the ease with which faulty boards can be
+			replaced. During commissioning a number of boards have been replaced by
+			someone not originally involved in the machine's wiring. Informal
+			measurements suggest that boards near the centre of a frame (i.e. those
+			most likely to be obstructed by unrelated cables) take around ten minutes
+			to replace, including time spent removing and replacing cables
+			obstructing the board being exchanged. By comparison boards at the edge
+			of the machine take around six minutes to replace. Though such timing
+			results are unavailable for other architectures, these times appear
+			reasonable in practice and suggest maintained is not impaired by the
+			wiring plan used.
+	
+	\section{Conclusions}
+		
+		In this chapter I presented a practical method of constructing real-world
+		installations of large hexagonal torus topologies such that the cabling
+		required is reasonable in length and maintainable. Two transformations,
+		shearing and slicing, are presented which allow conventional network
+		folding techniques to be applied to the topology to eliminate long `wrap
+		around' links. Though both techniques incur some overhead in terms of mean
+		and maximum cable length, as in other folding techniques, the maximum cable
+		length is fixed does not grow with the size of the network. This result
+		suggests hexagonal torus topologies are a practical choice for future
+		large-scale systems.
+		
+		The theoretical results presented in this chapter have been confirmed
+		through the successful construction of several large scale SpiNNaker
+		machines which implement hexagonal torus topologies. During construction,
+		diagnostic features of SpiNNaker's hardware are employed to guide
+		technicians performing cable installation. This technique was found to be
+		highly effective with cable installation times measured in seconds rather
+		than minutes as reported for other architectures. Surprisingly there is no
+		evidence of this technique being applied to other architectures and
+		consequently this secondary result may be of interest for future research.

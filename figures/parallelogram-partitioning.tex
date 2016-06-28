@@ -1,13 +1,16 @@
 \begin{tikzpicture}[thick]
-	\pgfmathsetmacro{\scale}{0.5}
+	\pgfmathsetmacro{\scale}{0.45}
 	
 	\pgfmathtruncatemacro{\width}{4}
 	\pgfmathtruncatemacro{\height}{4}
 	
+	\clip [scale=\scale]
+	      ([hexagonXYZ]0.5*\width + 0.5, 0.5*\height + 0.5)
+	      ++(-4.5, -4.5)
+	      rectangle
+	      ++(9, 9);
+	
 	\begin{scope}[scale=\scale,hexagonXYZ]
-		\clip (0, \height + 3.0)
-		      rectangle
-		      (\width + 1.0, -2);
 		
 		\foreach \xx in {-1,0,1}{
 			\foreach \yy in {-1,0,1}{

@@ -13,6 +13,8 @@
 		                 , data min=0.0
 		                 , data max=0.75
 		                 }
+		          , white
+		          , fill=gray!50!white
 		          ]
 		         table [y index=0] {data/wire_lengths.csv};
 		
@@ -26,7 +28,7 @@
 				\draw (xpos) -- (xpos |- toppos);
 				
 				\coordinate (labelpos) at ($(lastxpos)!0.5!(xpos)$);
-				\node (label) at (labelpos |- ypos) {\SI{#1}{\centi\meter}};
+				\node (label) at (labelpos |- ypos) {\contour{white}{\SI{#1}{\centi\meter}}};
 				\draw [<-] (lastxpos |- ypos) -- (label);
 				\draw [<-] (xpos |- ypos) -- (label);
 				
@@ -35,7 +37,7 @@
 			% 1m
 			\coordinate (xpos) at (rel axis cs: 1,0);
 			\coordinate (labelpos) at ($(lastxpos)!0.5!(xpos)$);
-			\node (label) at (labelpos |- ypos) {\SI{1}{\meter}};
+			\node (label) at (labelpos |- ypos) {\contour{white}{\SI{1}{\meter}}};
 			\draw [<-] (lastxpos |- ypos) -- (label);
 			\draw (xpos |- ypos) -- (label);
 		\end{scope}
