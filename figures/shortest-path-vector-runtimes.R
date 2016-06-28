@@ -7,17 +7,23 @@ d <- read.csv("data/shortest_path_vector_runtimes.csv") %>%
   filter(!is.na(runtime)) %>%
   mutate(runtime=(runtime / ((width * height) ^ 2)) * 1000000000) %>%
   group_by(algo) %>%
-  summarize(max_runtime=quantile(runtime, 0.25),
-            min_runtime=quantile(runtime, 0.75),
+  summarize(max_runtime=max(runtime),
+            min_runtime=min(runtime),
             runtime=mean(runtime))
-d$algo = factor(d$algo, levels=c("INSEE", "XYZ-Protocol", "IQ Method"))
 
-runtimes <- ggplot(d, aes( x=paste("~~~", algo),
+d$algo = factor(d$algo, levels=c("IQ Method", "XYZ-Protocol", "INSEE"))
+levels(d$algo) = c(
+	"~~~~IQ Method",
+	"~~~~XYZ-Protocol",
+	"~~~~INSEE"
+)
+
+runtimes <- ggplot(d, aes( x=algo,
                          , y=runtime
                          , ymin=min_runtime
                          , ymax=max_runtime
                          )) +
-            geom_bar(stat="identity") +
+            geom_bar(stat="identity", fill="#AAAAAA") +
             geom_errorbar() +
             scale_y_continuous(expand=c(0, 0)) +
             geom_blank(aes(y=max_runtime*1.10)) +
