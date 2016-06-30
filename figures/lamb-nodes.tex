@@ -9,7 +9,7 @@
 	\pgfmathtruncatemacro{\dx}{3}
 	\pgfmathtruncatemacro{\dy}{4}
 	
-	\tikzstyle{node}=[draw, circle, inner sep=0, minimum width=\nodewidth]
+	\tikzstyle{node}=[draw, circle, inner sep=0, minimum height=\nodewidth, minimum width=\nodewidth]
 	\tikzstyle{dead node}=[node, help lines]
 	\tikzstyle{lamb node}=[node, dotted]
 	
@@ -34,6 +34,18 @@
 				% Normal node
 				\node (n\x\y) at (\x, \y) [node ] {};
 			}}
+		}
+	}
+	
+	% Draw links
+	\foreach [count=\x] \xx in {2,...,\width}{
+		\foreach \y in {1,...,\height}{
+			\draw (n\x\y) -- (n\xx\y);
+		}
+	}
+	\foreach \x in {1,...,\width}{
+		\foreach [count=\y] \yy in {2,...,\height}{
+			\draw (n\x\y) -- (n\x\yy);
 		}
 	}
 	

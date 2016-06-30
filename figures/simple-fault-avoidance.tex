@@ -87,6 +87,14 @@
 \newcommand{\drawdeadlink}[1]{
 	\node [red] at (#1) {\contour{white}{$\times$}};
 }
+\newcommand{\drawdeadlinkbold}[1]{
+	\draw [red, ultra thick, line cap=round]
+	      (#1)
+	      +([xshift=0.5em,yshift=0.5em]0, 0) --
+	      +([xshift=-0.5em,yshift=-0.5em]0, 0)
+	      +([xshift=-0.5em,yshift=0.5em]0, 0) --
+	      +([xshift=0.5em,yshift=-0.5em]0, 0);
+}
 
 % #1 key entries
 \newcommand{\key}[1]{

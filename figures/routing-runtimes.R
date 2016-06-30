@@ -28,7 +28,7 @@ runtime_v_faults <- ggplot(d %>% filter( router=="NER"
                                        , faults>=0
                                        )
                           , aes(x=factor(round(faults*100/(256*256*3), 2)))
-                          ) + facet_grid(fault_model ~ dist, scales="free_y") +
+                          ) + facet_grid(fault_model ~ dist) +
                               geom_bar(aes(y=exectime+post_exectime, fill="PGS Repair~~~~~"), stat="identity") +
                               geom_bar(aes(y=exectime, fill="Routing"), stat="identity") +
                               geom_errorbar(aes( ymin=exectime+post_exectime-post_exectime_ci

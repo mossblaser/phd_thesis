@@ -2,16 +2,18 @@
 	\input{figures/simple-fault-avoidance.tex}
 	
 	\begin{scope}[thick, scale=0.5, hexagonXYZ]
-		\drawtorus{12}{12}
+		\begin{scope}[help lines]
+			\drawtorus{12}{12}
+		\end{scope}
 		
 		% #1 start link
 		% #2 delta from first link to second
 		\newcommand{\drawdeadhss}[2]{
 			\coordinate (pos) at (#1);
 			\foreach \step in {1,...,4}{
-				\drawdeadlink{pos}
+				\drawdeadlinkbold{pos}
 				\coordinate (pos) at ([shift={(#2)}]pos);
-				\drawdeadlink{pos}
+				\drawdeadlinkbold{pos}
 				\coordinate (pos) at ([shift={(#2)}]pos);
 			}
 		}

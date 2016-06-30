@@ -18,6 +18,7 @@ entries_v_faults <- ggplot(d, aes(x=factor(faults), y=max_entries)) +
                     facet_grid(fault_model ~ dist, scales="free_y") +
                     violin_theme +
                     scale_x_discrete(labels = format_decimals(2)) +
+                    expand_limits(y = 0) +
                     labs( x="Faulty Links (\\%)"
                         , y="Max Routing Entries-per-Chip"
                         )

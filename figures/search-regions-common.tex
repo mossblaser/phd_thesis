@@ -1,6 +1,3 @@
-\pgfmathsetseed{69}
-\pgfmathsetseed{87}
-
 \pgfmathtruncatemacro{\width}{5}
 \pgfmathtruncatemacro{\height}{7}
 \pgfmathtruncatemacro{\numnodes}{10}
@@ -35,12 +32,10 @@
 % Source
 \dest{src}{\sx}{\sy}{}
 \draw (src.center) circle (\diameter);
-\node [left=5pt of src, inner sep=0] {S};
+\node [right=5pt of src, inner sep=0] {S};
 
 % Some random destinations
-\foreach \i in {1,...,\numnodes}{
-	\pgfmathsetmacro{\x}{random(\width)}
-	\pgfmathsetmacro{\y}{random(\height)}
+\foreach [count=\i] \x/\y in {3/5,3/7,1/6,1/2,3/2}{
 	\dest{n\i}{\x}{\y}{}
 }
 
