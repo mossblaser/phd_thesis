@@ -397,6 +397,8 @@
 		
 	\section{Evaluation \& Results}
 		
+		\label{sec:routing-evaluation}
+		
 		The PGS repair technique, by design, is able to work around all possible
 		fault patterns (excluding those which completely disconnect entire regions
 		of the network). As a consequence, my evaluation focuses on the impact on
@@ -446,10 +448,11 @@
 			applications is in general. As we will see in the next chapter
 			(specifically section \label{sec:existing-applications}), fan outs in
 			existing applications vary between unicast routes and multicast routes
-			with hundreds of sinks. Informal experimentation has suggested that fan
-			out does not have a significant impact on the performance of PGS repair
-			and so to simplify this evaluation I only consider routes with a single
-			source node and exactly sixteen sink nodes.
+			with almost one hundred sinks. Since informal experimentation has
+			suggested that fan out does not have a significant impact on the
+			performance of PGS repair and I have simplified this evaluation by only
+			considering routes with a single source node and exactly sixteen sink
+			nodes.
 		
 		\subsection{Fault model}
 			
