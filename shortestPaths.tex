@@ -6,39 +6,38 @@
 	% space.
 	
 	In the previous chapter we explored the practical challenges of building
-	machines which use hexagonal torus topologies. In order to use such a machine
-	we must be able to route packets through its network.  In this chapter we
-	discuss the problem of finding shortest path vectors in hexagonal torus
-	topologies. Shortest path vectors are used by many routing algorithms as the
-	basis for the routes they generate. In non-hexagonal torus topologies,
-	finding shortest path vectors is trivial and intuitive. In hexagonal toruses,
-	this is not the case. In this chapter I introduce the \emph{Irregular
-	Quadrant (IQ) method}, a new technique for computing shortest path vectors in
-	hexagonal torus topologies.  The IQ method is cheaper to compute and more
-	general than existing techniques, functioning correctly on hexagonal torus
-	topologies of any aspect ratio. In non-square hexagonal torus topologies,
-	many shortest path vectors may exist between some points. I propose a new
-	technique for discovering all possible shortest path vectors which may allow
-	routing algorithms to produce routes which more evenly load a network.
+	machines which use hexagonal torus topologies. In order to exploit them,
+	however, we must also be able to route packets efficiently through their
+	network. In this chapter the problem of finding shortest path vectors in
+	hexagonal torus topologies is tackled. Shortest path vectors are used by many
+	routing algorithms as the basis for route generation. In non-hexagonal torus
+	topologies, finding shortest path vectors is trivial and intuitive. In
+	hexagonal toruses, this is not the case. In this chapter I introduce the
+	\emph{Irregular Quadrant (IQ) method}, a new technique for computing shortest
+	path vectors in hexagonal torus topologies.  The IQ method is cheaper to
+	compute and more general than existing techniques, functioning correctly on
+	hexagonal torus topologies of any aspect ratio.
 	
-	In this chapter, I only consider idealised hexagonal torus topologies without
-	faults or other irregularities. The challenge handling these artefacts of
-	real world systems is tackled In chapter \ref{sec:routing}.
+	In some hexagonal torus topologies, many shortest path vectors may exist
+	between a given pair of points. I propose a technique for discovering all
+	possible shortest path vectors which. With access to these alternative
+	shortest path vectors, routing algorithms may be able to produce routes which
+	more evenly load a network.
+	
+	In this chapter, I assume an idealised hexagonal torus topologies without
+	faults or other irregularities. The challenge handling such artefacts in real
+	world systems will be tackled in chapter \ref{sec:routing}.
 	
 	\section{Shortest path vectors}
 		
 		Many popular routing algorithms for torus topologies, including all
 		published algorithms designed for SpiNNaker \cite{davies12,navaridas14},
 		function by computing \emph{shortest path vectors} between the endpoints of
-		a route and generating routes from these. A shortest path vector between
-		two nodes is a vector, $\mathbf{v} = (v_1, v_2, v_3, \ldots)$, whose
-		magnitude, $\| \mathbf{v} \| = \lvert v_1 \rvert + \lvert v_2 \rvert +
-		\lvert v_3 \rvert + \cdots$, is minimal with respect to all possible
-		vectors between those nodes.
-		
-		In a non-hexagonal mesh topology, shortest path vectors are computed by
-		taking the element-wise difference between the source and destination
-		nodes' coordinates.
+		a route and generating paths from these. A shortest path vector between two
+		nodes is a vector, $\mathbf{v} = (v_1, v_2, v_3, \ldots)$, whose magnitude,
+		$\| \mathbf{v} \| = \lvert v_1 \rvert + \lvert v_2 \rvert + \lvert v_3
+		\rvert + \cdots$, is minimal with respect to all possible vectors between
+		those nodes.
 		
 		\begin{figure}
 			\center
@@ -48,24 +47,27 @@
 			\label{fig:mesh-topology-coordinates}
 		\end{figure}
 		
-		For example, figure \ref{fig:mesh-topology-coordinates} illustrates a 2D
-		mesh topology. In this topology, the nodes labelled `A', `B' and `C' have
-		position vectors $(1, 2)$, $(4, 5)$ and $(6, 1)$ respectively. The shortest
-		path vector from node `A' to `B' is $(4, 5) - (1, 2) = (3, 3)$ and from `B'
-		to `C' is $(6, 1) - (4, 5) = (2, -4)$. A route may be produced from a
-		shortest path vector by advancing the number of hops specified for each
-		dimension in the vector. For example a route from `A' to `B' may be
+		In a non-hexagonal mesh topology, shortest path vectors are computed by
+		taking the element-wise difference between the source and destination
+		nodes' coordinates. For example, figure \ref{fig:mesh-topology-coordinates}
+		illustrates a 2D mesh topology with three nodes labelled `A', `B' and `C'
+		with position vectors $(1, 2)$, $(4, 5)$ and $(6, 1)$ respectively. The
+		shortest path vector from node `A' to `B' is $(4, 5) - (1, 2) = (3, 3)$ and
+		from `B' to `C' is $(6, 1) - (4, 5) = (2, -4)$. A route may be produced
+		from a shortest path vector by advancing the number of hops specified for
+		each dimension in the vector.  For example a route from `A' to `B' may be
 		constructed from any permutation of the hops
 		X$^+\,$X$^+\,$X$^+\,$Y$^+\,$Y$^+\,$Y$^+$, an example of which is included
 		in the figure. Likewise a route from `B' to `C' may be constructed from any
 		permutation of the hops X$^+\,$X$^+\,$Y$^-\,$Y$^-\,$Y$^-\,$Y$^-$.
+		Regardless of the permutation of hops, the length of the route produced
+		from a shortest path vector, $\mathbf{v}$, is given by its magnitude,
+		$\|\mathbf{v}\|$.
 		
 		Many popular routing algorithms such as Dimension Order Routing, Right-Turn
 		Only Routing and Longest Dimension First Routing \cite{dally04,davies12}
-		simply prescribe a rule for ordering the hops specified by a shortest path
-		vector. Regardless of the permutation of hops, the length of the route
-		produced from a shortest path vector, $\mathbf{v}$, is given by its
-		magnitude, $\|\mathbf{v}\|$.
+		are simply defined as a rule for ordering the hops specified by a shortest
+		path vector.
 		
 		\subsection{Torus Networks}
 			
@@ -95,15 +97,15 @@
 			\end{figure}
 			
 			Computing shortest path vectors in non-hexagonal torus topologies is also
-			straight forward. For example, lets find the shortest path vector from
-			node `A' to `B' in the 2D torus topology shown in figure
-			\ref{fig:torus-shortest-path-example}. Both nodes are translated such
-			that the source node, `A', is at the centre of the network and a shortest
-			path vector computed as if in a mesh network (figure
+			straight forward. For example, to find the shortest path vector from node
+			`A' to `B' in the 2D torus topology shown in figure
+			\ref{fig:torus-shortest-path-example} both nodes are translated such that
+			the source node, `A', is at the centre of the network. The shortest path
+			vector is then computed in the same way as a mesh network (figure
 			\ref{fig:torus-shortest-path-translate}). Note that, as in this example,
 			translation may cause the destination node to `wrap around' the network.
-			As illustrated in \ref{fig:torus-shortest-path-routed}, the computed
-			shortest path vector is also valid for the two points prior to
+			As illustrated in figure \ref{fig:torus-shortest-path-routed}, the
+			computed shortest path vector is also valid for the two points prior to
 			translation.
 			
 			\begin{figure}
@@ -130,7 +132,7 @@
 				{\color{red}$\times$}.  Darker areas are further away. Contour lines show
 				equidistant points.}
 				
-				\label{fig:distance-map-mesh}
+				\label{fig:distance-map}
 			\end{figure}
 			
 			This procedure works because vectors from the centre of a non-hexagonal
@@ -140,10 +142,6 @@
 			that the magnitude of the shortest path vectors from the centre of a mesh
 			and torus grow identically. Conversely, the magnitudes of vectors from
 			other locations in mesh and torus topologies do not match.
-			
-			In a non-hexagonal mesh topology there is always exactly one vector
-			between any pair of nodes. By definition this is also the shortest path
-			vector.
 		
 	\section{Related work}
 		
@@ -174,15 +172,14 @@
 			network by taking any permutation of the three hops  X$^+\,$X$^+\,$Y$^+$.
 			
 			As explained in detail in appendix \ref{app:minimal-hex-coordinates},
-			there are an infinite number of vectors between any two points. For
-			example, the vectors $(1, 0, -1)$ and $(3, 2, 1)$ also reach node `B'
-			from `A'. However, for a given pair of nodes, there is always a single,
-			unique vector whose magnitude is minimal which is given by the function:
+			there are an infinite number of vectors between any two points in a
+			hexagonal mesh. For example, the vectors $(1, 0, -1)$ and $(3, 2, 1)$
+			also reach node `B' from `A'. However, for a given pair of nodes, there
+			is always a single, unique vector whose magnitude is minimal which is
+			given by the function:
 			%
-			\begin{equation*}
-				\operatorname{minimiseVector}(x,y,z)
-					= (x,y,z) - \operatorname{median}(x,y,z) \cdot (1,1,1)
-			\end{equation*}
+			\begin{equation*} \operatorname{minimiseVector}(x,y,z) = (x,y,z) -
+			\operatorname{median}(x,y,z) \cdot (1,1,1) \end{equation*}
 			%
 			An important side-effect of this function is that a minimised vector will
 			always contain at least one zero element meaning that shortest path
@@ -217,15 +214,15 @@
 				\label{fig:distance-map-hex}
 			\end{figure}
 			
-			Unfortunately, unlike non-hexagonal torus topologies, the translation
-			technique used for non-hexagonal toruses cannot be used. As illustrated
-			in figures \ref{fig:distance-map-hex-mesh} and
-			\ref{fig:distance-map-hex-torus}, shortest path vectors from the centre
-			or any other part of a hexagonal mesh network do not grow in magnitude in
-			the same way that those of a hexagonal torus network do.
+			Unfortunately, the translation technique used for non-hexagonal toruses
+			cannot be used in a hexagonal torus. As illustrated in figures
+			\ref{fig:distance-map-hex-mesh} and \ref{fig:distance-map-hex-torus},
+			shortest path vectors from the centre, or any other part of a hexagonal
+			mesh network, do not grow in magnitude in the same way that those of a
+			hexagonal torus network do.
 			
 			I am aware of two approaches to computing shortest path vectors in
-			hexagonal toruses in the literature which are described below.
+			hexagonal toruses in the literature. These are described below.
 			
 			\subsubsection{INSEE Method}
 			
@@ -304,25 +301,25 @@
 				\end{align*}
 				%
 				Where $W$ and $H$ are the width and height of the network respectively
-				(in nodes). This second vector describes a route from the source to
+				(in nodes). This vector describes a route from the source to
 				destination node that, in a torus topology, \emph{always} wraps around
 				the peripheries of both the `X' and `Y' dimensions.
 				
 				Two further 2D vectors, $(\Delta'_\textrm{X},\Delta_\textrm{Y})$ and
 				$(\Delta_\textrm{X},\Delta'_\textrm{Y})$ may be defined which wrap around
-				the X and Y axes only, respectively.
+				just the X and Y axes only, respectively.
 				
 				Each of the four 2D vectors may be converted into a three hexagonal 3D
-				vector in which one element of the vector is zero. In total this results
-				in twelve different vectors which cover all combinations of wrapping and
-				non-wrapping routes and all combinations of axes used. The vector with
-				the smallest magnitude must be the shortest path vector. The twelve
-				candidate vectors are illustrated in figure
+				vectors in which one element of the vector is zero. In total this
+				results in twelve different vectors which cover all combinations of
+				wrapping and non-wrapping routes and all combinations of axes used. The
+				vector with the smallest magnitude must be the shortest path vector.
+				The twelve candidate vectors are illustrated in figure
 				\ref{fig:insee-vector-candidates} for an example pair of nodes.
 				
-				This method can find shortest path vectors in hexagonal torus topologies
-				of any aspect ratio but, compared with other methods as we'll see later,
-				is relatively clumsy and slow to compute.
+				This method can find shortest path vectors in hexagonal torus
+				topologies of any aspect ratio but, compared with other methods, is
+				relatively clumsy and slow to compute.
 			
 			\subsubsection{XYZ-Protocol}
 				
@@ -343,10 +340,10 @@
 				quadrants outlined in figure \ref{fig:xyz-protocol-regions}.
 				
 				If the destination lies in quadrants 1 or 4, a route may be constructed
-				as if in a hexagonal mesh topology. Alternatively, if the destination
-				lies in regions 2 or 3, the algorithm tests whether taking a mesh-like
-				vector within the region or wrapping-around either the X or Y
-				dimensions yields the shortest vector.
+				as if in a hexagonal mesh topology. If the destination lies in regions
+				2 or 3, however, the algorithm tests whether taking a mesh-like vector
+				within the region or wrapping-around either the X or Y dimensions
+				yields the shortest vector.
 				
 				By comparison with the INSEE method, the number of vectors considered
 				is much smaller, just one for destinations in quadrants 1 and 4 and for
@@ -380,7 +377,7 @@
 			topologies of various aspect ratios may be partitioned into four
 			\emph{irregular quadrants}. These quadrants are defined according to which
 			axes are wrapped around by the shortest path vectors reaching them. The
-			Irregular quadrants correspond with nodes reachable by shortest path
+			Irregular quadrants correspond with locations reachable by shortest path
 			vectors which are:
 			%
 			\begin{enumerate}
@@ -413,10 +410,10 @@
 			\end{enumerate}
 			%
 			Since we know that $0 \le \Delta_\textrm{X} < W$ and $0 \le
-			\Delta_\textrm{Y} < H$, we can heavily simplify expressions for the
-			magnitude of each of the above vectors. This yields four expressions giving
-			the magnitude of a minimal vector which wraps around according to the four
-			irregular quadrants:
+			\Delta_\textrm{Y} < H$, we can simplify expressions for the magnitude of
+			each of the above vectors. This yields four expressions giving the
+			magnitude of a minimal vector which wraps around each combination of the
+			X and Y axes:
 			%
 			\begin{enumerate}
 				\item $\operatorname{max}(\Delta_\textrm{X}, \Delta_\textrm{Y})$
@@ -425,10 +422,12 @@
 				\item $\operatorname{max}(W-\Delta_\textrm{X}, H-\Delta_\textrm{Y})$
 			\end{enumerate}
 			%
-			From these expressions we can cheaply determine which combination of axes
-			the shortest path vector wraps around, i.e. which irregular quadrant the
-			destination is in. With this information, the shortest path can be found
-			by minimising the vector associated with that irregular quadrant.
+			From these expressions we can determine which combination of axes the
+			shortest path vector wraps around by find the expression with the minimum
+			value. With this information, the shortest path can be found by
+			minimising the vector associated with that irregular quadrant.  Figure
+			\ref{fig:iqmethod.py} shows a simple Python implementation of the IQ
+			method.
 			
 			\begin{figure}
 				\inputminted{python}{figures/iqmethod.py}
@@ -437,27 +436,24 @@
 				\label{fig:iqmethod.py}
 			\end{figure}
 			
-			Figure \ref{fig:iqmethod.py} shows a simple Python implementation of the IQ
-			method.
-			
 			Compared with the INSEE method, this technique requires fewer cases to be
 			considered (four rather than twelve) making it cheaper to compute.
 			
 			Unlike the four quadrants defined by the XYZ-protocol, the irregular
 			quadrants defined by the IQ method correspond exactly to a particular
 			shortest path vector. This means that once the irregular quadrant a point
-			lies in has been discovered the shortest path vector can be calculated
+			lies in has been discovered, the shortest path vector can be calculated
 			directly without considering multiple options. Though the boundaries
-			between the four irregular quadrants are more complex than those of the
-			XYZ-protocol's four quadrants, it is only marginally more expensive to
-			discover which irregular quadrant a point lies in. In addition, the
-			irregular quadrants retain their meaning across different aspect ratios
-			making the IQ method suitable for any hexagonal torus topology.
+			between the four irregular quadrants are more complex than the quadrants
+			of the XYZ-protocol', it is only marginally more expensive to discover
+			which irregular quadrant a point lies in. In addition, the irregular
+			quadrants retain their meaning across different aspect ratios making the
+			IQ method suitable for any hexagonal torus topology.
 		
 		\subsection{Computing distances}
 		
-			The four vector magnitude expressions can also be combined to produce a
-			compact and cheaply computed expression of the distance between two
+			The four vector magnitude expressions defined by the IQ method can also
+			be combined to produce a compact expression of the distance between two
 			points in a hexagonal torus topology:
 			%
 			\begin{align*}
@@ -468,22 +464,24 @@
 				                   &\operatorname{max}(W-\Delta_\textrm{X}, H-\Delta_\textrm{Y}))
 			\end{align*}
 			%
-			This expression was also independently derived from a graph-theoretic
-			study of the hexagonal torus topology by Xiao and Parhami\cite{xiao04}.
+			This expression has also been independently derived from a
+			graph-theoretic study of Cayley graphs, of which the hexagonal torus
+			topology is a special case, by Xiao and Parhami\cite{xiao04}.
 		
 		\subsection{Computational efficiency}
 			
 			Since computing shortest path vectors forms an integral part of the
-			kernel of many routing algorithms, the runtime of the chosen used can be
-			an important consideration.
+			kernel of many routing algorithms, the runtime of the function chosen
+			used can be an important consideration.
 			
-			To compare performance, the runtime of a C implementation of each
-			technique was measured. The C implementation of INSEE method is taken
-			directly from the INSEE source code \cite{navaridas09}. The C
-			implementation of the XYZ-Protocol is a straight implementation of the
-			published pseudocode \cite{hoffmann15}.
+			To compare the performance of the three shortest path vector functions
+			considered, the runtime of a C implementation of each technique was
+			measured. The C implementation of INSEE method is taken directly from the
+			INSEE source code \cite{navaridas09}. The C implementation of the
+			XYZ-Protocol is a straight translation of the published pseudocode
+			\cite{hoffmann15}.
 			
-			Each function is called approximately 3 billion times, once for every
+			Each function was called approximately 3 billion times: once for every
 			pair of source and destination nodes in a $240\times240$ node hexagonal
 			torus topology. The total execution time is then divided by the number of
 			calls to the shortest path vector function giving an average runtime.
@@ -503,11 +501,11 @@
 				\label{fig:shortest-path-vector-runtimes}
 			\end{figure}
 			
-			Figure \ref{fig:shortest-path-vector-runtimes} shows runtimes of each
+			Figure \ref{fig:shortest-path-vector-runtimes} shows the runtimes of each
 			shortest path vector function. From these results we can see that the
 			INSEE method is slower than the other techniques. Though the XYZ-protocol
-			and IQ method have similar performance, since the IQ method can be used
-			in the general case it is therefore best candidate for use in new
+			and IQ method have similar performance, since the IQ method works for any
+			hexagonal torus topology it is the best candidate for use in new
 			applications.
 	
 	\section{Generating all shortest path vectors}
@@ -525,9 +523,8 @@
 			even-sized topologies of these types there may be two distinct shortest
 			path vectors of equal magnitude between two nodes exactly half the length
 			of an axis away as in figure \ref{fig:wrap-alternatives}. The INSEE and
-			IQ methods of computing shortest path vectors may generate either vector
-			in these circumstances depending on how ties are broken in their
-			implementation.
+			IQ methods may generate either vector depending on how ties are broken in
+			their implementation.
 			
 			\begin{figure}
 				\center
@@ -543,36 +540,35 @@
 			magnitude) shortest path vectors.  For example, figure
 			\ref{fig:spiralling} illustrates the three distinct shortest path vectors
 			between a single pair of nodes. None of the shortest path vector
-			functions discussed will generate all possible vectors, potentially
-			reducing the choices available to routing algorithms using the functions.
-			To address this shortcoming, I propose a formula which, given any
-			shortest path vector, may be used to enumerate every equivalent shortest
-			path vector.
+			functions discussed can generate all possible vectors in this situation,
+			potentially limiting the choices available to routing algorithms.  To
+			address this shortcoming, I propose a formula which enumerates every
+			shortest path vector between a pair of points in a hexagonal torus.
 			
 			In a $W \times H$ hexagonal torus topology, the vector $(0, H, 0)$
 			straight-forwardly wraps once around the Y axis arriving back where it
-			started. The vector $(1,1,1)$ also results in no movement, arriving back
-			where it started (see appendix \ref{app:minimal-hex-coordinates}).
-			Consequently $(0,H,0) - H(1,1,1) = (-H, 0, -H)$ must also be a vector
-			resulting in no movement.  Adding this vector to vectors of the form $(x,
-			0, z)$ where $x\ge H$ and $z\le0$ results in a new distinct shortest path
-			vectors.
+			started. The vector $(1,1,1)$ also results in no movement (see appendix
+			\ref{app:minimal-hex-coordinates}).  Consequently $(0,H,0) -
+			H\cdot(1,1,1) = (-H, 0, -H)$ must also be a vector resulting in no
+			movement.  Adding this vector to shortest path vectors of the form $(x,
+			0, z)$ where $x\ge H$ and $z\le0$ results in a new, distinct, shortest
+			path vector.
 			
 			For example the vector $(10, 0, -1)$ (magnitude 11) in figure
-			\ref{fig:spiralling} can be added to $(-4, 0, -4)$ yielding $(6, 0, -5)$
-			(also magnitude 11) which is still a shortest path vector between the two
-			labelled nodes.  Since $(6, 0, -5)$ still meets the criteria defined
-			above ($6 \ge H$ and $-5 \le 0$), we can add $(-4, 0, -4)$ again yielding
-			another shortest path vector $(2, 0, -9)$.  This new vector no longer
-			meets the required criteria (since $2 \ngeq 4$) and so no further
+			\ref{fig:spiralling} can be added with $(-4, 0, -4)$ yielding $(6, 0,
+			-5)$ (also magnitude 11) which is still a shortest path vector between
+			the two labelled nodes.  Since $(6, 0, -5)$ still meets the criteria
+			defined above ($6 \ge 4$ and $-5 \le 0$), we can add $(-4, 0, -4)$ again
+			yielding another shortest path vector $(2, 0, -9)$.  This new vector does
+			not meet the required criteria (since $2 \ngeq 4$) and so no further
 			shortest path vectors can be produced.
 			
-			In general, a shortest path vector $(x, 0, z)$ may be converted into
-			another shortest path vector $(x', 0, y')$ as defined by the following
+			More formally, a shortest path vector $(x, 0, z)$ may be converted into
+			another shortest path vector $(x', 0, z')$ as defined by the following
 			formula:
 			%
 			\begin{equation*}
-				(x', 0, y') = (x, 0, z) - \left(\operatorname{trunc}\left(\frac{z}{H}\right) + n\right)(H, 0, H)
+				(x', 0, z') = (x, 0, z) - \left(\operatorname{trunc}\left(\frac{z}{H}\right) + n\right)(H, 0, H)
 			\end{equation*}
 			%
 			where
@@ -589,16 +585,34 @@
 			\end{equation*}
 			%
 			and $\operatorname{trunc}(\cdots)$ is the truncation operator which
-			rounds towards zero to the nearest integral value.
+			rounds towards zero to the nearest integer.
 			
 			A complementary formula may be derived based on the related observation
-			that the vector $(W, 0, 0)$ results in no movement. Using these two
-			expressions, all possible distinct shortest path vectors between two
-			points in a hexagonal torus topology may be enumerate.
+			that the vector $(W, 0, 0)$ results in no movement:
+			%
+			\begin{equation*}
+				(0, y', z') = (0, y, z) - \left(\operatorname{trunc}\left(\frac{z}{W}\right) + n\right)(0, W, W)
+			\end{equation*}
+			%
+			where
+			%
+			\begin{equation*}
+				\left\{
+					n \in \mathbb{Z}
+				\;\Big|\;
+					0 \le n \le
+						\left\lfloor
+							\frac{\left|y\right| + \left|z\right|}{W}
+						\right\rfloor
+				\right\}
+			\end{equation*}
+			
+			Using these two expressions, all possible distinct shortest path vectors
+			between two points in any hexagonal torus topology may be found.
 	
 	\section{Conclusions}
 		
-		The calculation of shortest path vectors in mesh and torus topologies forms
+		The calculation of shortest path vectors in mesh and torus topologies is at
 		the heart of many routing algorithms. In this chapter I have introduced a
 		new technique for computing shortest path vectors in hexagonal toruses
 		which generalises to any hexagonal torus topology while executing more
@@ -608,5 +622,4 @@
 		algorithms greater freedom by providing a choice of shortest path vectors
 		between some points. These contributions demonstrate that key operations
 		such as computing distances and vectors in hexagonal toruses can be
-		efficient and exhaustive just as in better understood non-hexagonal torus
-		topologies.
+		efficient and exhaustive just as in non-hexagonal torus topologies.
