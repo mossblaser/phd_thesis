@@ -13,29 +13,29 @@
 	In SpiNNaker, the vast majority of network faults are the result of
 	manufacturing defects which are static and known ahead of time. Though
 	transient faults can occur and new faults may develop as the hardware ages,
-	informal experiments suggest that such faults do not occur during application
-	runs lasting days at a time.  As a consequence, for many short and medium
-	duration applications, static fault tolerance measures such as those
-	described in this chapter are expected to be sufficient.
+	informal experiments suggest that such faults are unlikely to occur, even
+	during application runs lasting on the order of a day at a time. As a
+	consequence, for many short and medium duration applications, static fault
+	tolerance measures such as those described in this chapter are expected to be
+	sufficient.
 	
-	Numerous heuristic-based fault-tolerant routing algorithms exist which target
+	Numerous heuristic-based fault tolerant routing algorithms exist which target
 	different network topologies and router architectures. Unfortunately as I
 	will show, these algorithms are not portable and rely on, or attempt to work
 	around, specific features of their target network architecture. In
 	particular, existing work is dominated by the challenge of developing routing
-	schemes which avoid or defuse network deadlocks.
-	
-	Due to SpiNNaker's unconventional use of timeout-based flow-control, it is
-	not subject to the routing restrictions present in other architectures
-	intended to cope with deadlocks. The post-processing technique proposed in
-	this chapter exploits SpiNNaker's built in deadlock avoidance capability
-	allowing it to generate arbitrary routes to avoid faults.
+	schemes which avoid or defuse network deadlocks. Due to SpiNNaker's
+	unconventional use of timeout-based flow-control, it is not subject to the
+	routing restrictions present in other architectures intended to cope with
+	deadlocks. The post-processing technique proposed in this chapter utilises
+	SpiNNaker's built in deadlock avoidance capability allowing it to generate
+	arbitrary routes to avoid faults.
 	
 	To assess the performance of the proposed routing technique, a number of
-	experiments are performed using both software models and actual SpiNNaker
-	hardware. I find that for realistic fault rates, the proposed algorithm
-	incurs negligible runtime overhead during route generation and only a small
-	increase in network congestion and routing table usage.
+	experiments have been performed using both software models and actual
+	SpiNNaker hardware. For realistic fault rates, the proposed fault tolerant
+	routing algorithm incurs negligible runtime overhead during route generation
+	and only a small increase in network congestion and routing table usage.
 	
 	\section{Related work}
 		
@@ -46,13 +46,13 @@
 		
 		\subsection{Multicast routing in SpiNNaker}
 			
-			Various non fault tolerant multicast routing algorithms exist for many
-			networks and a number have been proposed and evaluated specifically in the
-			context of SpiNNaker.
+			Various non fault tolerant multicast routing algorithms have been
+			proposed and evaluated specifically in the context of SpiNNaker's
+			hexagonal torus network.
 			
 			In 2012, Davies \emph{et al.} evaluated the use of three common torus
 			routing algorithms in SpiNNaker \cite{davies12}. In each of the
-			algorithms considered, multicast routes were constructed by merging
+			algorithms considered, multicast routes are constructed by merging
 			together unicast routes from the source to each sink. The following
 			underlying unicast routing algorithms were considered:
 			
@@ -102,10 +102,10 @@
 			\end{figure}
 			
 			Figure \ref{fig:simple-routers} illustrates an example multicast route
-			from a central source point to a number of sinks located along the
-			boundaries of a hexagon. The authors concluded that, of the three
-			algorithms, multicast routes built using LDFR produce the most balanced
-			and efficient use of network resources.
+			from a central source point to a number of sinks located along a
+			hexagonal perimeter. The authors concluded that, of the three algorithms,
+			multicast routes built using LDFR produce the most balanced and efficient
+			use of network resources.
 			
 			In 2014, Navaridas \emph{et al.} introduced two new algorithms, `Enhanced
 			Shortest Path Routing' (ESPR) and `Neighbourhood Exploring Routing' (NER)
@@ -113,14 +113,13 @@
 			\cite{navaridas14}.
 			
 			In both ESPR and NER, the algorithm considers each sink vertex in turn
-			starting with those nearest to the source vertex. For each vertex the
-			algorithm attempts to find a near-by vertex to which a route already
-			exists. If it finds a nearby vertex, a LDFR route from that vertex to the
-			current sink vertex is added. If no nearby vertices are found the
-			algorithm inserts a LDFR route back to the source vertex. By producing
-			routes which connect to already-connected nearby vertices, ESPR and NER
-			hope to reduce the quantity of long-distance routes from the source which
-			all terminate in a concentrated area.
+			starting with those nearest to the source. For each vertex the algorithm
+			attempts to find a near-by vertex to which a route already exists. If a
+			connected vertex is found, an LDFR route from that vertex is added. If no
+			nearby vertices are found the algorithm inserts a LDFR route from the
+			source vertex. By producing routes which connect to already-connected
+			nearby vertices, ESPR and NER hope to reduce the number of long-distance
+			routes from the source.
 			
 			\begin{figure}
 				\center
@@ -147,26 +146,26 @@
 				\label{fig:search-regions}
 			\end{figure}
 			
-			ESPR and NER differ in the way they look for nearby vertices to connect
-			to. In ESPR, the algorithm searches within a parallelogram drawn to
-			enclose the current and source vertices as illustrated in figure
+			ESPR and NER differ in the way they search for nearby vertices. In ESPR,
+			the algorithm searches within a parallelogram drawn to enclose the
+			current and source vertices as illustrated in figure
 			\ref{fig:search-regions-espr}. The NER algorithm searches for vertices
-			within a fixed distance of the destination node as illustrated in figure
+			within a fixed distance of the current vertex as illustrated in figure
 			\ref{fig:search-regions-ner}.
 			
 			The NER algorithm was found to produce higher quality multicast routes
-			for larger SpiNNaker machines than either ESPR or the simpler algorithms
-			described in previous work. Unfortunately, as with previous work, this
+			for larger SpiNNaker machines than both ESPR and the simpler algorithms
+			described in previous work. Unfortunately, as in previous work, this
 			algorithm cannot tolerate faults.
 			
-		\subsection{Fault-tolerant routing}
+		\subsection{Fault tolerant routing}
 			
-			Numerous fault-tolerant routing algorithms have been proposed for
+			Numerous fault tolerant routing algorithms have been proposed for
 			super-computer networks. These algorithms are largely constrained by the
 			need to maintain deadlock freedom. Since SpiNNaker's routers employ a
 			timeout based deadlock-breaking strategy, much of this effort is
 			unnecessary in SpiNNaker. As we see below, this frequently renders
-			existing fault-tolerant routing algorithms unnecessarily complex and
+			existing fault tolerant routing algorithms unnecessarily complex and
 			inflexible making them unable to take advantage of the efficiency savings
 			achieved by algorithms such as NER.
 			
@@ -179,11 +178,11 @@
 				\label{fig:ring-deadlock}
 			\end{figure}
 			
-			Deadlocks occur in a network if a cyclic dependency exists on any limited
-			resource in the network. For example, as illustrated in figure
-			\ref{fig:ring-deadlock}, in a ring network a deadlock may form when every
-			node is waiting on the next node to accept a packet before accepting new
-			packets from the previous node.
+			Deadlocks occur in a network when a cyclic dependency on any resource in
+			the network develops. For example, as illustrated in figure
+			\ref{fig:ring-deadlock}, in a ring network a deadlock may occur when
+			every node is waiting on the next node to accept a packet before
+			accepting new packets from the previous node.
 			
 			To prevent deadlocks, combinations of router microarchitectural features
 			and routing restrictions are often employed. For example, a simple
@@ -214,7 +213,7 @@
 			example, if the node at the bottom-right corner of the figure was faulty,
 			the dotted example route would be blocked as no alternative routes are
 			allowed. Though some routing schemes may feature more relaxed routing
-			rules \cite{rodrigo09}, these are still ultimately not tolerant of
+			rules \cite{rodrigo09}, these may still ultimately not tolerate all
 			faults.
 			
 			\begin{figure}
@@ -226,77 +225,72 @@
 				\label{fig:lamb-nodes}
 			\end{figure}
 			
-			The BlueGene/L supercomputer \cite{adiga02} notably makes use of DOR for
-			its torus network to ensure deadlock freedom while implementing fault
-			tolerance by disabling so-called `lamb' nodes. The lamb nodes which,
-			though otherwise healthy, would potentially have their DOR routes blocked
-			by a fault. This principle is illustrated in the 2D topology shown in
-			figure \ref{fig:lamb-nodes} where a single node has died. Nodes in the
-			same row and column as the dead node are turned into `lamb' nodes and are
+			The 3D torus based BlueGene/L supercomputer \cite{adiga02} notably makes
+			use of DOR to ensure deadlock freedom while implementing fault tolerance
+			by disabling so-called `lamb' nodes. Lamb nodes are nodes which, though
+			otherwise healthy, could potentially have their DOR routes blocked by a
+			fault. This principle is illustrated in the 2D topology shown in figure
+			\ref{fig:lamb-nodes} where a single node has died. Nodes in the same row
+			and column as the dead node are turned into `lamb' nodes and are
 			configured to forward packets but otherwise take no part in running
 			applications. DOR routes between the remaining nodes will never pass
 			through the dead node thus avoiding the fault while maintaining normal
-			performance. This approach trades off wasted compute capacity with higher
-			performance and when faults are very rare and easily repaired this
-			trade-off may be favourable. In SpiNNaker, such fine-grained replacement
-			of nodes is impractical since each chip constitutes a node and therefore
-			a whole board of 48 chips must be replaced in order to repair a single
-			fault.
+			performance. This approach trades off wasted compute capacity for
+			maintaining network performance in the presence of faults. When faults
+			are rare and easily repaired this trade-off can be worthwhile. In
+			SpiNNaker, such fine-grained replacement of nodes is impractical since
+			each chip constitutes a node and therefore a whole board of 48 chips must
+			be replaced in order to repair a single fault.
 			
 			Other routing algorithms proposed for the BlueGene architecture attempt
 			to avoid the need for lamb nodes by generating routes which reach their
 			destination via a `proxy' node \cite{gomez04}. In this scheme, a pair of
-			nodes whose DOR route their messages via a `proxy' node.  This node is
-			chosen such that routes to and from the obstructed nodes and the proxy
-			are not obstructed by the fault. This approach relieves the need to
-			sacrifice `lamb' nodes at the expense of adding to the workload of the
-			proxy nodes and increasing routing complexity.
+			nodes DOR route their messages via a `proxy' node.  This node is chosen
+			such that routes to and from the proxy are not obstructed by the fault.
+			This approach relieves the need to sacrifice `lamb' nodes at the expense
+			of adding to the workload of the proxy nodes and increasing routing
+			complexity.
 			
-			Alternative routing strategies take a hybrid approach whereby an
+			Alternative routing strategies may take a hybrid approach whereby an
 			efficient but fault intolerant routing algorithm is used which falls back
-			on a less efficient fault tolerant routing algorithm when faults are
+			on a less efficient, fault tolerant routing algorithm when faults are
 			encountered. For example, the Immucube network architecture employs three
 			virtual networks which operate independently over the same physical links
 			\cite{puente07}. Initially messages are routed in the first virtual
 			network using a high-performance routing scheme which may deadlock or be
 			blocked by faults.  If a deadlock is occurs, the deadlocked packet is
 			moved into the second virtual network in which packets are routed using a
-			less efficient deadlock-free algorithm. Finally packets in the first and
-			second virtual networks are moved onto the third virtual network when a
-			faulty link or node is encountered. The third virtual network ring which
+			less efficient deadlock-free algorithm. Finally if packets in the first
+			and second virtual networks encounter a fault they are moved onto the
+			third virtual network. The third virtual network forms ring network which
 			eventually routes packets to every node in the network, though
 			potentially with a high performance penalty.
 			
-			The Immucube hybrid approach is similar to the technique I propose in
-			this chapter which uses a fault tolerant routing scheme to patch up
-			routes produced by an efficient fault intolerant routing algorithm. A key
-			difference is that in Immucube, unlike SpiNNaker, routes are restricted
-			to taking certain paths in order to avoid deadlock.  Because of this, the
-			routing strategies used when faults are encountered tend to be
-			significantly less efficient than normal routes, an undesirable property.
-			
 			Instead of providing multiple routing rules which apply globally, some
-			routing schemes divide the system up into regions in which a different
-			routing rules are applied \cite{mejia06,boppana95}. This approach suffers
-			the same flaws as other hybrid approaches in that the fault tolerant
-			routing schemes applied tend to have poor performance.
+			hybrid routing schemes divide the system up into regions in which a
+			different routing rules are used which avoid the particular patterns of
+			faults in those areas \cite{mejia06,boppana95}. As in other hybrid
+			approaches, fault tolerance is usually achieved through the use of
+			relatively inefficient routing algorithm, though their use is constrained
+			to a single region of the system.
 			
-			Other algorithms in in the field are distributed and use only local
-			information along with limited information from their peers to generate
-			routes \cite{fick09b}. In SpiNNaker applications, route generation is
-			typically carried out centrally allowing algorithms like ESPR and NER to
-			take advantage of global information when producing routes. Since routes
-			in SpiNNaker also tend to be static, using a centralised routing
-			algorithm to produce high quality routes up front may be favourable over
-			potentially faster but lower quality distributed algorithms.
+			Other routing algorithms are distributed and use only local information
+			along with limited information from their peers to generate routes
+			\cite{fick09b}. In SpiNNaker applications, route generation is typically
+			carried out centrally allowing algorithms such as ESPR and NER to take
+			advantage of global information when producing multicast routes. Since
+			routes in SpiNNaker applications are often static, using a centralised
+			routing algorithm to produce high quality routes up front may be
+			favourable over potentially faster but lower quality distributed
+			algorithms.
 			
 			Algorithms for very different network architectures such as IP networks
-			also tend to be a poor fit for SpiNNaker applications. IP networks, for
-			example, must contend with a dynamic and irregular network topology and
-			so the trade-offs made in their routing algorithms are a poor match for
-			the applications considered here.  Similarly work focusing on other
+			also tend to be a poor fit for SpiNNaker. IP networks, for example, must
+			contend with a dynamic and irregular network topology and so the
+			trade-offs made in their routing algorithms are a poor match for the
+			applications considered here.  Similarly work focusing on other
 			architectures whose topology differs significantly from a torus, for
-			example those of data centres \cite{guo08,liao12} are not general enough
+			example data centre networks \cite{guo08,liao12} are not general enough
 			be of use.
 			
 			Outside the field of computer networks, routing algorithms used to route
@@ -307,36 +301,41 @@
 			these algorithms are designed for occasional batch operation prior to the
 			multi-month process of chip manufacturing and so runtimes of hours or
 			days are commonplace \cite{nam08}. In addition, instances of congestion
-			are far more common than dead links in networks which has an impact on
-			the approach taken by these algorithms. As circuit routing algorithms
-			would be inappropriate for use in network applications.
+			in circuit designs are far more common than dead links in networks which
+			has an impact on the approach taken by these algorithms. As such, circuit
+			routing algorithms would be inappropriate for use in network
+			applications.
 	
 	\section{Partial graph search repair}
 		
 		As we have seen, existing multicast routing algorithms for SpiNNaker are
 		designed to make efficient use of the system's network but are not able to
-		avoid faults. The use of a hybrid routing approach which adds fault
-		tolerance to existing routers presents a possible way of retaining the
-		performance of existing algorithms while tolerating faults. In this section
-		I describe a novel post-processing scheme called Partial Graph Search-based
-		(PGS) repair.  By relying on SpiNNaker's built in timeout based deadlock
-		avoidance scheme PGS repair is not hampered by the routing restrictions
-		imposed by the architectures featured in previous work.
+		avoid faults. The hybrid routing approach used by Immucube allows an
+		existing, efficient routing algorithm to be used while falling back on
+		other routes when faults are encountered.  In this section I describe a
+		novel hybrid routing algorithm based on a post-processing scheme called
+		Partial Graph Search (PGS) repair.  By relying on SpiNNaker's built in
+		timeout based deadlock avoidance scheme PGS repair is not hampered by the
+		routing restrictions imposed by the architectures considered in other work.
+		For example, expensive router architectural features, such as the multiple
+		virtual networks used by Immucube, are not required. In addition, the
+		routes taken to avoid faults are not constrained to inefficient paths, such
+		as system-wide ring networks in order to ensure deadlock freedom.
 		
 		The PGS repair technique uses a graph search algorithm to find alternative
-		routes around faulty nodes to reconnect fault-afflicted routes generated by
-		a non fault tolerant routing algorithm such as NER. Though graph search
+		routes around faulty nodes and repair fault-afflicted routes generated by a
+		non fault tolerant routing algorithm such as NER. Though graph search
 		algorithms are generally shunned in network routing due to their high
 		computational complexity, their runtime is often bounded by $O(H^D)$ where
 		$H$ is the number of hops in the generated route and $D$ is the number of
 		dimensions in the network.  Since $H$ is likely to be small because faults
 		are rare and isolated in real systems \cite{gara05,alverson12}, the runtime
-		of the graph search should also be small.
+		of the graph will also be small in practice.
 		
 		The PGS repair technique proceeds as follows. A route is initially
 		generated by a fault intolerant routing algorithm such as NER. If no faults
 		are encountered by this route, the algorithm terminates immediately.
-		Otherwise the algorithm proceeds to post-process this route as follows.
+		Otherwise the algorithm proceeds to post-process this route.
 		
 		\begin{figure}
 			\center
@@ -362,19 +361,19 @@
 				\label{fig:pgs-repair-colouring-fix2}
 			\end{subfigure}
 			
-			\caption{PGS repair process example showing a disconnected multicast
-			route from A to B, C, D, E and F. $\times$ indicates a broken link.}
+			\caption{PGS repair example showing a disconnected multicast route from A
+			to B, C, D, E and F. {\color{red}$\times$} indicates a broken link.}
 			\label{fig:pgs-repair-colouring-steps}
 		\end{figure}
 		
 		The routing tree produced by the underlying routing algorithm is broken
 		into subtrees wherever it attempts to route through a broken link or node.
 		Each subtree is then assigned a unique `colour', as illustrated in figure
-		\ref{fig:pgs-repair-colouring}. From each disconnected subtree's root node
-		in turn, a graph search is performed to find a short, fault-free route to a
-		node in a subtree any other colour. Once a subtree has been found, the
-		route discovered by the graph search is added and the subtree coloured to
-		match the tree it has been connected to.
+		\ref{fig:pgs-repair-colouring}. From each disconnected subtree's root in
+		turn, a graph search is performed to find a short, fault-free route a
+		subtree of any other colour. Once a subtree has been found, the route
+		discovered by the graph search is added and the subtree coloured to match
+		the tree it has been connected to.
 		
 		For example in figure \ref{fig:pgs-repair-colouring-fix1}, a path from the
 		root of the subtree containing nodes E and F is found which connects it to
@@ -386,9 +385,9 @@
 		If the routing tree was broken into $N+1$ subtrees by faults there will be
 		$N$ subtrees disconnected from the root node. Each of the $N$ graph
 		searches performed connect two disconnected subtrees reducing the number of
-		subtrees by $1$ each time. After $N$ iterations, therefore, exactly $1$
-		tree remains which connects every node in the original routing tree: and
-		fault tolerant multicast route.
+		subtrees by $1$ each time. After $N$ iterations, therefore, exactly one
+		tree remains which connects every node in the original routing tree
+		resulting in a fault tolerant multicast route.
 		
 		Because SpiNNaker's network architecture ensures deadlock freedom for any
 		routing pattern, the graph search algorithm used is free to generate any
@@ -422,9 +421,9 @@
 				\buildfig{figures/traffic-distribution-centroids.tex}
 				
 				\caption{An example of a 3-centroid traffic distribution. Traffic is
-				sent by the node at the position marked with an $\times$ to nodes
-				chosen randomly with nodes in lighter areas being selected with a
-				higher probability.}
+				sent by the node at the position marked with an {\color{red}$\times$}
+				to nodes chosen randomly with nodes in lighter areas being selected
+				with a higher probability.}
 				\label{fig:traffic-distribution-centroids}
 			\end{figure}
 			
@@ -445,14 +444,13 @@
 			applications SpiNNaker is designed for \cite{navaridas14}.
 			
 			There is little consensus on what the `fan out' routes in real SpiNNaker
-			applications is in general. As we will see in the next chapter
-			(specifically section \label{sec:existing-applications}), fan outs in
-			existing applications vary between unicast routes and multicast routes
-			with almost one hundred sinks. Since informal experimentation has
-			suggested that fan out does not have a significant impact on the
-			performance of PGS repair and I have simplified this evaluation by only
-			considering routes with a single source node and exactly sixteen sink
-			nodes.
+			applications is in general. As we will see in the next chapter (in
+			section \ref{sec:existing-applications}), fan outs in existing
+			applications vary between unicast routes and multicast routes with almost
+			one hundred sinks. Since informal experimentation has suggested that fan
+			out does not have a significant impact on the performance of PGS repair
+			and I have simplified this evaluation by only considering routes with a
+			single source node and exactly sixteen sink nodes.
 		
 		\subsection{Fault model}
 			
@@ -477,8 +475,8 @@
 				\label{fig:fault-example}
 			\end{figure}
 			
-			Two different fault models are used which are chosen to be representative
-			of the faults found in real SpiNNaker systems:
+			Two different fault models are considered which are chosen to be
+			representative of the faults found in real SpiNNaker systems:
 			
 			\begin{description}
 				
@@ -487,10 +485,10 @@
 				isolated manufacturing defects in individual links.
 				
 				\item[HSS Link] Groups of links corresponding with randomly selected
-				single High-Speed Serial (HSS) link between SpiNNaker boards are
-				disabled together (figure \ref{fig:fault-example-uniform}). Each HSS
-				link carries several chip-to-chip traffic flows via a single cable
-				resulting in a contiguous line of failures.
+				High-Speed Serial (HSS) links between SpiNNaker boards are disabled
+				(figure \ref{fig:fault-example-uniform}). Each HSS link carries several
+				chip-to-chip traffic flows via a single cable resulting in a contiguous
+				line of failures.
 				
 			\end{description}
 			
@@ -499,18 +497,18 @@
 			several links impassable in a single area.
 			
 			Informal measurements of current large-scale SpiNNaker installations
-			suggest that the link failure rate is about \SI{0.03}{\percent} with
-			failures due to both individual chip-to-chip links and board-to-board HSS
-			links. Exact link failure statistics for commercial super computer
-			installations are not widely available, however, published
-			Mean-Time-Between-Failure (MTBF) statistics place an upper bound on link
-			failure rates at a similar \SI{0.03}{\percent} in one-year-old BlueGene/Q
-			systems \cite{chiu11}.
+			suggest that the link failure rate is approximately \SI{0.03}{\percent}
+			with failures due to both individual chip-to-chip links and
+			board-to-board HSS links. Exact link failure statistics for commercial
+			super computer installations are not widely available, however, published
+			Mean-Time-Between-Failure (MTBF) figures coincidentally place an upper
+			bound on link failure rates at a similar \SI{0.03}{\percent} in
+			one-year-old BlueGene/Q systems \cite{chiu11}.
 			
 			In addition to link faults, there is currently an undiagnosed problem
 			with the SDRAM packaged with around \SI{1}{\percent} of SpiNNaker chips
 			which renders them unusable. These faulty chips leave gaps in the network
-			dominating `true' link faults and making the effective link fault rate
+			which dominate `true' link faults making the effective link fault rate
 			rise to around \SI{1}{\percent} in practice.
 			
 			Surprisingly, research into fault tolerant routing in super computers
@@ -520,7 +518,7 @@
 			
 			In this evaluation, fault rates ranging from \SI{0.01}{\percent} to
 			\SI{5}{\percent} are considered to cover both realistic fault levels
-			along with the more extreme cases considered in related work.
+			along with the more extreme cases considered in the literature.
 		
 		\subsection{Base routing algorithm}
 			
@@ -531,8 +529,8 @@
 			
 		\subsection{Algorithm runtime}
 			
-			To assess runtime overhead introduced by PGS repair process, routing
-			problems were generated for a $256\times256$ hexagonal torus topologies
+			To assess runtime overhead introduced by the PGS repair process, routing
+			problems were generated for a $256\times256$ hexagonal torus topology
 			with randomly generated faults. For each combination of fault pattern and
 			traffic pattern \num{10000} route and fault sets were generated and the
 			runtime of the NER and PGS repair algorithms recorded.
@@ -546,28 +544,26 @@
 				\buildrplot{figures/routing-runtimes.R}
 				
 				\caption{Mean runtime of NER routing and PGS repair. Bars are stacked
-				and do not overlap. Error bars indicate 95\% confidence interval. Note
-				different Y-scale for HSS link and uniform fault models.}
+				and do not overlap. Error bars indicate 95\% confidence interval.}
 				\label{fig:routing-runtimes}
 			\end{figure}
 			
 			Figure \ref{fig:routing-runtimes} shows the average runtimes recorded for
 			both the NER and PGS repair algorithms. In fault-free networks the
 			PGS-repair post-processing step is not required and incurs no penalty. As
-			the fault rate increases the runtime of the algorithm grows in proportion
-			for both fault and traffic models.
+			the fault rate increases the runtime of the algorithm grows
+			proportionally for both fault and traffic models.
 			
 			The HSS fault model results in longer runtimes for the PGS repair process
 			compared with an equivalent fault-density of uniform faults.  Because the
 			HSS fault model produces contiguous lines of faults the PGS repair
 			algorithm must construct a longer path to avoid the fault.  Since the
 			space explored by a graph algorithm grows with $O(H^2)$ in a 2D hexagonal
-			torus topology with respect to the hops in the discovered route, $H$,
-			this increase in search distance has a significant impact on the runtime
-			of the PGS repair process.
+			torus topology, this increase in search distance has a significant impact
+			on the runtime of the PGS repair process.
 			
 			The centroid traffic pattern tends to result in routes with fewer hops
-			than a uniform traffic since route segments are often shared between
+			than uniform traffic since route segments are often shared between
 			destination nodes in the same centroid.  Since the NER algorithm's
 			runtime is strongly related to the number of hops in the output route the
 			runtime of the algorithm is greater for uniform traffic.  Likewise the
@@ -578,40 +574,40 @@
 		\subsection{Routing table usage}
 			
 			SpiNNaker uses a table based router with a fixed quantity of table
-			entries at the core of its multicast router. Algorithms such as NER
-			attempt to exploit `default routing' which allows routing table entries
-			to be omitted on chips where a packet does not change direction by
-			generating routes which travel in straight lines as much as possible.
-			PGS repair, however, makes no such effort and thus may be liable to bloat
-			the number of routing table entries required.
+			entries in its multicast router. Algorithms such as NER attempt to
+			exploit `default routing' which allows routing table entries to be
+			omitted on chips where a packet is forwarded in a straight line by
+			generating routes which avoid turning corners.  PGS repair, however,
+			makes no such effort and thus may be liable to bloat the number of
+			routing table entries required.
 			
 			In order to gain a realistic measure of routing table usage it is
 			necessary to produce a range of routes for a single example network and
 			generate routing tables accordingly.  To enable a sufficiently large
-			number of samples to be collected a smaller network containing
-			$48\times48$ nodes is considered in this experiment.
+			number of samples to be collected smaller networks with $48\times48$
+			nodes are considered in this experiment.
 			
 			\num{1000} $48\times48$ node networks are produced according to the HSS
 			link and uniform fault models. For each of these networks two sets of
-			$48\times48\times16=$~\num{36864} routes are generated using the centroid
-			and uniform traffic models respectively. This corresponds approximately
-			to one multicast route per application core in a $48\times48$ SpiNNaker
-			system.
+			$48\times48\times16=$~\num{36864} routes are generated: one using the
+			centroid model and the other the uniform traffic model. This number of
+			routes corresponds to to one multicast route per application core in a
+			$48\times48$ SpiNNaker system.
 			
-			Routing table entries are inserted at the source node of the route, at
-			each destination node and at each corner or fork in the route, exploiting
-			default routing to route packets along other parts of the route. This
-			table generation scheme is very widely used in SpiNNaker applications due
-			to its simplicity and reasonably efficient use of routing table entries.
-			Though more effective techniques exist for compressing routing tables for
-			use in SpiNNaker's network \cite{mundy16}, their performance is heavily
-			influenced by non-routing-related factors such as routing key selection
-			and so are not considered here.
+			Routing table entries are inserted at the source node of each route, at
+			each destination node and at every corner or fork, exploiting default
+			routing to route packets along other parts of routes. This table
+			generation scheme is very widely used in SpiNNaker applications due to
+			its simplicity and efficient use of routing table entries. Though more
+			effective techniques exist for compressing routing tables for use in
+			SpiNNaker's network \cite{mundy16}, their performance is strongly
+			influenced by other factors such as routing key selection and so are not
+			considered here.
 			
 			For each network model and traffic pattern the number of routing table
-			entries required on each node. The maximum count is then recorded since
-			even if only one routing table is too large to fit in SpiNNaker's router
-			the entire application cannot run.
+			entries required on each node is counted. The maximum count is then
+			recorded since even if only one routing table is too large to fit in
+			SpiNNaker's router the entire application cannot run.
 			
 			\begin{figure}
 				\center
@@ -625,17 +621,17 @@
 			
 			Figure \ref{fig:routing-entries} shows the distributions of the largest
 			routing table sizes for each fault and traffic model. For realistic fault
-			rates under \SI{0.1}{\percent}, routing table sizes are not significantly
-			impacted.
+			rates (under \SI{0.1}{\percent}), routing table sizes are not
+			significantly impacted.
 			
 			At around the \SI{1}{\percent} fault rate, routing table sizes grow very
 			little in the presence of uniform faults though begin to exceed routing
 			table size limits for the HSS link faults. Since SpiNNaker's
 			\SI{1}{\percent} fault rate can be attributed to isolated, uniformly
 			distributed SDRAM faults, the HSS link fault model is not representative
-			of real faults at this fault rate. As such, for the fault rates and fault
-			patterns experienced by real SpiNNaker machines, routing table sizes are
-			not significantly affected.
+			of real faults at this fault rate. As such, I conclude that for the fault
+			rates and fault patterns experienced by real SpiNNaker machines PGS
+			repair has no significant on routing table usage.
 			
 			\begin{figure}
 				\center
@@ -661,38 +657,36 @@
 			\end{figure}
 			
 			As the fault rates climb to more extreme levels, routing table sizes grow
-			more significantly with the HSS link failure model most dramatically
-			increasing routing table requirements.  This is because HSS link faults
-			result in a large concentration of routes being disrupted and then
-			re-routed around the same obstacle in a single location. Figure
-			\ref{fig:hss-link-routing-table-usage} shows how routing sizes are
-			doubled around a HSS link fault in one instance of the experiment. The
-			peaks in routing table use are concentrated around the tips of the HSS
-			link fault as a result of PGS repair always taking shortest path routes
-			around obstacles.
+			more quickly under the HSS link failure model. This is because HSS link
+			faults result in a large concentration of routes being re-routed around
+			the same obstacle. Figure \ref{fig:hss-link-routing-table-usage} shows
+			how routing table sizes have doubled around a HSS link fault in one
+			instance of the experiment. The peaks in routing table use are
+			concentrated around the tips of the HSS link fault as a result of PGS
+			repair always taking shortest path routes around obstacles.
 		
 		\subsection{Network congestion}
 			
 			To measure the impact of PGS repair on network congestion, two
-			experiments were performed. The first uses the same model used in the
-			routing table usage experiments using a crude metric to estimate network
-			congestion, and thus throughput. To confirm the validity of this
-			experiment, a synthetic traffic generator running on real SpiNNaker
-			hardware was used to measure actual network throughput in the presence of
-			simulated faulty links. Because of the baseline fault rate of
-			\SI{1}{\percent} and limited routing table size in real SpiNNaker
-			hardware, these experiments are more limited in scope and sample size,
-			hence the continued use of the software model.
+			experiments were performed. In the first, the same model is used as in
+			the routing table usage experiments, using a simple metric to estimate
+			network congestion, and thus throughput. The second experiment attempts
+			to confirm the validity of the first using real SpiNNaker hardware. A
+			synthetic traffic generator running on SpiNNaker was used to determine
+			actual network throughput in the presence of simulated faulty links.
+			Because of the baseline fault rate of \SI{1}{\percent} and limited
+			routing table size in real SpiNNaker hardware, these experiments are more
+			limited in scope and sample size.
 			
 			\subsubsection{Software model}
 			
 				For each of the network fault and traffic pattern described in the
 				previous experiment the number of times each link is used is counted.
-				The number of routes passing through the most-used link is then
-				recorded, giving an indication of the peak congestion in the network.
-				In general network throughput is bounded by the slowest, or in this
-				case, most congested link in the system \cite{dally04} making this
-				metric a suitable proxy for peak throughput.
+				The number of routes passing through the most-used link is recorded,
+				giving an indication of the peak congestion in the network.  In general
+				network throughput is bounded by the slowest, or in this case, most
+				congested link in the system \cite{dally04} making this metric a
+				suitable proxy for peak throughput.
 				
 				\begin{figure}
 					\center
@@ -704,30 +698,30 @@
 				\end{figure}
 				
 				The results are presented in figure \ref{fig:routing-resource} and
-				follow the same trends as the results previously shown for routing
-				table usage.  Again, HSS link faults result in routes with the greatest
+				follow the same trends as the results as those shown for routing table
+				usage.  Again, HSS link faults result in routes with the greatest
 				congestion due to the concentration of routes finding shortest paths
 				around an obstacle as seen in figure \ref{fig:hss-link-resource-usage}.
 			
 			\subsubsection{SpiNNaker experiments}
 			
-				To verify that the results produced by the software model, an
-				additional experiment has been carried out using actual SpiNNaker
-				hardware. In these experiments a synthetic network traffic generator is
-				loaded onto a $8\times8$ chip SpiNNaker machine partitioned from a
-				larger SpiNNaker installation.  Because these machines are subsections
-				of larger torus topologies, they lack wrap-around links and form
-				hexagonal mesh topologies. It was not possible to use larger topologies
-				because at some of the fault rates and distributions considered the
-				\num{1024} routing table entries available in the SpiNNaker hardware
-				are quickly exhausted.
+				To verify the results produced by the software model, an additional
+				experiment has been carried out using actual SpiNNaker hardware. In
+				these experiments a synthetic network traffic generator is loaded onto
+				a $8\times8$ chip SpiNNaker machine partitioned from a larger SpiNNaker
+				installation.  Because these machines are subsections of larger torus
+				topologies, they lack wrap-around links and form hexagonal mesh
+				topologies. It was not possible to use larger topologies because at
+				some of the fault rates and distributions considered the \num{1024}
+				routing table entries available in SpiNNaker are insufficient.
 				
 				The traffic generation software running on SpiNNaker is configured to
 				produce uniform and 3-centroid traffic patterns with routes generated
 				by the NER and PGS repair algorithms. Simulated network faults are
-				inserted according to the HSS link and uniform fault models. Due to the
-				baseline fault rate of \SI{1}{\percent} these experiments only consider
-				fault rates above this.
+				inserted according to the HSS link and uniform fault models in addition
+				to those already present. Due to the baseline fault rate of
+				\SI{1}{\percent} these experiments only consider fault rates above
+				this.
 				
 				Packets are generated according to a Bernoulli distribution. The rate
 				of packet injection is gradually increased across all routes until
@@ -736,7 +730,8 @@
 				destinations, the network is deemed to have saturated and the peak
 				throughput achieved prior to saturation is recorded. This experiment is
 				repeated 100 times, each time with a different randomly generated
-				network and on a randomly partitioned block of a SpiNNaker system.
+				network and on a randomly partitioned block of a larger SpiNNaker
+				system.
 				
 				\begin{figure}
 					\center
@@ -753,8 +748,8 @@
 				software model, increased fault rates result in reduced network
 				throughput. HSS link faults also continue to result in greater
 				performance segregation than uniform faults. Increasing the fault rate
-				from 1\% to 3\% halves throughput in HSS links while in the presence of
-				uniform faults throughput is only reduced by 10\%.
+				from 1\% to 3\% halves throughput for HSS link faults while in the
+				presence of uniform faults throughput is only reduced by 10\%.
 				
 				In the experiments performed on SpiNNaker, the uniform and centroid
 				traffic patterns differ little. This similarity is attributed to the
@@ -768,35 +763,33 @@
 		
 		Fault tolerance is a necessity in large scale systems such as SpiNNaker and
 		other super computers. Thanks to SpiNNaker's unconventional use of
-		timeout-based deadlock avoidance, the expensive trade-offs made by existing
-		routing algorithms to ensure fault tolerance need not hamper routing
-		algorithms for SpiNNaker. Thanks to this, the PGS repair algorithm
-		introduced in this chapter is able to exploit the high-quality routes
-		generated by existing non fault tolerant while handling faults with minimal
-		routing and network overhead.
+		timeout-based deadlock avoidance, the expensive trade-offs made by routing
+		algorithms for other architectures need not be made. Thanks to this, the
+		PGS repair algorithm introduced in this chapter is able to exploit the
+		high-quality routes generated by existing non fault tolerant while handling
+		faults with minimal routing and network overhead.
 		
-		Unlike some other fault tolerant routing algorithms for other
-		architectures, PGS repair is able to work-around arbitrary fault patterns.
-		In the presence of fault rates of up to \SI{0.1}{\percent} representative
-		of real-world systems, the runtime, routing table use and network
-		performance overheads introduced were found to be negligible.  In the
-		presence of more extreme fault rates of up to \SI{1}{\percent}
-		representative of current SpiNNaker machines suffering from an unknown
-		SDRAM issue the overhead remains manageable. Overheads increase by
-		\SI{30}{\percent}, \SI{11}{\percent} and \SI{44}{\percent} for algorithm
-		runtime, routing table usage and network performance respectively.  As a
-		result of these performance characteristics, PGS repair is a viable option
-		for real SpiNNaker applications.
+		Unlike some other fault tolerant routing algorithms, PGS repair is able to
+		work-around arbitrary fault patterns.  In the presence of fault rates of up
+		to \SI{0.1}{\percent} representative of real-world systems, the runtime,
+		routing table use and network performance overheads introduced were found
+		to be negligible.  In the presence of more extreme fault rates of up to
+		\SI{1}{\percent} representative of current SpiNNaker machines suffering
+		from an unknown SDRAM issue, the overhead remains manageable. Overheads
+		increased by \SI{30}{\percent}, \SI{11}{\percent} and \SI{44}{\percent} for
+		algorithm runtime, routing table usage and network performance
+		respectively.  As a result of these performance characteristics, PGS repair
+		is a viable option for real SpiNNaker applications.
 		
 		At more extreme fault rates not anticipated in real-world systems, the
 		algorithm still functions correctly but the results incur much greater
 		routing table and congestion overheads, particularly when faults are
-		concentrated. Future extensions to this algorithm might aim to reduce this
-		overhead by producing longer and more varied routes around faults to even
-		out the load.
+		concentrated in one area. Future extensions to this algorithm might aim to
+		reduce this overhead by producing longer and more varied routes around
+		faults to even out load.
 		
 		The success of the PGS repair algorithm demonstrates that SpiNNaker's
 		unconventional deadlock avoidance scheme may warrant greater attention in
 		future larger scale systems in which more faults may be present. It may
-		also be more applicable to lower-cost systems with more relaxed fault rate
+		also be applicable to lower-cost systems with more relaxed fault rate
 		targets.
