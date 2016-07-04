@@ -101,7 +101,7 @@
 				\label{fig:simple-routers}
 			\end{figure}
 			
-			Figure \ref{fig:simple-routers} illustrates an example multicast route
+			Figure~\ref{fig:simple-routers} illustrates an example multicast route
 			from a central source point to a number of sinks located along a
 			hexagonal perimeter. The authors concluded that, of the three algorithms,
 			multicast routes built using LDFR produce the most balanced and efficient
@@ -375,9 +375,9 @@
 		discovered by the graph search is added and the subtree coloured to match
 		the tree it has been connected to.
 		
-		For example in figure \ref{fig:pgs-repair-colouring-fix1}, a path from the
+		For example in figure~\ref{fig:pgs-repair-colouring-fix1}, a path from the
 		root of the subtree containing nodes E and F is found which connects it to
-		the subtree rooted at A. In figure \ref{fig:pgs-repair-colouring-fix2} a
+		the subtree rooted at A. In figure~\ref{fig:pgs-repair-colouring-fix2} a
 		path is also found connecting the subtree containing nodes C and D back to
 		the subtree rooted at node A. At this point only one tree remains: the
 		fully connected route.
@@ -445,7 +445,7 @@
 			
 			There is little consensus on what the `fan out' routes in real SpiNNaker
 			applications is in general. As we will see in the next chapter (in
-			section \ref{sec:existing-applications}), fan outs in existing
+			section~\ref{sec:existing-applications}), fan outs in existing
 			applications vary between unicast routes and multicast routes with almost
 			one hundred sinks. Since informal experimentation has suggested that fan
 			out does not have a significant impact on the performance of PGS repair
@@ -486,7 +486,7 @@
 				
 				\item[HSS Link] Groups of links corresponding with randomly selected
 				High-Speed Serial (HSS) links between SpiNNaker boards are disabled
-				(figure \ref{fig:fault-example-uniform}). Each HSS link carries several
+				(figure~\ref{fig:fault-example-uniform}). Each HSS link carries several
 				chip-to-chip traffic flows via a single cable resulting in a contiguous
 				line of failures.
 				
@@ -548,7 +548,7 @@
 				\label{fig:routing-runtimes}
 			\end{figure}
 			
-			Figure \ref{fig:routing-runtimes} shows the average runtimes recorded for
+			Figure~\ref{fig:routing-runtimes} shows the average runtimes recorded for
 			both the NER and PGS repair algorithms. In fault-free networks the
 			PGS-repair post-processing step is not required and incurs no penalty. As
 			the fault rate increases the runtime of the algorithm grows
@@ -619,7 +619,7 @@
 				\label{fig:routing-entries}
 			\end{figure}
 			
-			Figure \ref{fig:routing-entries} shows the distributions of the largest
+			Figure~\ref{fig:routing-entries} shows the distributions of the largest
 			routing table sizes for each fault and traffic model. For realistic fault
 			rates (under \SI{0.1}{\percent}), routing table sizes are not
 			significantly impacted.
@@ -659,7 +659,7 @@
 			As the fault rates climb to more extreme levels, routing table sizes grow
 			more quickly under the HSS link failure model. This is because HSS link
 			faults result in a large concentration of routes being re-routed around
-			the same obstacle. Figure \ref{fig:hss-link-routing-table-usage} shows
+			the same obstacle. Figure~\ref{fig:hss-link-routing-table-usage} shows
 			how routing table sizes have doubled around a HSS link fault in one
 			instance of the experiment. The peaks in routing table use are
 			concentrated around the tips of the HSS link fault as a result of PGS
@@ -697,11 +697,11 @@
 					\label{fig:routing-resource}
 				\end{figure}
 				
-				The results are presented in figure \ref{fig:routing-resource} and
+				The results are presented in figure~\ref{fig:routing-resource} and
 				follow the same trends as the results as those shown for routing table
 				usage.  Again, HSS link faults result in routes with the greatest
 				congestion due to the concentration of routes finding shortest paths
-				around an obstacle as seen in figure \ref{fig:hss-link-resource-usage}.
+				around an obstacle as seen in figure~\ref{fig:hss-link-resource-usage}.
 			
 			\subsubsection{SpiNNaker experiments}
 			
@@ -744,7 +744,7 @@
 					\label{fig:routing-hardware}
 				\end{figure}
 				
-				Figure \ref{fig:routing-hardware} confirms that, as suggested by the
+				Figure~\ref{fig:routing-hardware} confirms that, as suggested by the
 				software model, increased fault rates result in reduced network
 				throughput. HSS link faults also continue to result in greater
 				performance segregation than uniform faults. Increasing the fault rate

@@ -76,7 +76,7 @@
 				the problem onto the target machine. For example when simulating a 3D
 				volume in a super computer with a $3 \times 4 \times 2$ 3D torus or
 				mesh topology network, the modelled volume might be divided into as in
-				figure \ref{fig:fem-partitioning}. Each cuboid in the model is then
+				figure~\ref{fig:fem-partitioning}. Each cuboid in the model is then
 				assigned to the corresponding node in the network topology.
 				
 				Unfortunately, this technique only applies to a very narrow class of
@@ -126,8 +126,8 @@
 				\ref{fig:sequential} illustrates three popular space filling
 				curves.
 				
-				The row-order (figure \ref{fig:sequential-row-order}) and alternating
-				(figure \ref{fig:sequential-alternating}) curves illustrate 2D versions
+				The row-order (figure~\ref{fig:sequential-row-order}) and alternating
+				(figure~\ref{fig:sequential-alternating}) curves illustrate 2D versions
 				of the default node assignment orders provided by the SLURM and
 				BlueGene systems.  The Cray extensions to SLURM software provide a
 				Hilbert curve \cite{hilbert91}  node assignment order (figure
@@ -170,7 +170,7 @@
 				
 				The RCM algorithm was originally designed as a tool for reducing the
 				bandwidth of matrices to improve the performance of linear algebra
-				techniques. Figure \ref{fig:rcm} illustrates how a sparse matrix is
+				techniques. Figure~\ref{fig:rcm} illustrates how a sparse matrix is
 				permuted by the RCM algorithm to produce a matrix with low bandwidth.
 				The matrix dual of a graph is an adjacency matrix, $M$, where $M_{i,j}$
 				is $w$ if node $i$ is connected by an edge to node $j$ with weight $w$
@@ -261,7 +261,7 @@
 				partitioning algorithms such as METIS \cite{karypis98} to perform
 				recursive bipartitioning based placement
 				\cite{phillips14,hoefler11,pellegrini96}.  This placement process is
-				illustrated in figure \ref{fig:partitioning}.
+				illustrated in figure~\ref{fig:partitioning}.
 				
 				\begin{figure}
 					\center
@@ -401,7 +401,7 @@
 				\end{figure}
 				
 				To illustrate this approach, consider the simple one-dimensional
-				placement problem presented in figure \ref{fig:quadratic-placement}.
+				placement problem presented in figure~\ref{fig:quadratic-placement}.
 				In the quadratic placement technique, the cost of a placement is
 				modelled as the weighted sum of the squares of the distances between
 				connected components. In this case this yields the expression:
@@ -615,7 +615,7 @@
 				\end{figure}
 				
 				Rather than blindly picking pairs of vertices to swap, abandoning those
-				which don't fit, the process illustrated in figure \ref{fig:sa-swap} is
+				which don't fit, the process illustrated in figure~\ref{fig:sa-swap} is
 				used. This swapping process reduces the likelihood that swaps involving
 				larger vertices are aborted when the vertices on the target chip are
 				individually too small to free up enough room to complete a swap.
@@ -680,9 +680,9 @@
 				
 				In the star model, the cost of a net is found by summing the distances
 				from the net's source vertex to each sink vertex in turn as illustrated
-				in figure \ref{fig:cost-function-star}. In a hexagonal mesh and torus
+				in figure~\ref{fig:cost-function-star}. In a hexagonal mesh and torus
 				topology, the distance between two points can be cheaply determined (as
-				described in chapter \ref{sec:shortestPaths}) making this cost function
+				described in chapter~\ref{sec:shortestPaths}) making this cost function
 				inexpensive to compute. Unfortunately, this model will over-estimate
 				network resource usage for nets with more than two vertices since in
 				practice multicast routing algorithms will tend to generate routes
@@ -701,8 +701,8 @@
 				that there are several ways in which a bounding box may be defined.
 				Specifically, the bounding box may extend along any pair of axes
 				resulting in three possible bounding boxes, and thus three HPWL values
-				for any net as illustrated in \ref{fig:cost-function-hpwl-xy},
-				\ref{fig:cost-function-hpwl-xz} and \ref{fig:cost-function-hpwl-yz}. The
+				for any net as illustrated in~\ref{fig:cost-function-hpwl-xy},
+				\ref{fig:cost-function-hpwl-xz} and~\ref{fig:cost-function-hpwl-yz}. The
 				relative sizes of these three bounding boxes varies depending on specific
 				arrangement of vertices in the net meaning that no single bounding box is
 				appropriate for all situations.
@@ -896,7 +896,7 @@
 			routing algorithms under test and changes in their performance are
 			reported.
 			
-			Table \ref{tab:real-benchmarks} summarises each of the benchmarks. While
+			Table~\ref{tab:real-benchmarks} summarises each of the benchmarks. While
 			these applications are much smaller than those expected to run on new,
 			large-scale SpiNNaker systems, these benchmarks are hoped to provide a
 			meaningful indicator of the types of connectivity which might be present
@@ -987,7 +987,7 @@
 				
 				In order to measure the `quality' of the placement solutions generated,
 				the total number of hops taken by the generated routes is compared in
-				figure \ref{fig:application-benchmarks-quality}. A better placement
+				figure~\ref{fig:application-benchmarks-quality}. A better placement
 				solution should require fewer hops and, as an indirect result, achieve
 				lower network congestion.  Since the actual hop counts vary greatly
 				between benchmarks, these results are normalised against the number of
@@ -1024,7 +1024,7 @@
 				some networks can become very spread out by the random placer.
 				
 				The third metric considered is the runtime of the placement algorithm,
-				shown in figure \ref{fig:application-benchmarks-tables}. The simulated
+				shown in figure~\ref{fig:application-benchmarks-tables}. The simulated
 				annealing algorithm requires much longer runtimes than the baseline
 				placement algorithms considered; in several cases an order of magnitude
 				longer. This is unsurprising since the baseline algorithms are
@@ -1144,7 +1144,7 @@
 				SpiNNaker's network does not become saturated and drop packets. By
 				contrast, when placed by the baseline algorithms, the application
 				saturates the network and drops packets before becoming CPU bound.
-				Figure \ref{fig:mu0-saturation} shows the distribution of simulation
+				Figure~\ref{fig:mu0-saturation} shows the distribution of simulation
 				speeds achieved for 100 runs of the simulator placed by each baseline
 				placer. As in many of the other benchmarks, the Hilbert placer performs
 				better than the Random and RCM placers with the RCM placer producing
@@ -1224,7 +1224,7 @@
 				three hops. The results are shown in figure
 				\ref{fig:placement-scalability-size}.
 				
-				In figure \ref{fig:placement-scalability-size-quality} we can see that
+				In figure~\ref{fig:placement-scalability-size-quality} we can see that
 				as the placement problem size grows, existing placement techniques
 				quickly begin to produce solutions requiring many more hops to route
 				than a `manual' solution. While the quality of the simulated annealing
@@ -1239,7 +1239,7 @@
 				routing these placed graphs requires more memory than was available in
 				the cluster machines and so no results are reported.
 				
-				Figure \ref{fig:placement-scalability-size-runtime} shows the runtime
+				Figure~\ref{fig:placement-scalability-size-runtime} shows the runtime
 				of the routing algorithms for each problem size. Once again the
 				simulated annealing algorithm's runtime consistently dwarves the other
 				algorithms but grows approximately linearly with the problem size. For
@@ -1294,7 +1294,7 @@
 				fan out was tested twenty times and the results are shown in figure
 				\ref{fig:placement-scalability-fanout}.
 				
-				As shown in figure \ref{fig:placement-scalability-fanout-quality}, the
+				As shown in figure~\ref{fig:placement-scalability-fanout-quality}, the
 				quality of the placements produced does not change dramatically as the
 				fan out is increased with the exception of the Hilbert placer which
 				appears to perform better for very small and very large fan outs. In
@@ -1303,7 +1303,7 @@
 				
 				In all but the random placer (which does not consider connectivity),
 				the placement algorithms' runtimes grow in proportion to the fan out
-				(figure \ref{fig:placement-scalability-fanout-quality}). Once again,
+				(figure~\ref{fig:placement-scalability-fanout-quality}). Once again,
 				simulated annealing is significantly slower than the other algorithms
 				but scales approximately linearly with problem size.
 	
