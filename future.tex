@@ -1,34 +1,161 @@
-\chapter{Future research}
+\chapter{Conclusions and future research}
 	
-	In this thesis I have presented a number of new techniques which have made it
-	possible to assemble and operate the SpiNNaker super computer. This work
-	opens up a range of possibie lines of research to extend this work to future
-	architectures and applications. In this chapter I focus on two anticipated
-	challenges of future systems: growing scale and greater dynamicism in
-	applications.
+	\section{Answers to research questions}
+		
+		\textbf{Is the hexagonal torus topology just as usable as a 2D torus topology
+		(but with better bisection bandwidth)?}
+		
+		Yes it is. You can efficiently build, and place and route a a hexagonal
+		torus topology.
+		
+		To do this I've proposed a new way of folding networks to make them
+		buildable using existing techniques. These let you build hexagonal toruses
+		which scale just as well in a data centre as 2D topologies. Since 2D
+		topologies map well into 2D data centres, this is pretty ideal.
+		
+		I've also described more efficient and complete ways of finding shortest
+		paths in hexagonal toruses. Though these functions are more complex than 2D
+		toruses it is equally possible to do. I have helped simplify the situation
+		providing a faster and more elegant shortest path function. I've also
+		completed the picture by providing a function for enumerating shortest path
+		vectors which previously had not been done before.
+		
+		I also looked at placement and found that just as in 2D toruses, cheap cost
+		functions are available making placement functions accurate and high
+		quality.
+		
+		\textbf{Does SpiNNaker's router architecture help or hinder in practice at
+		scale?}
+		
+		SpiNNaker's router architecture is unusual, particularly in its use of
+		timeout based deadlock avoidance. This technique has been widely derided
+		as unsuitable for general use however it does hugely simplify the router
+		hardware. Since SpiNNaker is targeted at spiking stuff, and this is known
+		to tolerate dropped packets on an occasional basis anyway, does this
+		architecture have any other impact?
+		
+		For route generation, the flexibility is awesome. In particular, PGS repair
+		achieves perfect fault tolerance while in practice actually not suffering
+		any real overheads. Compared with the state of the art elsewhere, that loss
+		of freedom comes with a significant overhead in the presence of faults. As
+		I show, I get away with all the benefits but none of these limitations but
+		only because of this feature. Another thumbs-up from me for this feature,
+		at least in SpiNNaker!
+		
+		\textbf{Do circuit placement techniques allow placement to scale to the size of
+		large SpiNNaker machines or large architectures in general?}
+		
+		Circuit placement research has remained ahead of the game and we're
+		currently at the size where SA is a good placement algorithm. I've
+		confirmed this hypothesis. Indeed though slow I've demonstrated this
+		working at the scale of millions of vertices. Indeed I've shown that
+		contemporary application placement techniques do not scale for
+		SpiNNaker-like applications where the application is irregular. For some
+		real applications I've even shown that simulated annealing is actually
+		necessary.
+		
+		Given current trends there are a few years left in this judgement but this
+		finding suggests that looking to circuit placement is a good way to go for
+		the future.
 	
-	\section{Wiggly edges around spalloc'd boards}
+	\subsection{Implications}
 		
-		\label{sec:wiggly-board-allocations}
+		As suggested by these findings, large scale SpiNNaker systems are possible
+		thanks to the demonstration that the hexagonal torus topology works in
+		practice and that machines of that scale can in fact be used at all. This
+		work makes it possible to move on with new large scale experiments on
+		SpiNNaker, partly because the machine now exists but also because the
+		techniques proposed actually work. Indeed, this work has already lead to
+		large-scale models running on SpiNNaker which could not have run before,
+		e.g. the Nengo stuff.
+		
+		Within the field, hexagonal toruses along with SpiNNaker's unusual routing
+		mechanism may prove useful in other applications. Particularly very large
+		scale, very unreliable stuff like future SoCs with ever increasing density.
+		The flexibility afforded should be important.
 	
-	\section{Scaling up}
+	\section{Future research}
 		
-		TODO: INTRO
-		
-		\subsection{Grid machine room layouts}
+		\subsection{Cabinets in rows and columns}
 			
-			In chapter XXX, I developed a machine room layout for hexagonal torus
-			topologies which allowed machines occupying a row of standard
-			machine-room cabinets to scale up without the need for long
-			interconnecting cables. For larger installations, however, it will be
-			necessary to employ multiple rows of cabinets in a 2D arrangement.
+			My approach only scales so far. Real server rooms are arrayed in 2D.
+			Scaling in 1D eventually hits the problem that you are embedding a 2D
+			space in a 1D space.
+			
+			Cabling over-and-under may be an option. In SpiNNaker, this could be
+			complicated due to 1 meter cable length limit. Perhaps do as others do and
+			go heterogeneous between cabinets or rows?
 		
-		\subsection{Routing congestion control}
+		\subsection{Cabling assistance for other architectures}
+			
+			Strangely not reported elsewhere but clearly very useful. Would be worth
+			seeing how this could work in other super computers or even data centres.
+			Some limitations would be for longer cables but then again, maybe not since
+			visual context is missing when you're running between two endpoints.
 		
-		\subsection{Parallel place and route}
+		\subsection{Congestion mitigation}
+			
+			In this work there have been two notable instances of congestion causing
+			issues: due to faults and due to spalloc'd machines.
+			
+			As we've already explained, contiguous blocks of faults cause PGS repair to
+			hot-spot around the corners of those faults. The placer proposed isn't even
+			aware of these faults and would happily place things which communicate on
+			the wrong side of faults.
+			
+			\label{sec:wiggly-board-allocations}
+			
+			We've also seen some Nengo examples which (spectacularly) fail on rare
+			occasions due to a (presumed) spalloc related issue. These experiments,
+			like many on SpiNNaker, were run on partitioned larger machines. Unlike the
+			routing experiments, these partitions are not neat rectangular cut outs but
+			rather cut out at board boundaries. Because of the wrapped-triple
+			partitioning scheme you get things which look like *figure*. The knobbled
+			edges cause the same obstructions that the placer won't deal with (just
+			like faults) and which PGS repair will congest.
+			
+			\subsubsection{Making routes better}
+				
+				Could do this by having a cost map of nodes used for PGS repair which the
+				graph search would use to weight path lengths. This could push some
+				routes out of the way of the hot spots, easing congestion.
+			
+			\subsubsection{Making placements better}
+				
+				Possibly use some sort of cost-weighting overlay for bounding boxes?
+				Basically, push things out of the crinkly areas if the connect. Challenge
+				would be doing this with minimal compute overhead since this would end up
+				in the cost function.
+		
+		\subsection{Improving placement speed}
+			
+			Reducing the size of the graph can substantially improve placement runtime.
+			For example, if you clustered so that every vertex was a whole chip that's a
+			16 times speedup! Graph coarsening techniques exist (and are related to
+			graph partitioning work).
+			
+			Initial experiments suggest that even a Naive Python implementation can
+			cluster a million-core graph in minutes! The challenge is that you end up
+			with really-bad packing problems which mean that the clustered graph is not
+			placeable while the raw graph has no problem.
+			
+			Possible solutions include allowing illegal placement solutions and using a
+			legalisation step, as is done in detailed placement for circuits. Gee
+			circuits are a great source of inspiration, eh?
+		
+		\subsection{Benchmarking}
+			
+			There is a serious shortfall in the quality of placement benchmarks out
+			there for SpiNNaker because applications are in short supply.  This is a
+			bit of a chicken and egg but a major issue non-the-less.
+			
+			In this work I used a fairly simple 2D distribution as a benchmark but in
+			reality, many interesting networks are not of this form (e.g. Nengo) even
+			though the brain may be at-large, though whether this actually matters is
+			unclear.  Might want to look into using some of the techniques used in
+			part 1 (benchmarks) in \cite{nam07} for constructing artificial
+			benchmarks for which gold-standard placement solutions are known.
 	
-	\section{Structural plasticity and dynamic fault-tolerance}
-		\subsection{Plasticity models}
-		\subsection{Incremental placement}
-		\subsection{Incremental routing}
-		\subsection{Hot-spare routes}
+	\section{Closing remarks}
+		
+		TODO: JONATHAN QUAKES IN FEAR AT THE PROSPECT OF WRITING THESE
