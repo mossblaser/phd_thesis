@@ -21,6 +21,7 @@ processors_over_time <- ggplot(d, aes(x=year, y=p, ymin=minp, ymax=maxp)) +
 	                      , 10000
 	                      , 100000
 	                      , 1000000
+	                      , 10000000
 	                      )) +
 	scale_x_continuous(expand=c(0, 0)) +
 	labs( x="Year"
