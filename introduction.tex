@@ -1,1 +1,166 @@
 \chapter{Introduction}
+
+%Problem area
+%
+%* Network construction and exploitation
+%  * Cabling: Build it cheaply in terms of tech cost and install cost
+%  * Routing: Get around it cheaply and reliably
+%  * Placement: Use it efficiently
+
+As super computer networks have grown in scale, so to have the challenges of
+building and exploiting them. Just as Moore's `law' observes that computer
+processors are growing in scale at an exponential rate, so to are the numbers
+of processors in the worlds most powerful super computers growing
+exponentially. To exploit the power of the now millions of processors in a
+modern super computer, the network which interconnects them must balance
+performance against practicality. The topology and architecture of an
+interconnection network can have a profound impact on this balance.
+
+A network's topology determines the distances between processors which may wish
+to communicate and imposes particular requirements on the network hardware and
+software used. In tree topologies, routers must be able to cope with tens or
+hundreds of incoming connections while in meshes, packets may take many `hops'
+to reach their destinations and so routers must attempt to minimise latency.
+Application software distributed across a network must be organised such that
+communicating processes are able to communicate without disrupting others.
+
+As machines have grown in size, faults have moved from rare occurrences to an
+inevitability in modern super computers. In general faults are isolated, for
+example caused by a faulty connector between components, but they can result in
+obstructions in the network which the system must attempt to work-around.
+Network topologies must be chosen such that sufficient redundancy is available
+in the form of alternative routes through the topology are available for
+routing algorithms to use in the presence of faults.
+
+Simultaneously, a network's logical topology also influences how the system is
+physically assembled. Ultimately, a network's topology must be expressed by
+circuit board traces and cables strung between processors and network
+equipment. This immersion into the real-world brings practical challenges such
+as the need for teams of people to be able to assemble and maintain the system.
+At this level, details such as the need to keep cabling short and the correct
+connections easy to find are very important.
+
+%Motivation
+%
+%* SpiNNaker
+%  * Neural simulator, under construction/development
+%  * Large scale system (up there with the top 500 in core count)
+%  * Unusual architecture
+%    * Tiny nodes, big network
+%    * Hexagonal torus topology
+%    * Strange router
+
+The Spiking Neural Network Architecture (SpiNNaker) is a novel super computer
+architecture designed to simulate biologically realistic models of brains in
+real time. Though scientists are now beginning to develop a clear understanding
+of the electrical and chemical processes that drive the behaviour of neurons,
+the building block of the brain, it is their complex interactions which produce
+the brain's most remarkable behaviours. Studies of real brains are hampered by
+the significant variations between individuals and the difficult of measuring
+and recording neural activity. Computer simulations of large scale neural
+models are hoped to provide new insights by offering researchers greater
+control and visibility over their experiments.
+
+To support the efficient simulation of large neural models, SpiNNaker's
+architecture, and in particular its interconnection network, makes a number of
+unconventional choices. Neural modelling software demands an unusual
+combination of relatively limited computational effort combined with heavy
+communication requirements. In order to meet these demands, SpiNNaker consists
+of up to one million low power, and relatively low speed, processor cores
+interconnected by a high performance interconnection network. SpiNNaker's
+interconnection network uses a hexagonal torus topology, a topology which has
+largely received only theoretical treatment in the literature. In theory this
+topology has superior throughput and robustness compared with other network
+topologies such as 2D toruses while maintaining their ease of manufacture.
+
+SpiNNaker also uses a bespoke network router designed to efficiently route
+neural simulation events, called spikes, from their source to neurons being
+simulated on other processor cores in parallel. Because spikes are often lost
+in biology, SpiNNaker's router does not guarantee delivery of messages sent
+through the network. This relaxation of responsibility comes with substantial
+savings in router complexity at the expense of greater software complexity in
+circumstances where reliable communication is required.
+
+%Contributions
+%
+%* Cabling scheme for hexagonal toruses without long cables
+%* Efficient installation technique for dense systems
+%* Exhaustive and efficient route calculation in hex toruses
+%* Fault tolerant routing scheme exploiting SpiNNaker's odd router
+%* Placement based on SA a: works very well and b: suggests circuit placement is
+%  a good source of inspiration.
+
+Chapter~\ref{sec:background} describes SpiNNaker's architecture in greater
+depth, in particular its interconnection network and topology.
+
+Existing work using SpiNNaker has been constrained to small prototype systems
+consisting of a single circuit board and a handful of SpiNNaker chips.
+SpiNNaker's unconventional network presents a number of challenges to its
+large-scale realisation and exploitation, some of which this thesis attempts to
+address. Specifically this thesis hopes to answer the following research
+questions:
+
+\begin{enumerate}
+	
+	\item Can the hexagonal torus topology be deployed in a real, large scale
+	system?
+	
+	\item Does SpiNNaker's router architecture help, or hinder fault tolerance?
+	
+	\item How can a neural application efficiently exploit a large hexagonal
+	torus topology?
+	
+\end{enumerate}
+
+%Structure
+%
+%* Chapter 2: Background: detailed dive into what's in SpiNNaker, why its
+%  really so unusual. Also looks at what applications run on SpiNNaker and how
+%  they work.
+%* Chapter 3: How to build a really big SpiNNaker machine.
+%* Chapter 4: How to find your way around that machine.
+%* Chapter 5: How to find your way around that machine even when its broken.
+%* Chapter 6: Now you can walk, time to run.
+%* Chapter 7: Wrapping up.
+%* Appendices: Hard-to-come-by theoretical and practical details useful if
+%  you're about to continue where this research left off but be useful but
+%  otherwise hard to come by, especially in one place.
+
+In chapter~\ref{sec:building}, I develop a pair of cabling schemes for
+large hexagonal torus topologies which enable arbitrarily large networks to be
+constructed using only short, inexpensive cables. These schemes are then proven
+by the construction a range of SpiNNaker prototype systems with the largest
+containing over half a million processor cores and spanning several machine
+room cabinets. In addition, I propose the use of built-in diagnostic facilities
+to assist technicians performing network installation and maintenance which is
+found to greatly reduce the effort required and the number of mistakes made.
+
+In chapters~\ref{sec:shortestPaths}~and~\ref{sec:routing} the challenge of
+generating efficient, and fault-tolerant routes in SpiNNaker's network is
+tackled. Chapter~\ref{sec:shortestPaths} develops a new approach to finding
+shortest paths through hexagonal torus topologies, an integral part of many
+routing algorithms. The newly proposed approach is cheaper to compute than the
+state of the art and, unlike previous efforts, is able to discover all valid
+short paths through the topology. This theoretical advance brings hexagonal
+torus topologies in line with other topologies by providing routing algorithms
+with complete information about the paths available to them. In chapter
+\ref{sec:routing} I propose a fault tolerant routing algorithm for SpiNNaker
+which is able to avoid arbitrary static fault patterns with minimal performance
+overhead at the fault rates found in very large SpiNNaker machines. A key
+finding of this chapter is that the flexibility afforded to fault tolerant
+routing algorithms by SpiNNaker's simple router architecture enables far more
+efficient tolerance of faults.
+
+Finally, in chapter~\ref{sec:placement}, I explore the problem of application
+placement in SpiNNaker's network. As in other networks and applications, neural
+simulations must be arranged within SpiNNaker's hexagonal torus topology such
+that communication occurs mostly between processors close together in the
+network. Due to the irregular connectivity and large scale of the neural models
+expected to run on SpiNNaker's network, an automated approach is necessary. I
+develop a novel placement algorithm based on algorithms used for circuit layout
+in computer chips. This algorithm is found to allow some larger neural models
+to run on SpiNNaker for the first time while allowing other applications to run
+at greater speeds. In addition, synthetic benchmarks containing over one
+million processors indicate that this algorithm should handle the anticipated
+demands of larger neural models expected to be run on the new large-scale
+SpiNNaker installations.
