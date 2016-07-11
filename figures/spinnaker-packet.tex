@@ -1,0 +1,62 @@
+\begin{tikzpicture}[ thick
+                   , blockstyle/.style={ draw
+                                       , rectangle
+                                       , minimum height=2em
+                                       }
+                   ]
+	\pgfmathsetlengthmacro{\bitlen}{0.45em}
+	\pgfmathsetlengthmacro{\bitdashlen}{0.3em}
+	
+	% #1: Node to draw on
+	% #2: Number of bits
+	\newcommand{\bitdashes}[2]{
+		\pgfmathsetmacro{\boundaries}{#2-1}
+		\begin{scope}[help lines]
+			\foreach \x in {1,...,\boundaries}{
+				\draw ([shift={(\x*\bitlen,0)}] #1.north west)
+				   -- ++(0, -\bitdashlen);
+				
+				\draw ([shift={(\x*\bitlen,0)}] #1.south west)
+				   -- ++(0, \bitdashlen);
+			}
+		\end{scope}
+		
+		\draw [ decorate
+		      , decoration={ brace
+		                   , amplitude=1ex
+		                   , raise=0.2ex
+		                   }
+		      ]
+		      (#1.south east)
+		   -- node [anchor=north, yshift=-1.2ex] {#2 bits}
+		      (#1.south west);
+	}
+	
+	\node (control)
+	      [ blockstyle
+	      , minimum width=8*\bitlen
+	      ]
+	      {header};
+	\bitdashes{control}{8}
+	
+	\node (key)
+	      [ blockstyle
+	      , minimum width=32*\bitlen
+	      , right=-\the\pgflinewidth of control
+	      ]
+	      {routing key};
+	\bitdashes{key}{32}
+	
+	\begin{scope}[help lines]
+		\node (payload)
+		      [ blockstyle
+		      , minimum width=32*\bitlen
+		      , right=-\the\pgflinewidth of key
+		      ]
+		      {(optional) payload};
+		\bitdashes{payload}{32}
+	\end{scope}
+	
+\end{tikzpicture}
+
+

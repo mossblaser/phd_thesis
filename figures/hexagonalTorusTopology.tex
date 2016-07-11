@@ -14,11 +14,19 @@
 			}
 		}
 		
-		\coordinate (coordpos) at (-4.5,2.0,0);
+		% Labelled chips
+		\begin{scope}[font=\footnotesize]
+			\node at (1, 1, 0) {$\alpha$};
+			\node at (3, 1, -1) {$\beta$};
+			\node at (9, 3, 0) {$\gamma$};
+		\end{scope}
+		
+		% Axes
+		\coordinate (coordpos) at (-10,5,0);
 		\def\coordSep{0.1em}
 		\def\coordLen{1.5}
 		
-		\begin{scope}[font=\footnotesize, gray]
+		\begin{scope}[font=\footnotesize]
 			\draw [->] (coordpos) -- ++(\coordLen,0,0)
 			      node [hexagon,anchor=side west,inner sep=\coordSep] {X}
 			      ;

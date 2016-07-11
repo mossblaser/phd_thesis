@@ -1,0 +1,76 @@
+\begin{tikzpicture}[thick, hexagonXYZ, scale=4.0, font=\footnotesize]
+	
+	\tikzstyle{router node}=[ draw
+	                        , rectangle
+	                        , minimum height=2.5cm
+	                        , text width=2.5cm
+	                        , fill=white
+	                        ]
+	
+	\clip (-0.75, -0.5, 0) rectangle (3.75, 2.5, 0);
+	
+	% Wires between nodes
+	\begin{scope}[line width=1em, white!80!black]
+		\foreach \x in {-1,...,4}{
+			\foreach \y in {-1,...,4}{
+				\draw (\x, \y, 0) -- ++(1, 0, 0);
+				\draw (\x, \y, 0) -- ++(0, 1, 0);
+				\draw (\x, \y, 0) -- ++(0, 0, 1);
+			}
+		}
+	\end{scope}
+	
+	% #1 Coordinates
+	% #2 Text
+	\newcommand{\router}[2]{
+		\node (router) at (#1)
+		      [router node] {
+			#2
+		};
+		\node [anchor=north west] at (router.north west)
+		      [help lines]
+		      {$(#1)$};
+	}
+	
+	% #1 link no
+	\newcommand{\link}[1]{%
+		\begin{tikzpicture}[baseline=-0.25em]
+			% Pad to make all arrows the same height
+			\draw [<->, white](60: -0.5em) -- (60: 0.5em);
+			 % The actual arrow
+			\draw [->] (#1 * 60: -0.5em) -- (#1 * 60: 0.5em);
+		\end{tikzpicture}%
+	}
+	% #1 core no
+	\newcommand{\core}[1]{%
+		$C_{#1}$%
+	}
+	
+	\router{0, 0, 0}{
+		\texttt{1011}:~\{\link{0}\}\\
+		\texttt{00XX}:~\{\link{1}\}\\
+	}
+	\router{1, 0, 0}{
+		\texttt{1011}:~\{\link{1}\}\\
+	}
+	\router{2, 0, 0}{}
+	
+	\router{0, 1, 0}{}
+	\router{0, 0, -1}{
+		\texttt{00XX}:~\{\link{2}, \link{0}\}\\
+	}
+	\router{1, 0, -1}{
+		\texttt{00XX}:~\{\core{11}, \link{1}\}\\
+	}
+	\router{2, 0, -1}{}
+	
+	\router{0, 1, -1}{
+		\texttt{00XX}:~\{\core{5}\}\\
+	}
+	\router{0, 0, -2}{}
+	\router{1, 0, -2}{
+		\texttt{1011}:~\{\core{7}\}\\
+		\texttt{00XX}:~\{\core{6}\}\\
+	}
+	
+\end{tikzpicture}

@@ -1,0 +1,159 @@
+\pgfmathsetmacro{\scale}{0.8}%
+\begin{tikzpicture}[thick, scale=\scale]
+	
+	% #1 0 if outline, 1 if text
+	% #2 position
+	% #3 text
+	\newcommand{\htorusnode}[3]{
+		\ifthenelse{\equal{#1}{0}}{
+			\node [ draw
+			      , hexagon
+			      , inner sep=0
+			      , minimum width=\scale*1cm
+			      ]
+			      at (#2) {};
+		}{
+			\node [font=\tiny] at (#2)
+			      {\contour{white}{\color{gray}{#3}}};
+		}
+	}
+	
+	% Nodes
+	\newcommand{\htorus}[1]{
+		\begin{scope}[hexagonXYZ]
+			\htorusnode{#1}{0, 0, 0}{0}
+			\htorusnode{#1}{1, 0, 0}{1}
+			\htorusnode{#1}{0, 0, -1}{2}
+			\htorusnode{#1}{0, 1, 0}{3}
+			\htorusnode{#1}{-1, 0, 0}{4}
+			\htorusnode{#1}{0, 0, 1}{5}
+			\htorusnode{#1}{0, -1, 0}{6}
+			\htorusnode{#1}{2, 0, 2}{18}
+			\htorusnode{#1}{1, 0, 2}{17}
+			\htorusnode{#1}{0, 0, 2}{16}
+			\htorusnode{#1}{0, 1, 2}{15}
+			\htorusnode{#1}{0, 2, 2}{14}
+			\htorusnode{#1}{0, 2, 1}{13}
+			\htorusnode{#1}{0, 2, 0}{12}
+			\htorusnode{#1}{1, 2, 0}{11}
+			\htorusnode{#1}{2, 2, 0}{10}
+			\htorusnode{#1}{2, 1, 0}{9}
+			\htorusnode{#1}{2, 0, 0}{8}
+			\htorusnode{#1}{2, 0, 1}{7}
+			
+		\end{scope}
+		
+		% Outline
+		\pgfmathsetmacro{\costhirty}{cos(30)}
+		\pgfmathsetmacro{\sinthirty}{sin(30)}
+		\pgfmathsetmacro{\tanthirty}{tan(30)}
+		\draw [hexagonBoardXYZ, ultra thick]
+		      ([hexagonXYZ]2.5,0,0)
+		      ++(0, 0.5*\tanthirty, 0) --
+		      ++ (-\tanthirty, 0, 0) --
+		      ++ (0, \tanthirty, 0) --
+		      ++ (-\tanthirty, 0, 0) --
+		      ++ (0, \tanthirty, 0) --
+		      ++ (-\tanthirty, 0, 0) --
+		      ++ (0, 0, \tanthirty) --
+		      ++ (-\tanthirty, 0, 0) --
+		      ++ (0, 0, \tanthirty) --
+		      ++ (-\tanthirty, 0, 0) --
+		      ++ (0, 0, \tanthirty) --
+		      ++ (0, -\tanthirty, 0) --
+		      ++ (0, 0, \tanthirty) --
+		      ++ (0, -\tanthirty, 0) --
+		      ++ (0, 0, \tanthirty) --
+		      ++ (0, -\tanthirty, 0) --
+		      ++ (\tanthirty, 0, 0) --
+		      ++ (0, -\tanthirty, 0) --
+		      ++ (\tanthirty, 0, 0) --
+		      ++ (0, -\tanthirty, 0) --
+		      ++ (\tanthirty, 0, 0) --
+		      ++ (0, 0, -\tanthirty) --
+		      ++ (\tanthirty, 0, 0) --
+		      ++ (0, 0, -\tanthirty) --
+		      ++ (\tanthirty, 0, 0) --
+		      ++ (0, 0, -\tanthirty) --
+		      ++ (0, \tanthirty, 0) --
+		      ++ (0, 0, -\tanthirty) --
+		      ++ (0, \tanthirty, 0) --
+		      ++ (0, 0, -\tanthirty) --
+		      cycle
+		      ;
+	}
+	
+	\newcommand{\repeatedhtorus}[1]{
+		\begin{scope}[help lines]
+			
+			% Repeating shaddows
+			\begin{scope}[shift={([hexagonXYZ]0, -3, 2)}] \htorus{#1} \end{scope}
+			\begin{scope}[shift={([hexagonXYZ]0, 3, -2)}] \htorus{#1} \end{scope}
+			
+			\begin{scope}[shift={([hexagonXYZ]3, -2, 0)}] \htorus{#1} \end{scope}
+			\begin{scope}[shift={([hexagonXYZ]-3, 2, 0)}] \htorus{#1} \end{scope}
+			
+			\begin{scope}[shift={([hexagonXYZ]2, 0, -3)}] \htorus{#1} \end{scope}
+			\begin{scope}[shift={([hexagonXYZ]-2, 0, 3)}] \htorus{#1} \end{scope}
+			
+			% Main torus
+			\htorus{#1}
+		\end{scope}
+	}
+	
+	% Clip the world
+	\pgfmathsetmacro{\radius}{3.3}
+	\clip [hexagonXYZ]
+	      (-\radius, 0, 0) --
+	      ++(0, 0, -\radius) --
+	      ++(\radius, 0, 0) --
+	      ++(0, -\radius, 0) --
+	      ++(0, 0, \radius) --
+	      ++(-\radius, 0, 0) --
+	      cycle
+	      ;
+	
+	% Node outlines
+	\repeatedhtorus{0}
+	
+	% Wrapping path
+	\begin{scope}[hexagonXYZ]
+		\draw (0, -0.5, 2) -- ++(0, 3, 0);
+		\draw (1, -0.5, 2) -- ++(0, 4, 0);
+		\draw (2, -0.5, 2) -- ++(0, 5, 0);
+		\draw (3, 0.5, 2) -- ++(0, 4, 0);
+		\draw (4, 1.5, 2) -- ++(0, 3, 0);
+		
+		\pgfmathsetmacro{\pull}{2}
+		\begin{scope}[dotted]
+			% 14 -> 7
+			\draw (-2, 0.5, 0)
+			      .. controls +(0, \pull, 0) and +(0, -\pull, 0) ..
+			      (1, -1.5, 0);
+			
+			% 11 -> 17
+			\draw (0, 1.5, -1)
+			      .. controls +(0, \pull, 0) and +(0, -\pull, 0) ..
+			      (0, -1.5, 1);
+			
+			% 13 -> 8
+			\draw (-1, 1.5, 0)
+			      .. controls +(0, \pull, 0) and +(0, -\pull, 0) ..
+			      (2, -0.5, 0);
+			
+			% 10 -> 18
+			\draw (0, 0.5, -2)
+			      .. controls +(0, \pull, 0) and +(0, -\pull, 0) ..
+			      (0, -2.5, 0);
+			
+			% 12 -> 16
+			\draw (0, 2.5, 0)
+			      .. controls +(0, \pull, 0) and +(0, -\pull, 0) ..
+			      (0, -0.5, 2);
+		\end{scope}
+	\end{scope}
+	
+	% Node numbers
+	\repeatedhtorus{1}
+	
+\end{tikzpicture}

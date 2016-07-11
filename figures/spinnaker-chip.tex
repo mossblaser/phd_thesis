@@ -1,0 +1,42 @@
+\begin{tikzpicture}[thick]
+	
+	\pgfmathtruncatemacro{\numcores}{18}
+	
+	\coordinate (last);
+	
+	% Cores
+	\foreach \n in {1,...,\numcores}{
+		\node [ draw
+		      , rectangle
+		      , right=1ex of last
+		      ]
+		      (core\n)
+		      {C};
+		\coordinate (last) at (core\n.east);
+	}
+	
+	% Router
+	\node [ below= 2cm of $(core1)!0.5!(core\numcores)$
+	      , draw
+	      , rectangle
+	      , inner sep=2em
+	      , minimum width=8cm
+	      ]
+	      (router)
+	      {Network Router};
+	
+	
+	% Wires between cores and router
+	\pgfmathsetmacro{\prop}{0.7}
+	\foreach \n in {1,...,\numcores}{
+		\pgfmathsetmacro{\perc}{((\n/\numcores) * \prop) + ((1-\prop)/2)}
+		\draw [<->]
+		      (core\n.south)
+		      .. controls +(0, -2em) and +(0, +2em) ..
+		      ($(router.north west)!\perc!(router.north east)$);
+	}
+	
+	% SDRAM
+	
+	
+\end{tikzpicture}

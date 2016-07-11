@@ -1,0 +1,27 @@
+\begin{tikzpicture}[ultra thick, hexagonXYZ, yscale=1.15, scale=2.7]
+	\pgfmathtruncatemacro{\width}{9}
+	\pgfmathtruncatemacro{\height}{5}
+	
+	\newcommand{\chip}{\includegraphics[width=19mm]{figures/spinnakerChip.jpg}}
+	
+	\clip (2, 2-.2, 0) rectangle (8, 4+.2, 0);
+	
+	% Chips
+	\foreach \x in {1,...,\width}{
+		\foreach \y in {1,...,\height}{
+			\node at (\x, \y, 0)
+			      (chip\x\y)
+			      {\chip};
+		}
+	}
+	
+	% Links
+	\foreach [count=\x] \xx in {2,...,\width}{
+		\foreach [count=\y] \yy in {2,...,\height}{
+			\draw (chip\x\y) -- (chip\xx\y);
+			\draw (chip\x\y) -- (chip\x\yy);
+			\draw (chip\x\y) -- (chip\xx\yy);
+		}
+	}
+	
+\end{tikzpicture}%

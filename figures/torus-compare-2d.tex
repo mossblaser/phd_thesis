@@ -1,0 +1,18 @@
+\pgfmathsetmacro{\scale}{0.4}%
+\begin{tikzpicture}[thick, scale=\scale]
+	
+	\foreach \x in {1,...,8}{
+		\foreach \y in {1,...,8}{
+			\node [ rectangle
+			      , draw
+			      , inner sep=0
+			      , minimum width=\scale * 1cm
+			      , minimum height=\scale * 1cm
+			      ]
+			      at (\x, \y)
+			      {};
+		}
+	}
+	
+\end{tikzpicture}
+

@@ -1,0 +1,97 @@
+\begin{tikzpicture}
+	
+	% Router
+	\node [ draw
+	      , rectangle
+	      , minimum width=3cm
+	      , minimum height=2cm
+	      , thick
+	      ]
+	      (router)
+	      {Router};
+	
+	% Router in pipe
+	\draw [<-]
+	      (router.west)
+	      -- ++(-1cm, 0)
+	      coordinate (router in);
+	
+	% Input arbiter
+	\draw [thick]
+	      (router in)
+	      -- ++(0, 2.25cm)
+	      -- ++(-0.75cm, 0.5cm)
+	      coordinate (arb top)
+	      -- ++(0, -5.5cm)
+	      coordinate (arb btm)
+	      -- ++(0.75cm, 0.5cm)
+	      -- cycle;
+	
+	% Inputs
+	\foreach \n in {1,...,24}{
+		\pgfmathsetmacro{\perc}{(\n-1)/23}
+		\pgfmathsetmacro{\perc}{(\perc * 0.9) + 0.05}
+		\draw [<-]
+		      ($(arb top)!\perc!(arb btm)$)
+		      -- ++(-0.5cm, 0)
+		      node [ anchor=east
+		           , draw
+		           , rectangle
+		           , inner sep=0
+		           , minimum width =0.15cm
+		           , minimum height=0.15cm
+		           , thick
+		           ]
+		      (in)
+		      {};
+		\draw (in.west) -- ++(-0.25cm, 0)
+		      coordinate (input \n);
+	}
+	
+	% Input labels
+	\draw [thick,decorate,decoration={brace,amplitude=0.15cm,mirror}]
+	      ([xshift=-0.1cm]input 1)
+	      -- node [anchor=east, xshift=-0.3cm] {Other chips}
+	      ([xshift=-0.1cm]input 6);
+	\draw [thick,decorate,decoration={brace,amplitude=0.15cm,mirror}]
+	      ([xshift=-0.1cm]input 7)
+	      -- node [anchor=east, xshift=-0.3cm] {Local cores}
+	      ([xshift=-0.1cm]input 24);
+	
+	% Output plane
+	\coordinate (out top) at ([xshift=1.5cm, yshift=1.75cm]router.north east);
+	\coordinate (out btm) at ([xshift=1.5cm, yshift=-1.75cm]router.south east);
+	
+	% Outputs
+	\foreach \n in {1,...,24}{
+		\pgfmathsetmacro{\perc}{(\n-1)/23}
+		\pgfmathsetmacro{\perc}{(\perc * 0.9) + 0.05}
+		\draw ($(router.north east)!\perc!(router.south east)$)
+		      .. controls +(1em, 0) and +(-1em, 0) ..
+		      ($(out top)!\perc!(out btm)$)
+		      node [ anchor=west
+		           , draw
+		           , rectangle
+		           , inner sep=0
+		           , minimum width =0.15cm
+		           , minimum height=0.15cm
+		           , thick
+		           ]
+		      (out)
+		      {};
+		\draw [->]
+		      (out.east) -- ++(0.5cm, 0)
+		      coordinate (output \n);
+	}
+	
+	% Output labels
+	\draw [thick,decorate,decoration={brace,amplitude=0.15cm}]
+	      ([xshift=0.1cm]output 1)
+	      -- node [anchor=west, xshift=0.3cm] {Other chips}
+	      ([xshift=0.1cm]output 6);
+	\draw [thick,decorate,decoration={brace,amplitude=0.15cm}]
+	      ([xshift=0.1cm]output 7)
+	      -- node [anchor=west, xshift=0.3cm] {Local cores}
+	      ([xshift=0.1cm]output 24);
+	
+\end{tikzpicture}
