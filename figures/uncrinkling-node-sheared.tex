@@ -1,13 +1,13 @@
 \begin{tikzpicture}
 	\def\size{6}
-	\def\scale{0.3}
+	\def\scale{0.5}
 	
 	\pgfmathsetmacro{\slant}{cos(30)*2/3}
 	
-	\clip (-\scale*4, -\scale*10.5) rectangle ++(\scale*8.5,\scale*16.5);
+	\clip (-\scale*4, -\scale*9.1) rectangle ++(\scale*8.0,\scale*15.0);
 	
 	% Boards
-	\begin{scope}[xslant=\slant,help lines,hexagonXYZ,scale=\scale,inner sep=0, minimum width=\scale*1cm,xshift=\size/2*-1cm]
+	\begin{scope}[xslant=\slant,hexagonXYZ,scale=\scale,inner sep=0, minimum width=\scale*1cm,xshift=\size/2*-1cm]
 		% Hexagons themselves
 		\foreach \y in {0,...,\size}{
 			\foreach \x in {0,...,\size}{
@@ -18,7 +18,7 @@
 	
 	% Annotations
 	\newcommand{\annotate}[2]{
-		\node [font=\tiny]
+		\node [font=\footnotesize]
 		      at (#1)
 		      {#2}
 		      ;
@@ -34,7 +34,7 @@
 	\draw [->,thick] (0,-1.0em) -- ++(0,-1em);
 	
 	% Squares
-	\begin{scope}[help lines,xshift=\size/2*\scale*-1cm,yshift=-3.0em]
+	\begin{scope}[xshift=\size/2*\scale*-1cm,yshift=-3.0em]
 		\foreach \y in {0,...,\size}{
 			\foreach \x in {0,...,\size}{
 				\pgfmathtruncatemacro{\yy}{\size-\y}

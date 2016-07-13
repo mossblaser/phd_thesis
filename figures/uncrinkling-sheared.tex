@@ -1,12 +1,13 @@
 \begin{tikzpicture}
 	\def\size{3}
-	\def\scale{0.3}
+	\def\scale{0.5}
 	
-	\clip (-\scale*6.5, -\scale*10.5) rectangle ++(\scale*13.0,\scale*16.5);
+	%\clip (-\scale*6.5, -\scale*10.5) rectangle ++(\scale*13.0,\scale*16.5);
+	\clip (-\scale*6.1, -\scale*8.1) rectangle ++(\scale*12.2,\scale*14.2);
 	
 	% Boards
 	\pgfmathsetmacro{\slant}{cos(30)*2 / 3}
-	\begin{scope}[xslant=\slant,hexagonBoardXYZ,help lines, xshift=-\scale*\size cm]
+	\begin{scope}[xslant=\slant,hexagonBoardXYZ, xshift=-\scale*\size cm]
 		\foreach \x in {0,...,\size}{
 			\foreach \y in {0,...,\size}{
 				\foreach \z in {0,1,2}{
@@ -29,7 +30,7 @@
 	\end{scope}
 	
 	% Crinkles
-	\begin{scope}[rounded corners=2pt, thick]
+	\begin{scope}[rounded corners=2pt, gray, ultra thick]
 		\foreach \y in {0,...,\size}{
 			\draw (board 0\y 0.center)
 			   -- (board 0\y 1.center)
@@ -48,7 +49,7 @@
 	
 	% Annotations
 	\newcommand{\annotate}[2]{
-		\node [font=\tiny]
+		\node [font=\footnotesize]
 		      at (#1)
 		      {\contour{white}{#2}}
 		      ;
@@ -70,7 +71,7 @@
 	
 	% Squares
 	\pgfmathtruncatemacro{\sizee}{(\size+1)*3 - 1}
-	\begin{scope}[yshift=-3em, xshift=-0.5*\scale*\sizee cm,help lines]
+	\begin{scope}[yshift=-3em, xshift=-0.5*\scale*\sizee cm]
 		\foreach \y in {0,...,\size}{
 			\foreach \x in {0,...,\sizee}{
 				\pgfmathtruncatemacro{\xx}{\x/3}
@@ -85,7 +86,7 @@
 	\end{scope}
 	
 	% Straightened Crinkles 
-	\begin{scope}[thick]
+	\begin{scope}[gray, ultra thick]
 		\foreach \y in {0,...,\size}{
 			\draw (square 0\y0.center)
 			   -- (square \size\y2.center)
