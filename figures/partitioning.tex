@@ -67,7 +67,11 @@
 	      ([shift={(-1.5,-2)}]cpu c) coordinate (bl) rectangle
 	      ([shift={(1,1)}]process 6 |- process 4) coordinate (tr);
 	
-	% Arrows
+	% `Start' arrow
+	\node (start arrow) [darrow] at ([yshift=1.25cm]$(bl|-tr)!0.5!(tr)$) {};
+	\node [above=0.3em of start arrow] {\textbf{Start}};
+	
+	% Arrows to recursive steps
 	\node [rarrow] at ([xshift=0.25cm]$(bl-|tr)!0.5!(tr)$) {};
 	\node [larrow] at ([xshift=-.25cm]$(bl)!0.5!(tr-|bl)$) {};
 	

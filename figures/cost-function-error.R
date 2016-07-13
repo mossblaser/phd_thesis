@@ -46,10 +46,23 @@ cost_function_comparison <-
 	scale_x_continuous(expand=c(0, 0), breaks=c(2,10,20,30)) +
 	scale_y_continuous(breaks=c(0), labels=c("0")) +
 	labs( x="Net fan out ($n$)"
-	    , y="Error"
+	    , y="(Linear) Error"
 	    , color="Net cost function"
 	    ) +
 	plot_theme +
+	annotate( "text"
+	        , x = 19.65
+	        , y = 6
+	        , label = "\\footnotesize\\color{gray}$\\uparrow$ Overestimate"
+	        , hjust = 0
+	        ) +
+	annotate( "text"
+	        , x = 19.65
+	        , y = -6
+	        , label = "\\footnotesize\\color{gray}$\\downarrow$ Underestimate"
+	        , hjust = 0
+	        ) +
+	theme(plot.margin=unit(c(0,0,0.2,0), "lines")) +
 	theme(legend.key = element_rect(colour="white")) +
 	scale_colour_manual(values=cbPalette) +
 	coord_cartesian(ylim = c(-60, 60))

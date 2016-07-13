@@ -14,7 +14,7 @@ runtime <- ggplot(d, aes(x=netlist, y=runtime, fill=placer, group=placer)) +
                       ) +
     placement_bar_theme +
     theme(legend.position = "none") +
-    theme(plot.margin=unit(c(0.5,0,0.1,0), "lines")) +
+    theme(plot.margin=unit(c(0.5,0,0.3,0), "lines")) +
     theme(axis.title.x = element_blank()) +
     labs( y="Runtime (\\si{\\second})"
         , fill=""

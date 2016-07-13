@@ -8,7 +8,7 @@ goodness <- ggplot(d, aes(x=netlist, y=max_entries, fill=placer, group=placer)) 
     geom_hline(yintercept=1024, color="red") +
     theme(legend.position = "none") +
     theme(axis.title.x = element_blank()) +
-    theme(plot.margin=unit(c(0,0,0.1,0), "lines")) +
+    theme(plot.margin=unit(c(0,0,0.3,0), "lines")) +
     labs( y="Max table entries"
         , fill=""
         )
