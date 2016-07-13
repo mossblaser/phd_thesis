@@ -132,11 +132,35 @@
 				(figure~\ref{fig:sequential-alternating}) curves illustrate 2D versions
 				of the default node assignment orders provided by the SLURM and
 				BlueGene systems.  The Cray extensions to SLURM software provide a
-				Hilbert curve \cite{hilbert91}  node assignment order (figure
-				\ref{fig:sequential-hilbert}). Unlike the row-order and alternating
-				space filling curves, the Hilbert curve ensures that pairs of vertices
-				close together in the node iteration order are also close together in
-				the target machine's network \cite{moon01, zumbusch99}.
+				Hilbert curve \cite{hilbert91} node assignment order (figure
+				\ref{fig:sequential-hilbert}). The Hilbert curve specifically attempts
+				to maintain the property that points that are close together along the
+				length of the curve are also close together in the 2D mapping
+				\cite{moon01, zumbusch99}. Since the vertex iteration order is also
+				chosen such that connected vertices tend to be closer together, this
+				property may lead to improved placement solutions.
+				
+				\begin{figure}
+					\center
+					\buildrplot{figures/space_filling_curves_comparison.R}
+					
+					\caption{Relationship between distance along a space filling curve
+					and between the 2D positions assigned. Results shown for a
+					Manhattan distances in a $32\times32$ 2D mesh.}
+					\label{fig:space_filling_curves_comparison}
+				\end{figure}
+				
+				Figure~\ref{fig:space_filling_curves_comparison} illustrates how the
+				distance between locations along each space filling curve map to
+				distances in the resulting 2D space. Both the row-order and alternating
+				orderings result in distances oscillating between being closer and
+				spread out in 2D space, just as the space filling curve oscillates from
+				side-to-side. For the Hilbert curve, however, distances grow more
+				monotonically\footnote{The growth in distance for Hilbert curves may
+				appear slightly random but in fact forms a fractal as a result of the
+				fractal construction of the Hilbert curve itself.} and at smaller 1D
+				distances, 2D distances are often lower than in other space filling
+				curves.
 				
 				A number of algorithms have been proposed for automatically selecting
 				good vertex and chip iteration orders, typically using a
