@@ -269,6 +269,17 @@
 	
 	\section{The hexagonal torus topology}
 		
+		Each SpiNNaker chips is a node in a `hexagonal torus topology' as
+		illustrated in figure~\ref{fig:hexagonalTorusTopology}. Network packets
+		sent by SpiNNaker's processor cores may `hop' through several nodes in the
+		network to reach their intended destination. In each hop, a packet may
+		advance one node along one of the three axes of the topology. For example,
+		a packet sent by the node labelled $\alpha$ (in the bottom-left corner) to
+		the node labelled $\beta$, might take the following sequence of hops:
+		X$^+$, X$^+$, Z$^-$. Packets sent from $\alpha$ to $\gamma$ might take the
+		route: X$^-$, X$^-$, Y$^+$, Y$^+$. The first hop of this route `wraps
+		around' from the bottom-left node to the bottom-right node in a single hop.
+		
 		\begin{figure}
 			\center
 			\buildfig{figures/hexagonalTorusTopology.tex}
@@ -280,17 +291,6 @@
 			hexagonal torus topology, `X', `Y' and `Z' are also shown.}
 			\label{fig:hexagonalTorusTopology}
 		\end{figure}
-		
-		Each SpiNNaker chips is a node in a `hexagonal torus topology' as
-		illustrated in figure~\ref{fig:hexagonalTorusTopology}. Network packets
-		sent by SpiNNaker's processor cores may `hop' through several nodes in the
-		network to reach their intended destination. In each hop, a packet may
-		advance one node along one of the three axes of the topology. For example,
-		a packet sent by the node labelled $\alpha$ (in the bottom-left corner) to
-		the node labelled $\beta$, might take the following sequence of hops:
-		X$^+$, X$^+$, Z$^-$. Packets sent from $\alpha$ to $\gamma$ might take the
-		route: X$^-$, X$^-$, Y$^+$, Y$^+$. The first hop of this route `wraps
-		around' from the bottom-left node to the bottom-right node in a single hop.
 		
 		\begin{figure}
 			\center
