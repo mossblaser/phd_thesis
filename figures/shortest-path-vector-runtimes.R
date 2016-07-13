@@ -29,7 +29,7 @@ runtimes <- ggplot(d, aes( x=algo,
             geom_blank(aes(y=max_runtime*1.10)) +
             bar_theme_with_grid +
             no_rotate +
-            labs(y="Runtime (ns)")+
+            labs(y="Mean runtime (ns)")+
             theme(axis.title.y=element_blank()) +
             theme(panel.grid.major.y = element_blank()) +
             theme(panel.grid.minor.y = element_blank()) +
