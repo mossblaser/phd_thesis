@@ -34,17 +34,6 @@
 		\draw [<-]
 		      ($(arb top)!\perc!(arb btm)$)
 		      -- ++(-0.5cm, 0)
-		      node [ anchor=east
-		           , draw
-		           , rectangle
-		           , inner sep=0
-		           , minimum width =0.15cm
-		           , minimum height=0.15cm
-		           , thick
-		           ]
-		      (in)
-		      {};
-		\draw (in.west) -- ++(-0.25cm, 0)
 		      coordinate (input \n);
 	}
 	
@@ -66,22 +55,13 @@
 	\foreach \n in {1,...,24}{
 		\pgfmathsetmacro{\perc}{(\n-1)/23}
 		\pgfmathsetmacro{\perc}{(\perc * 0.9) + 0.05}
-		\draw ($(router.north east)!\perc!(router.south east)$)
+		\draw [->]
+		      ($(router.north east)!\perc!(router.south east)$)
 		      .. controls +(1em, 0) and +(-1em, 0) ..
 		      ($(out top)!\perc!(out btm)$)
-		      node [ anchor=west
-		           , draw
-		           , rectangle
-		           , inner sep=0
-		           , minimum width =0.15cm
-		           , minimum height=0.15cm
-		           , thick
-		           ]
-		      (out)
+		      coordinate
+		      (output \n)
 		      {};
-		\draw [->]
-		      (out.east) -- ++(0.5cm, 0)
-		      coordinate (output \n);
 	}
 	
 	% Output labels
