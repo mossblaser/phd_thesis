@@ -99,11 +99,9 @@
 			
 			Computing shortest path vectors in non-hexagonal torus topologies is also
 			straight forward. For example, to find the shortest path vector from node
-			`A' to `B' in the 2D torus topology shown in figure
-			\ref{fig:torus-shortest-path-example} both nodes are translated such that
+			`A' to `B' in the 2D torus topology shown in figure~\ref{fig:torus-shortest-path-example} both nodes are translated such that
 			the source node, `A', is at the centre of the network. The shortest path
-			vector is then computed in the same way as a mesh network (figure
-			\ref{fig:torus-shortest-path-translate}). Note that, as in this example,
+			vector is then computed in the same way as a mesh network (figure~\ref{fig:torus-shortest-path-translate}). Note that, as in this example,
 			translation may cause the destination node to `wrap around' the network.
 			As illustrated in figure~\ref{fig:torus-shortest-path-routed}, the
 			computed shortest path vector is also valid for the two points prior to
@@ -440,8 +438,7 @@
 			From these expressions we can determine which combination of axes the
 			shortest path vector wraps around by find the expression with the minimum
 			value. With this information, the shortest path can be found by
-			minimising the vector associated with that irregular quadrant.  Figure
-			\ref{fig:iqmethod.py} shows a simple Python implementation of the IQ
+			minimising the vector associated with that irregular quadrant.  Figure~\ref{fig:iqmethod.py} shows a simple Python implementation of the IQ
 			method.
 			
 			\begin{figure}
@@ -552,8 +549,7 @@
 			
 			Unlike non-hexagonal topologies, when the aspect ratio of a hexagonal
 			topology is not $1:1$, some points may have many distinct (but equal
-			magnitude) shortest path vectors.  For example, figure
-			\ref{fig:spiralling} illustrates the three distinct shortest path vectors
+			magnitude) shortest path vectors.  For example, figure~\ref{fig:spiralling} illustrates the three distinct shortest path vectors
 			between a single pair of nodes. None of the shortest path vector
 			functions discussed will generate all possible vectors in this situation,
 			potentially limiting the choices available to routing algorithms.  To
@@ -569,9 +565,9 @@
 			$(x, 0, z)$ where $x\ge H$ and $z\le0$ results in a new, distinct,
 			shortest path vector.
 			
-			For example the vector $(10, 0, -1)$ (magnitude 11) in figure
-			\ref{fig:spiralling} can be added with $(-4, 0, -4)$ yielding $(6, 0,
-			-5)$ (also magnitude 11) which is still a shortest path vector between
+			For example the vector $(10, 0, -1)$ (magnitude 11) in
+			figure~\ref{fig:spiralling} can be added with $(-4, 0, -4)$ yielding $(6,
+			0, -5)$ (also magnitude 11) which is still a shortest path vector between
 			the two labelled nodes.  Since $(6, 0, -5)$ still meets the criteria
 			defined above ($6 \ge 4$ and $-5 \le 0$), we can add $(-4, 0, -4)$ again
 			yielding another shortest path vector $(2, 0, -9)$.  This new vector does
