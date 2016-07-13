@@ -254,7 +254,7 @@
 			% Router timeouts must be configured to be long enough that delays in
 			% packet transmission, for example due to the time taken for packets to
 			% traverse a link, do not trigger packet dropping. Conversely, the timeout
-			% should be as short as possible in order to reduce the time the router is
+			% should be as short as possible to reduce the time the router is
 			% blocked and maximise network throughput.
 	
 	\section{The hexagonal torus topology}
@@ -274,7 +274,7 @@
 		SpiNNaker chips are logically connected in a `hexagonal torus topology'
 		as illustrated in figure~\ref{fig:hexagonalTorusTopology}. Network
 		packets sent by SpiNNaker's processor cores may `hop' through several
-		chips in the network in order to reach their intended destination. In
+		chips in the network to reach their intended destination. In
 		each hop, a packet may advance one chip along one of the three axes of
 		the topology. For example, a packet sent by the chip labelled $\alpha$
 		(in the bottom-left corner) to the chip labelled $\beta$, might take the
@@ -454,7 +454,7 @@
 			\label{fig:spinnaker-boards}
 		\end{figure}
 		
-		In order to build large SpiNNaker systems comprising tens of thousands of
+		To build large SpiNNaker systems comprising tens of thousands of
 		SpiNNaker chips, groups of forty-eight chips are mounted onto printed
 		circuit boards as illustrated in figure~\ref{fig:spinnakerBoard}. These
 		boards may be connected together to form larger systems.

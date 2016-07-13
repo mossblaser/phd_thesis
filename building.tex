@@ -4,8 +4,8 @@
 	
 	Like any super computer, physically assembling a large SpiNNaker machine
 	poses many practical challenges in terms of arranging, installing and
-	maintaining the hundreds of meters of network cables required.  For
-	conventional architectures and network topologies, the techniques are well
+	maintaining the hundreds of metres of network cables required.  For
+	conventional architectures and network topologies techniques are well
 	understood and embodied by industry standards such as TAI-942 \cite{tia2006}.
 	SpiNNaker's use of the hexagonal torus topology render existing mappings
 	insufficient.
@@ -13,7 +13,7 @@
 	In the first part of this chapter I extend existing techniques for mapping
 	network topologies into standard data centre physical infrastructure to
 	support the hexagonal torus topology. This mapping is designed to ensure that
-	all cables are kept short (under \SI{1}{\meter}) in order to reduce costs and
+	all cables are kept short (under \SI{1}{\meter}) to reduce costs and
 	simplify the network hardware required. The techniques described introduce
 	little overhead in terms of cable length over existing torus wiring schemes
 	and confirm the suitability of the hexagonal torus topology for real-world
@@ -212,7 +212,7 @@
 	
 	\section{Folding \& interleaving hexagonal toruses}
 		
-		In order to exploit the folding technique used by non-hexagonal topologies,
+		To exploit the folding technique used by non-hexagonal topologies,
 		the units in a hexagonal torus topology must be mapped into a space with
 		orthogonal coordinates. The choice of transformation to an orthogonal
 		coordinate system can have an impact on how far apart neighbouring units
@@ -450,7 +450,7 @@
 			
 			When `square' networks with a $1:1$ aspect ratio are sliced, the network
 			may be folded \emph{twice} along the Y axis as in figure
-			\ref{fig:folding-sliced} in order to eliminate the criss-crossing
+			\ref{fig:folding-sliced} to eliminate the criss-crossing
 			wrap-around links. It is not possible to eliminate wrap-around links from
 			sliced networks with other aspect ratios by folding.
 			
@@ -466,7 +466,7 @@
 			In each step of the transformation from hexagonal torus topology to a
 			folded and interleaved 2D grid the distances between connected units may
 			increase. When designing a system, the transformation with the least
-			distortion should be used in order to minimise the total length of the
+			distortion should be used to minimise the total length of the
 			cables required.
 			
 			By referring back figure~\ref{fig:uncrinkling} (page
