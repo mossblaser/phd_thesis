@@ -11,11 +11,11 @@
 	\begin{center}
 		\textsc{\large\thesistitle}
 		
-		\vspace{1em}
+		\vspace{0.5em}
 		
 		\thesisauthor
 		
-		\vspace{1em}
+		\vspace{0.5em}
 		
 		A thesis submitted to the University of Manchester\\
 		for the degree of Doctor of Philosophy, 2016
@@ -24,27 +24,35 @@
 	\vfill
 	
 	% The abstract
-	Super computers consist of a large number of independent compute nodes
-	(commonly CPU cores) interconnected by a high performance network. SpiNNaker is
-	an unusual super computer designed for simulating large-scale neural models of
-	the brain in biological realtime. This project addresses a number of the key
-	practical challenges involved in the construction and operation of a full-sized
-	SpiNNaker machine with over one million CPU cores.
 	
-	Due to its unconventional hexagonal torus network topology, conventional
-	approaches to building large machine installations do not apply. We begin by
-	proposing a novel machine-room layout for SpiNNaker systems which enables
-	systems of arbitrary size to be constructed using only short cables, saving
-	money and energy while also improving network performance. We follow this with
-	a novel routing algorithm for hexagonal torus networks which is both more
-	concise and more evenly utilises available resources. Since any large-scale
-	system will inevetably have some faults we develop novel extensions to this
-	algorithm which take advantage of unique features of SpiNNaker's network to
-	tollerate arbitrary static network faults. Finally, to make the most
-	efficient use of SpiNNaker's network we adapt techniques from the field of chip
-	design to efficiently map applications across SpiNNakers million cores while
-	making effective use of the network.
-
-	% Required to ensure linespacing is set for this whole block
+	SpiNNaker is an unconventional super computer architecture designed to
+	simulate up to one billion biologically realistic neurons in real time. To
+	achieve this goal, SpiNNaker employs an unconventional network architecture
+	which poses a number of practical problems in scaling up from desktop
+	prototypes to machine room filling installations.
+	
+	SpiNNaker's hexagonal torus network topology has received mostly theoretical
+	treatment in the literature. This thesis tackles two chalenges encountered
+	when building `real-world' systems.  Firstly, a scheme for laying out out
+	hexagonal torus topologies in machine rooms while avoiding long cables is
+	devised and demonstrated on a half-million core SpiNNaker prototype.
+	Secondly, to improve the performance of existing routing algorithms, a more
+	efficient process is proposed for finding short paths through hexagonal torus
+	topologies. This is complemented by a formula enabling routing algorithms
+	greater flexibility finding paths potentially resulting in more balanced
+	network utilisation.
+	
+	The scale of SpiNNaker's networks and the models intended for it also present
+	a practical challenge. A pair of placement and routing algorithms are
+	developed which assign processes to nodes and generate paths through the
+	network such that network congestion is reduced and network faults are
+	tolerated.  The proposed placement algorithm is inspired by techniques used
+	in chip design and is shown to allow larger applications to run -- with good
+	performance -- on SpiNNaker than the previous state-of-the-art. Likewise the
+	routing algorithm developed is able to tolerate network faults inevetably
+	present in large scale systems with littler performance overhead.
+	
+	
+	% Required to ensure single line spacing is used for this whole block
 	\par%
 }
