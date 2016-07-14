@@ -1,4 +1,4 @@
-\documentclass[12pt,twoside,a4paper]{report}
+\documentclass[12pt,twoside,openright,a4paper]{report}
 
 \newcommand{\thesistitle}{Building and operating large-scale SpiNNaker machines}
 \newcommand{\thesisauthor}{Jonathan Heathcote}
@@ -20,6 +20,21 @@
 	\chapter*{#1}
 	\addcontentsline{toc}{chapter}{#1}
 }
+
+% Reverses the usual LaTeX margins, placing the wider margin on the left on
+% odd-numbered pages. When printed double-sided with the title first, the
+% larger margin will be on the binding side. Though this goes against
+% typographical conventions, it is what the University requires.
+%
+% When professionally printing and binding a book, extra-wide paper is used and
+% an extra space is left to allow for binding. Since theses usually aren't
+% professionally printed and bound (but rather done by a hack-job at a
+% university print shop), normal A4 paper is used and the extra space to allow
+% for binding must be included as part of the margins.
+\let\tmp\oddsidemargin
+\let\oddsidemargin\evensidemargin
+\let\evensidemargin\tmp
+\reversemarginpar
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -69,7 +84,6 @@
 	\end{tikzpicture}
 }}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Document body
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,12 +92,17 @@
 	% The title page
 	\input{titlepage}
 	
+	% Make preliminary non-numbered chapters start on the right-hand side
+	\makeatletter\@openrightfalse\makeatother
+	
 	% The table of contents which, per university regulations, is followed by a
 	% total wordcount.
+	\cleardoublepage
 	\tableofcontents
 	\vfill
 	\noindent\immediate\write18{./wordcount.sh > thesis.wordcount}%
 		\input{thesis.wordcount}
+	
 	
 	\clearpage
 	\listoffigures
@@ -102,6 +121,9 @@
 	
 	% Acknowledgements
 	\input{acknowledgements}
+	
+	% Make chapter pages start on the right-hand side
+	\makeatletter\@openrighttrue\makeatother
 	
 	% Main body
 	\input{introduction.tex}
