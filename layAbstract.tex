@@ -1,0 +1,57 @@
+{
+	\prefacesection{Lay abstract}
+	
+	% Single line spacing for the lay abstract page
+	\setstretch{1.0}
+	
+	
+	\vfill
+	
+	% Standard thesis information
+	\begin{center}
+		\textsc{\large\thesistitle}
+		
+		\vspace{0.5em}
+		
+		\thesisauthor
+		
+		\vspace{0.5em}
+		
+		A thesis submitted to the University of Manchester\\
+		for the degree of Doctor of Philosophy, 2016
+	\end{center}
+	
+	\vfill
+	
+	% The lay abstract
+	
+	SpiNNaker is a super computer designed to simulate neural networks like those
+	in the brain. Unlike biological experiments, computer simulations make it
+	easy for neuroscientists to see what's going on in a neural network and
+	easily test new theories. Though it is extremely unlikely that SpiNNaker will
+	ever `think', it may give researchers a better understanding of how different
+	parts of the brain work, and what makes them go wrong.
+	
+	Like most super computers, SpiNNaker is made up of a many smaller computers
+	which all work together on the same problem. When completed SpiNNaker, will
+	contain over one million computer processors, each responsible for simulating
+	several hundred neurons at once.
+	
+	This thesis makes three contributions towards tackling the challenge of
+	building a full-sized SpiNNaker machine. Firstly I devised a new way of
+	organising the many computers that make up SpiNNaker such that only short
+	cables are required to connect everything together, even in big machines.
+	These techniques make SpiNNaker cheaper and easier to build.  Secondly, I
+	developed a method that allows the individual computers in SpiNNaker to
+	communicate reliably, even if some of the connections between them break --
+	an unavoidable situation in super computers. Finally, I adapted a technique
+	normally used to design computer chips to decide how to assign neurons to
+	SpiNNaker's processors. This method keeps neurons which are connected to each
+	other close together inside SpiNNaker. By doing this, the signals exchanged
+	between neurons have to travel less distance through SpiNNaker's computer
+	network and don't get in each other's way. This makes it possible to simulate
+	bigger and more complex neural networks.
+	
+	% Required to ensure single line spacing is used for this whole block
+	\par%
+}
