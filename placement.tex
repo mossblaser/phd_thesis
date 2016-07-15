@@ -68,7 +68,8 @@
 					\center
 					\buildfig{figures/fem-partitioning.tex}
 					
-					\caption{Example partitioning of a 3D space to fit into a super
+					\caption[Partitioning of a 3D volumn for a $3\times4\times2$ torus.]%
+					{Example partitioning of a 3D volume to fit into a super
 					computer with a $3\times4\times2$ torus or mesh topology.}
 					\label{fig:fem-partitioning}
 				\end{figure}
@@ -144,7 +145,8 @@
 					\center
 					\buildrplot{figures/space_filling_curves_comparison.R}
 					
-					\caption{Relationship between distance along a space filling curve
+					\caption[Relationship between space filling curve offset and 2D space.]%
+					{Relationship between distance along a space filling curve
 					and between the 2D positions assigned. Results shown for a
 					Manhattan distances in a $32\times32$ 2D mesh.}
 					\label{fig:space_filling_curves_comparison}
@@ -189,7 +191,8 @@
 						\label{fig:rcm-sorted}
 					\end{subfigure}
 					
-					\caption{Adjacency matrix representation of a graph before and after
+					\caption[Graph adjacency matrix before and after RCM permutation.]%
+					{Adjacency matrix representation of a graph before and after
 					permutation by the RCM algorithm.}
 					\label{fig:rcm}
 				\end{figure}
@@ -293,7 +296,8 @@
 					\center
 					\buildfig{figures/partitioning.tex}
 					
-					\caption{Illustration of application placement by recursive
+					\caption[Application placement by recursive partitioning.]%
+					{Illustration of application placement by recursive
 					partitioning. Each node has the capacity to hold two vertices.}
 					\label{fig:partitioning}
 				\end{figure}
@@ -340,7 +344,8 @@
 				\center
 				\buildrplot{figures/top500-num-processors.R}
 				
-				\caption{Historical processor (core) counts for the `Top500' super
+				\caption[Historical core counts for the `Top500' super computers.]%
+				{Historical processor (core) counts for the `Top500' super
 				computer installations. The line shows the mean number of processsors and
 				grey ribbon indicates the range. Data reported by the `Top500 List'
 				\cite{meuer16j}.}
@@ -429,7 +434,8 @@
 					\center
 					\buildfig{figures/quadratic-placement.tex}
 					
-					\caption{An optimal 1D quadratic placement solution for two fixed
+					\caption[An optimal 1D quadratic placement solution.]%
+					{An optimal 1D quadratic placement solution for two fixed
 					vertices ($f_1$ and $f_2$), two movable vertices ($m_1$ and $m_2$)
 					and three weighted edges.}
 					\label{fig:quadratic-placement}
@@ -711,7 +717,8 @@
 						\label{fig:cost-function-hpwl-yz}
 					\end{subfigure}
 					
-					\caption{Net cost estimation functions for hexagonal toruses and meshes.}
+					\caption[Net cost estimation functions for hexagonal toruses.]%
+					{Net cost estimation functions for hexagonal toruses and meshes.}
 					\label{fig:cost-function}
 				\end{figure}
 				
@@ -755,7 +762,8 @@
 					\center
 					\buildrplot{figures/cost-function-error.R}
 					
-					\caption{Estimation error of various cost functions compared with
+					\caption[Estimation error of various cost functions.]%
+					{Estimation error of various cost functions compared with
 					routing solutions. Positive and negative errors are equally bad.
 					Y-axis limit clipped for clarity. The error of the star cost function
 					grows linearly with fan out beyond the axis limit.}
@@ -974,7 +982,8 @@
 					\bottomrule
 				\end{tabular}
 				
-				\caption{SpiNNaker application benchmarks. `Fan out' refers to the fan
+				\caption[SpiNNaker application benchmarks.]%
+				{SpiNNaker application benchmarks. `Fan out' refers to the fan
 				out of the nets in the communication graph and not necessarily the
 				total fan outs of individual vertices. Both the mean and (maxium) fan
 				out are shown.}
@@ -1127,7 +1136,8 @@
 						\label{fig:parse-dropped-packets}
 					\end{subfigure}
 					
-					\caption{Rates of packet dropping in `Nengo SpiNNaker' simulations
+					\caption[Packet dropping in `Nengo SpiNNaker' simulations]%
+					{Rates of packet dropping in `Nengo SpiNNaker' simulations
 					with different placements. Results shown jittered in the `X'
 					direction for clarity.}
 					\label{fig:nengo-dropped-packets}
@@ -1174,7 +1184,8 @@
 					\center
 					\buildrplot{figures/mu0-saturation.R}
 					
-					\caption{Simulation speeds at which the circuit simulator begins to
+					\caption[Packet dropping in `circuit simulator'.]%
+					{Simulation speeds at which the circuit simulator begins to
 					drop packets.}
 					\label{fig:mu0-saturation}
 				\end{figure}
@@ -1256,7 +1267,8 @@
 						\label{fig:placement-scalability-size-runtime}
 					\end{subfigure}
 					
-					\caption{Scalability with respect to graph size. Lines give mean
+					\caption[Placer scalability with respect to graph size.]%
+					{Scalability with respect to graph size. Lines give mean
 					values, bands give range of results. Some results are absent due to
 					out-of-memory errors during routing following placement of some
 					larger graphs.}
@@ -1326,7 +1338,8 @@
 						\label{fig:placement-scalability-fanout-runtime}
 					\end{subfigure}
 					
-						\caption{Scalability with respect to fan out. Lines give mean values,
+						\caption[Placer scalability with respect to fan out.]%
+						{Scalability with respect to fan out. Lines give mean values,
 						bands give range of results.}
 					\label{fig:placement-scalability-fanout}
 				\end{figure}

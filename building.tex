@@ -83,7 +83,8 @@
 				\label{fig:ring-folding-interleaved}
 			\end{subfigure}
 			
-			\caption{Folding and interleaving a ring network to reduce maximum cable
+			\caption[Folding and interleaving a ring network]%
+			{Folding and interleaving a ring network to reduce maximum cable
 			length.}
 			\label{fig:ring-folding}
 		\end{figure}
@@ -127,7 +128,8 @@
 				\label{fig:failing-to-fold-hex-toruses-z}
 			\end{subfigure}
 			
-			\caption{Schematics showing folding along each axis of a hexagonal
+			\caption[Folding each axis of a hexagonal torus topology]%
+			{Schematics showing folding along each axis of a hexagonal
 			torus topology failing to eliminate wrap-around connections.  Same-shaped
 			and coloured dots show the endpoints of two example wrap-around
 			connections.}
@@ -168,7 +170,8 @@
 				\label{fig:wrapped-triple-partitioning}
 			\end{subfigure}
 			
-			\caption{Partitioning of non-hexagonal (a) and hexagonal (b and c) torus
+			\caption[Partitioning of torus topologies into units.]%
+			{Partitioning of non-hexagonal (a) and hexagonal (b and c) torus
 			topologies into units.}
 			\label{fig:partitioning-options}
 		\end{figure}
@@ -276,7 +279,8 @@
 					\label{fig:hex-to-plane-node-slice}
 				\end{subfigure}
 				
-				\caption{Rectangularisation of parallelogram partitioned hexagonal
+				\caption[Rectangularisation of parallelogram partitioned toruses.]%
+				{Rectangularisation of parallelogram partitioned hexagonal
 				toruses. Thin lines show wrap-around links. Pointy-topped hexagons
 				represent parallelogram partitioned units.}
 				\label{fig:hex-to-plane-node}
@@ -310,7 +314,8 @@
 					\label{fig:hex-to-plane-slice}
 				\end{subfigure}
 				
-				\caption{Rectangularisation of wrapped triple partitioned hexagonal
+				\caption[Rectangularisation of wrapped triple partitioned toruses.]%
+				{Rectangularisation of wrapped triple partitioned hexagonal
 				toruses. Thin lines show wrap-around links.  Flat-topped hexagons
 				represent wrapped triple partitioned units.}
 				\label{fig:hex-to-plane}
@@ -348,7 +353,8 @@
 			\begin{figure}
 				\center
 				\buildfig{figures/slicing-examples.tex}
-				\caption{Patterns of wrap-around connections in sliced systems of
+				\caption[Patterns of wrap-around connections in sliced systems.]%
+				{Patterns of wrap-around connections in sliced systems of
 				various sizes.}
 				\label{fig:slicing-examples}
 			\end{figure}
@@ -394,7 +400,8 @@
 				
 				\vspace{1em}
 				
-				\caption{Uncrinkling rectangularised arrangements of units into a 2D
+				\caption[Uncrinkling units into a 2D grid.]%
+				{Uncrinkling rectangularised arrangements of units into a 2D
 				grid. Thick lines show how crinkled rows and columns of units are
 				uncrinkled.  Annotations show how the relative positions of units
 				change after uncrinkling.}
@@ -434,7 +441,8 @@
 					\label{fig:folding-sliced}
 				\end{subfigure}
 				
-				\caption{Schematic illustrating elimination of long wrap-around links
+				\caption[Elimination of long wrap-around links by folding.]%
+				{Schematic illustrating elimination of long wrap-around links
 				during folding. In each example a single link has been highlighted to
 				aid in following the process.}
 				\label{fig:folding}
@@ -465,7 +473,7 @@
 			
 			\label{sec:distortion}
 			
-			In each step of the transformation from hexagonal torus to a folded and
+			in each step of the transformation from hexagonal torus to a folded and
 			interleaved 2D grid the distances between connected units may increase.
 			When designing a system, the transformation with the least distortion
 			should be used to minimise the average length of the cables required.
@@ -549,7 +557,8 @@
 					\bottomrule
 				\end{tabular}
 				
-				\caption{Recommended transformation for the two partitioning schemes
+				\caption[Recommended transformations for folding hexagonal toruses.]%
+				{Recommended transformation for the two partitioning schemes
 				for different aspect ratios.}
 				\label{tab:transform-recommended}
 			\end{table}
@@ -591,7 +600,8 @@
 				\center
 				\buildfig{figures/cabinetisation.tex}
 				
-				\caption{Mapping from the abstract folded and interleaved 2D grid
+				\caption[Mapping cabling from abstract to physical space.]%
+				{Mapping from the abstract folded and interleaved 2D grid
 				layout into physical cabinet and frame positions. Arrows indicate the
 				order in which units (boards) are mapped into each frame, from
 				left-to-right.}
@@ -606,7 +616,8 @@
 				\center
 				\buildfig{figures/million-core-machine.tex}
 				
-				\caption{Cabling plan for a \num{1200}~board (\num{1036800}~core)
+				\caption[Cabling plan for a \num{1200}~board SpiNNaker machine.]%
+				{Cabling plan for a \num{1200}~board (\num{1036800}~core)
 				SpiNNaker machine.}
 				\label{fig:million-core-machine}
 			\end{figure}
@@ -626,8 +637,9 @@
 				\center
 				\buildfig{figures/wire-length-histogram.tex}
 				
-				\caption{Histogram of connection distances in a one-million core
-				SpiNNaker machine annotated with the selected cable lengths.}
+				\caption[Cable lengths in a \num{1200}~board SpiNNaker machine.]%
+				{Histogram of connection distances in a \num{1200} board SpiNNaker
+				machine annotated with the selected cable lengths.}
 				\label{fig:wire-length-histogram}
 				
 			\end{figure}
@@ -681,7 +693,7 @@
 					\label{fig:bgWiringInstallation}
 				\end{subfigure}
 				
-				\caption{BlueGene/Q cable installation \cite{cscs13}}
+				\caption{BlueGene/Q cable installation \cite{cscs13}.}
 				\label{fig:bgWiring}
 			\end{figure}
 			
@@ -742,7 +754,8 @@
 					\label{fig:interactive-wiring-guide-gui}
 				\end{subfigure}
 				
-				\caption{Interactive wiring software guides cable installation.}
+				\caption[$\approx \pi$ Interactive wiring software guides cable installation.]%
+				{Interactive wiring software guides cable installation.}
 				\label{fig:interactive-wiring-guide}
 			\end{figure}
 			
@@ -777,7 +790,8 @@
 					\bottomrule
 				\end{tabular}
 				
-				\caption{Cable installation times for various sizes of SpiNNaker
+				\caption[Cable installation times for various SpiNNaker machines.]%
+				{Cable installation times for various sizes of SpiNNaker
 				machine.}
 				\label{tab:install-time}
 			\end{table}
@@ -785,7 +799,8 @@
 			\begin{figure}
 				\buildfig{figures/install-histogram.tex}
 				
-				\caption{Histogram of cable installation times for the two cabinet
+				\caption[Two-cabinet SpiNNaker cable installation times.]%
+				{Histogram of cable installation times for the two cabinet
 				SpiNNaker system.}
 				\label{fig:install-histogram}
 			\end{figure}

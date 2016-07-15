@@ -43,7 +43,8 @@
 		\begin{figure}
 			\center
 			\buildfig{figures/mesh-topology-coordinates.tex}
-			\caption{An example 2D mesh network with example shortest-path routes
+			\caption[Shortest path routes in a 2D mesh network.]%
+			{An example 2D mesh network with example shortest-path routes
 			from `A' to `B' and `B' to `C'.}
 			\label{fig:mesh-topology-coordinates}
 		\end{figure}
@@ -126,7 +127,8 @@
 					\label{fig:distance-map-torus}
 				\end{subfigure}
 				
-				\caption{Plots showing the magnitude of shortest path vectors in a 2D
+				\caption[Magnitudes of shortest path vectors in a 2D mesh.]%
+				{Plots showing the magnitude of shortest path vectors in a 2D
 				(non-hexagonal) topology from various locations marked
 				{\color{red}$\times$}.  Darker areas are further away. Contour lines show
 				equidistant points.}
@@ -219,7 +221,8 @@
 					\label{fig:distance-map-hex-torus}
 				\end{subfigure}
 				
-				\caption{Plots showing the magnitude of shortest path vectors in a
+				\caption[Magnitudes of shortest path vectors in a hexagonal torus.]%
+				{Plots showing the magnitude of shortest path vectors in a
 				hexagonal torus topology from various locations marked
 				{\color{red}$\times$}.  Darker areas are further away. Contour lines show
 				equidistant points.}
@@ -295,8 +298,9 @@
 						
 					\end{tikzpicture}
 					
-					\caption{The twelve candidate shortest-path vectors considered by INSEE
-					represented as dimension-order routes. $W=H=8$,
+					\caption[The twelve candidate vectors considered by the INSEE method.]%
+					{The twelve candidate shortest-path vectors considered by the INSEE
+					method represented as dimension-order routes. $W=H=8$,
 					$(\Delta_\textrm{X},\Delta_\textrm{Y}) = (5, 3)$ and
 					$(\Delta'_\textrm{X},\Delta'_\textrm{Y}) = (-3, -5)$.}
 					\label{fig:insee-vector-candidates}
@@ -381,7 +385,8 @@
 				\center
 				\buildfig{figures/shortest-path-regions.tex}
 				
-				\caption{Hexagonal torus topologies of various aspect ratios divided
+				\caption[The four regions defined by the IQ method.]%
+				{Hexagonal torus topologies of various aspect ratios divided
 				into regions in which a particular pair of dimensions is used.}
 				\label{fig:shortest-path-regions}
 			\end{figure}
@@ -507,7 +512,8 @@
 				\center
 				\buildrplot{figures/shortest-path-vector-runtimes.R}
 				
-				\caption{Mean runtime of each shortest path vector function. Error bars
+				\caption[Mean runtime of each shortest path vector function.]%
+				{Mean runtime of each shortest path vector function. Error bars
 				indicate the range of the mean runtimes of the fifty
 				3-billion-combination experiments.}
 				\label{fig:shortest-path-vector-runtimes}
@@ -542,7 +548,8 @@
 				\center
 				\buildfig{figures/spiralling.tex}
 				
-				\caption{Distinct shortest path vectors between two points, all with
+				\caption[Distinct shortest path vectors in non-square topologies.]%
+				{Distinct shortest path vectors between two points, all with
 				magnitude 11.}
 				\label{fig:spiralling}
 			\end{figure}

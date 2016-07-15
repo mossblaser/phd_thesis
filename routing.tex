@@ -96,7 +96,8 @@
 					\label{fig:simple-routers-dor}
 				\end{subfigure}
 				
-				\caption{Example multicast routes produced by merging together unicast
+				\caption[Multicast routes produced by merging unicast routes.]%
+				{Example multicast routes produced by merging together unicast
 				routes from a central source node to each destination node.}
 				\label{fig:simple-routers}
 			\end{figure}
@@ -138,7 +139,8 @@
 					\label{fig:search-regions-ner}
 				\end{subfigure}
 				
-				\caption{The ESPR and NER algorithms attempt to connect the node marked
+				\caption[The ESPR and NER multicast routing algorithms.]%
+				{The ESPR and NER algorithms attempt to connect the node marked
 				`D' to the closest node in the shaded region which is connected to the
 				source node, `S'. If no connected node is found in the shaded region, the
 				LDFR route is taken to `S'. The dotted line indicates the route chosen
@@ -173,7 +175,8 @@
 				\center
 				\buildfig{figures/ring-deadlock.tex}
 				
-				\caption{A deadlock in a ring network where each node is waiting for
+				\caption[A deadlock in a ring network.]%
+				{A deadlock in a ring network where each node is waiting for
 				the next to accept a packet before accepting any further packets.}
 				\label{fig:ring-deadlock}
 			\end{figure}
@@ -202,7 +205,8 @@
 				\center
 				\buildfig{figures/deadlock-free-dor.tex}
 			
-				\caption{Deadlock-free routing of two example routes using DOR in a 2D
+				\caption[Deadlock-free routing using DOR in a 2D mesh topology.]%
+				{Deadlock-free routing of two example routes using DOR in a 2D
 				mesh topology. The numbers of the hops taken by each route are given on
 				the right.}
 				\label{fig:deadlock-free-dor}
@@ -220,7 +224,8 @@
 				\center
 				\buildfig{figures/lamb-nodes.tex}
 				
-				\caption{`Lamb' nodes may be disabled to ensure DOR will never
+				\caption[Avoiding faults using `lamb' nodes and DOR.]%
+				{`Lamb' nodes may be disabled to ensure DOR will never
 				encounter a fault.}
 				\label{fig:lamb-nodes}
 			\end{figure}
@@ -361,7 +366,8 @@
 				\label{fig:pgs-repair-colouring-fix2}
 			\end{subfigure}
 			
-			\caption{PGS repair example showing a disconnected multicast route from A
+			\caption[PGS repair example.]%
+			{PGS repair example showing a disconnected multicast route from A
 			to B, C, D, E and F. {\color{red}$\times$} indicates a broken link.}
 			\label{fig:pgs-repair-colouring-steps}
 		\end{figure}
@@ -420,7 +426,8 @@
 				\center
 				\buildfig{figures/traffic-distribution-centroids.tex}
 				
-				\caption{An example of a 3-centroid traffic distribution. Traffic is
+				\caption[An example of a 3-centroid traffic distribution.]%
+				{An example of a 3-centroid traffic distribution. Traffic is
 				sent by the node at the position marked with an {\color{red}$\times$}
 				to nodes chosen randomly with nodes in lighter areas being selected
 				with a higher probability.}
@@ -543,7 +550,8 @@
 				\center
 				\buildrplot{figures/routing-runtimes.R}
 				
-				\caption{Mean runtime of NER routing and PGS repair. Bars are stacked
+				\caption[Mean runtime of NER routing and PGS repair.]%
+				{Mean runtime of NER routing and PGS repair. Bars are stacked
 				and do not overlap. Error bars indicate 95\% confidence interval.}
 				\label{fig:routing-runtimes}
 			\end{figure}
@@ -613,7 +621,8 @@
 				\center
 				\buildrplot{figures/routing-entries.R}
 				
-				\caption{Violin plot showing the distribution of maximum routing table
+				\caption[Routing table sizes for \num{1000} random networks.]%
+				{Violin plot showing the distribution of maximum routing table
 				sizes for \num{1000} random networks. The red line at \num{1024}
 				entries indicates the size of SpiNNaker's routing tables.}
 				\label{fig:routing-entries}
@@ -650,7 +659,8 @@
 					\label{fig:hss-link-resource-usage}
 				\end{subfigure}
 				
-				\caption{The impact of a HSS link fault on routing table usage and
+				\caption[The impact of a HSS link fault.]%
+				{The impact of a HSS link fault on routing table usage and
 				congestion. Each hexagon represents a single chip, the red line
 				indicates the chip-to-chip connections broken by the HSS link fault.}
 				\label{fig:hss-link-usage}
@@ -692,7 +702,8 @@
 					\center
 					\buildrplot{figures/routing-resource.R}
 					
-					\caption{Violin plots showing the distribution of maximum
+					\caption[Distribution of routes-per-chip for \num{1000} random networks.]%
+					{Violin plots showing the distribution of maximum
 					routes-per-chip for \num{1000} random networks.}
 					\label{fig:routing-resource}
 				\end{figure}
@@ -737,7 +748,8 @@
 					\center
 					\buildrplot{figures/routing-hardware.R}
 					
-					\caption{Maximum throughput achieved by \num{100} random traffic
+					\caption[Maximum throughput achieved on SpiNNaker.]%
+					{Maximum throughput achieved by \num{100} random traffic
 					patterns running on SpiNNaker. The dots show the recorded result
 					(jittered in the `X' direction for clarity) and the lines show the
 					mean.}
