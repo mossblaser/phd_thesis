@@ -1,7 +1,15 @@
 \chapter{Minimising hexagonal mesh coordinates}
 	\label{app:minimal-hex-coordinates}
 	
-	TODO: THE WHOLE THING REALLY...
+	As in conventional mesh and torus topologies, coordinates in a hexagonal
+	torus topology are given in terms of the offset of a point from the origin
+	along each axis of the topology. Hexagonal topologies, however, unusually
+	have three non-orthogonal axes. In a conventional 2D topology, for example,
+	moving along the X axis does not alter your position on the Y axis because
+	the X and Y axes are orthogonal. In a hexagonal coordinate system, moving
+	along any of the three axes results in some movement in the other two. A
+	consequence of this is that multiple coordinates may exist for the same
+	position.
 	
 	\begin{figure}
 		\center
@@ -12,19 +20,55 @@
 		\label{fig:hex-mesh-loop}
 	\end{figure}
 	
-	Unlike (non-hexagonal) mesh topologies, the dimensions of a hexagonal
-	mesh are \emph{non-orthogonal}, the most notable side-effect of which is
-	that there are an infinite number of vectors (of an infinite number of
-	lengths) between a given pair of points. For example the vector $(3, 2,
-	1)$ also reaches `B' from `A' but does so in six hops. The reason for
-	this phenomenon is illustrated in figure \ref{fig:hex-mesh-loop} which
-	shows how the vector $(1, 1, 1)$ results in no movement. As a result,
-	adding or subtracting any multiple of $(1, 1, 1)$ from a vector yields an
-	equivalent, yet different, vector. For example, given our original vector
-	from `A' to `B', a new vector can be produced like so:
-	%
-	\begin{equation} (2, 1, 0) - (1, 1, 1) = (1, 0, -1) \end{equation}
-	%
-	This new vector yields routes requiring only two hops compared with three
-	for the original vector. Subtracting $(1, 1, 1)$ again, however, produces
-	$(0, -1, -2)$ with a greater magnitude of three.
+	Consider the vector $(1,1,1)$ which takes one hop along each axis.
+	Figure~\ref{fig:hex-mesh-loop} illustrates how this vector takes us back to
+	our starting point after three hops. Because, like $(0,0,0)$, this vector
+	results in no movement, it may be added or subtracted to any existing vector
+	or coordinate without changing the meaning of the vector. Doing so, however,
+	clearly has some impact on the magnitude of the vector. For example, the
+	coordinate vector $(2, -3, -1)$ has magnitude of 6. Adding $(1,1,1)$ results
+	in a new, equivalent vector, $(3, -2, 0)$, with a reduced magnitude of 5.
+	Adding $(1,1,1)$ once more produces the vector $(4, -1, 1)$ of magnitude 6
+	again.
+	
+	In a hexagonal mesh, every point has a unique vector whose magnitude is
+	minimal. To demonstrate this by cases, consider:
+	
+	\begin{itemize}
+	
+		\item If a vector has three positive elements, subtracting $(1,1,1)$
+		\emph{reduces} the magnitude of the vector by three overall.
+		
+		\item If a vector has two positive elements, subtracting $(1,1,1)$
+		decreases the magnitude of those two elements and increases the magnitude
+		of the remaining element resulting in a net \emph{reduction} in magnitude
+		of one.
+		
+		\item If a vector has only one positive, non-zero element, subtracting
+		$(1,1,1)$ decreases the magnitude of that element and increases the
+		magnitude of the remaining two resulting in a net \emph{increase} in
+		magnitude of one.
+		
+		\item Similar arguments may be made for vectors with negative elements and
+		the addition of $(1,1,1)$.
+	
+	\end{itemize}
+	
+	These cases indicate that a vector containing at least one zero element with
+	the remaining elements of opposite sign are minimal since adding or
+	subtracting $(1,1,1)$ will always increase the magnitude of the vector.
+	
+	To minimise a vector in a hexagonal mesh topology, the following function may
+	be used, producing a unique coordinate vector for any given point.
+	
+	\begin{equation*}
+		\operatorname{minimiseVector}(x,y,z) =
+			(x,y,z) - \operatorname{median}(x,y,z) \cdot (1,1,1)
+	\end{equation*}
+	
+	As an aside, minimising a hexagonal coordinate vector is not the only way to
+	determine a unique coordinate for a given point. Given a vector of the form
+	$(x, y, z)$, subtracting $(z,z,z)$ will result in a vector of the form $(x',
+	y', 0)$. Because this form mimics the appearance of a standard 2D coordinate
+	system while uniquely identifying points, it is widely used as a convenient
+	and intuitive addressing scheme by SpiNNaker's system software.

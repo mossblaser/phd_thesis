@@ -1,57 +1,43 @@
-\begin{tikzpicture}[thick, scale=1.5, hexagonXYZ]
+\pgfmathsetmacro{\scale}{1.0}
+\begin{tikzpicture}[thick, scale=\scale, hexagonXYZ]
+	
 	\pgfmathtruncatemacro{\width}{4}
 	\pgfmathtruncatemacro{\height}{4}
 	
-	% Clipping
-	\clip (1.5, 1.5) --
-	    ++(2, 0) --
-	    ++(0, 2) --
-	    ++(-2, 0) --
-	      cycle;
-	
-	% Links
-	\begin{scope}[help lines]
-		\foreach \x in {1,...,\width}{
-			\foreach [count=\y] \yy in {2,...,\height}{
-				\draw (\x, \y) -- (\x, \yy);
-			}
-		}
-		\foreach \y in {1,...,\height}{
-			\foreach [count=\x] \xx in {2,...,\width}{
-				\draw (\x, \y) -- (\xx, \y);
-			}
-		}
-		\foreach [count=\x] \xx in {2,...,\width}{
-			\foreach [count=\y] \yy in {2,...,\height}{
-				\draw (\x, \y) -- (\xx, \yy);
-			}
-		}
-	\end{scope}
-	
-	% Nodes
 	\foreach \x in {1,...,\width}{
 		\foreach \y in {1,...,\height}{
-			\node (node\x\y)
-			      [ fill
-			      , circle
-			      , minimum size=0.5em
+			\node [ draw
+			      , hexagon
 			      , inner sep=0
+			      , minimum width=\scale * 1cm
+			      , help lines
 			      ]
-			      at (\x, \y)
+			      at (\x, \y, 0)
 			      {};
 		}
 	}
 	
-	% Route X+
-	\begin{scope}[ -{>[length=0.5em, width=0.5em]}
-	             , line width=0.2em
-	             , font=\footnotesize
-	             , inner sep=0.2em
-	             ]
-		\draw (node22) -- node [hexagonBoardXYZ,shift={(0, -0.3, 0)}] {X$^+$} (node32);
-		\draw (node32) -- node [hexagonBoardXYZ,shift={(0, 0, -0.3)}] {~Y$^+$} (node33);
-		\draw (node33) -- node [hexagonBoardXYZ,shift={(-0.3, 0, 0)}] {Z$^+$} (node22);
+	\begin{scope}[inner sep=0]
+		\node [hexagon] at (2, 2, 0) (n1) {};
+		\node [hexagon] at (3, 2, 0) (n2) {};
+		\node [hexagon] at (3, 3, 0) (n3) {};
 	\end{scope}
+	
+	\begin{scope} [thick]
+		\draw [->]
+		      (n1.side south)
+		      -- node [anchor=north, inner sep=0.2cm] {\contour{white}{X}}
+		      (n2.side south west);
+		\draw [->]
+		      (n2.side north east)
+		      -- node [anchor=west, inner sep=0.2cm] {\contour{white}{Y}}
+		      (n3.side east);
+		\draw [->]
+		      (n3.side west)
+		      -- node [anchor=south east, inner sep=0.1cm] {\contour{white}{Z}}
+		      (n1.side north);
+	\end{scope}
+	
 \end{tikzpicture}
 
 
