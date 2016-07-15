@@ -4,13 +4,12 @@
 	
 	The nodes in super computer networks are usually relatively small, for
 	example in SpiNNaker each node is a single chip. To allow several nodes to
-	share resources such as power supplies and simplify construction. Typically
-	tens of nodes are packed together into a single unit such as a circuit board
-	or server blade to simplify assembly and share common power and cooling
-	resources \cite{gilge14,ajima12}. In commercial super computers built on
-	non-hexagonal torus topologies, each unit's represents a hypercube partition
-	of the overall topology as illustrated in figure
-	\ref{fig:hypercube-partitioning} \cite{chen11,ajima12}.
+	share resources such as power supplies and simplify construction tens of
+	nodes are typically packed together into a single unit such as a circuit
+	board or server blade \cite{gilge14,ajima12}. In commercial super computers
+	built on non-hexagonal torus topologies, each unit represents a hypercube
+	partition of the overall topology as illustrated in figure
+	\ref{fig:apdx-hypercube-partitioning} \cite{chen11,ajima12}.
 	
 	\begin{figure}
 		\center
@@ -27,34 +26,33 @@
 			\label{fig:apdx-parallelogram-partitioning}
 		\end{subfigure}
 		
-		\caption[Torus partitioning.]%
-		{Conventional hypercube topology partitioning (a) and the
-		hexagonal torus topology analogue (b).}
+		\caption{Partitioning schemes for 2D and hexagonal torus topologies.}
 		\label{fig:apdx-partitioning-options}
 	\end{figure}
 	
 	
 	The analogue of this scheme in a hexagonal torus topology is a parallelogram
-	as illustrated in figure~\ref{fig:parallelogram-partitioning}.  Each
+	as illustrated in figure~\ref{fig:apdx-parallelogram-partitioning}.  Each
 	partition connects to six neighbouring partitions and, unlike hypercube
 	partitions, the number of connections to each is imbalanced.  Specifically
-	the partitions above-right and below-left are connected by only one link
-	each. The consequence is potentially a need for multiple interconnect
-	technologies if connections between partitions are concentrated into single
-	connections as in SpiNNaker (see chapter~\ref{sec:background}). This adds
-	both to design complexity and system cost.
+	the partitions above-right and below-left are connected by only one link each
+	while others are connected by many. As a consequence multiple interconnect
+	technologies may be needed if connections between partitions are concentrated
+	into single connections, as in SpiNNaker (see chapter~\ref{sec:background}).
+	This adds both to design complexity and system cost.
 	
 	In this appendix, I describe how and why the `wrapped triple' partitioning
-	scheme devised by Davidson works \cite{davidsonWiring}.
+	scheme devised by Davidson for SpiNNaker works \cite{davidsonWiring}.
 	
 	\section{Tiling}
 		
 		For a particular configuration of nodes to form a valid partition, it must
 		be possible to use this configuration to `tile' a hexagonal torus. In many
 		of the figures in this thesis, a `pointy-topped' hexagon is used to
-		represent chips in a hexagonal torus resulting in a parallelogram-shaped
-		arrangement. Any partition which shares the translational symmetry of a
-		pointy-topped hexagon must also tile a hexagonal torus.
+		represent a chip in a hexagonal torus which is drawn by convention in a
+		parallelogram-shaped arrangement. Any partition which shares the
+		translational symmetry of a pointy-topped hexagon must also tile a
+		hexagonal torus.
 		
 		\begin{figure}
 			\center
@@ -68,51 +66,51 @@
 			\center
 			\buildfig{figures/parallelogram-tiling.tex}
 			
-			\caption{Visual proof that a parallelogram shares translational symmetry
+			\caption[A parallelogram tiles a hexagonal torus.]%
+			{Visual proof that a parallelogram shares translational symmetry
 			with a pointy-topped hexagon.}
 			\label{fig:parallelogram-tiling}
 		\end{figure}
 		
-		For example, in figure~\ref{fig:tiling-a-torus} we can see that $2\times2$
-		parallelograms can tile a $9\times9$ hexagonal torus topology. In
-		figure~\ref{fig:parallelogram-tiling}, we will see how a parallelogram
-		partition shares its translational symmetry with a pointy-topped hexagon.
-		
-		In figure~\ref{fig:parallelogram-tiling}a, the $2\times2$ partition is
-		shown with each node shaded differently and in
+		For example, in figure~\ref{fig:tiling-a-torus} we can see that a
+		$2\times2$ parallelograms can tile a $9\times9$ hexagonal torus topology.
+		In figure~\ref{fig:parallelogram-tiling}, we will demonstrate that this
+		parallelogram partition shares its translational symmetry with a
+		pointy-topped hexagon. In figure~\ref{fig:parallelogram-tiling}a, the
+		$2\times2$ partition is shown with each node shaded differently and in
 		figure~\ref{fig:parallelogram-tiling}b, a pointy-topped hexagon has been
-		superimposed. By tiling several copes of this partition
+		superimposed. By tiling several copes of the partition
 		(figure~\ref{fig:parallelogram-tiling}c), we can see that repeating pattern
-		of the parallelogram matches the repeating pattern of the pointy-topped
-		hexagon. We refer to this as the parallelogram sharing the translational
-		symmetry of a pointy-topped hexagon.
+		of the parallelogram matches that of the pointy-topped hexagon. I refer to
+		this as the parallelogram sharing the translational symmetry of a
+		pointy-topped hexagon.
 		
 		Notice that the parallelogram partition can be redrawn such that all parts
-		protruding from the overlaid pointy-topped hexagon wrap around, filling the
-		gaps on opposite sides to produce a pointy-topped hexagon shaped tile as
+		protruding from the overlaid pointy-topped hexagon wrap around to fill the
+		gaps on opposite sides producing a pointy-topped hexagon shaped tile as
 		shown in figure~\ref{fig:parallelogram-tiling}d.
 		
 	
 	\section{How \emph{not} to tile a hexagonal torus}
 		
-		\begin{figure}
+		\begin{figure}[h]
 			\center
 			\buildfig{figures/wrapped-hexagon-tiling.tex}
 			
-			\caption{Visual proof that a wrapped hexagon does not share translational
+			\caption[A wraped hexagon does not tile a hexagonal torus.]%
+			{Visual proof that a wrapped hexagon does not share translational
 			symmetry with a pointy-topped hexagon.}
 			\label{fig:wrapped-hexagon-tiling}
 		\end{figure}
 	
 		An `obvious' partitioning scheme for a hexagonal topology which evenly
 		distributes links between six sides is to use a hexagonal partition. Such a
-		partition might na\"ively be formed by wrapping `layers' of hexagons around a
-		single hexagon. Figure~\ref{fig:wrapped-hexagon-tiling}a illustrates a
-		simple partition with a single layer of hexagons surrounding a central
-		hexagon.
+		partition might na\"ively be formed by wrapping `layers' of hexagons around
+		a central hexagon. Figure~\ref{fig:wrapped-hexagon-tiling}a illustrates a
+		simple partition with a single layer of hexagons.
 	
 		While this type of partition exposes six equally-sized edges (satisfying
-		the requirement that connections between boards should have a balanced
+		the requirement that connections between partitions should have a balanced
 		number of connections) this partition does not share translational symmetry
 		with a pointy-topped hexagon. Figure~\ref{fig:wrapped-hexagon-tiling}b
 		shows a best-fitting pointy-topped hexagon superimposed on the partition.
@@ -121,8 +119,9 @@
 		indicating it does not share the same translational symmetry.
 		
 		Consequently, it is not possible to construct a hexagonal torus from
-		partitions of this shape (though it is possible to construct a related, but
-		different topology, the H-torus, see \S\ref{sec:hex-vs-h-torus}).
+		partitions of this shape. As an aside, it is possible to construct a
+		H-torus topology, a related, but different, topology mentioned in
+		\S\ref{sec:hex-vs-h-torus}.
 	
 	\section{Triads of triples}
 		
@@ -130,7 +129,8 @@
 			\center
 			\buildfig{figures/wrapped-triple-tiling.tex}
 			
-			\caption{Visual proof that a triple shares the same translational
+			\caption[Triples share translational symetry with flat-topped hexagons.]%
+			{Visual proof that a triple shares the same translational
 			symmetry as a flat-topped hexagon.}
 			\label{fig:wrapped-triple-tiling}
 		\end{figure}
@@ -138,9 +138,9 @@
 		A `triple' is a partition made up of three nodes arranged as in
 		figure~\ref{fig:wrapped-triple-tiling}a. This partition's edges may be
 		broken into six groups with an equal number of connections, meeting the
-		requirements set out at the beginning of this appendix. A triple partition,
-		however, does not share translational symmetry with a pointy-topped hexagon
-		but \emph{does} share it with a `flat-topped' hexagon (the
+		requirements set out at the beginning of this appendix. A triple, however,
+		does not share translational symmetry with a pointy-topped hexagon but
+		\emph{does} share it with a `flat-topped' hexagon (the
 		\SI{30}{\degree}-rotated cousin of the pointy-topped hexagon) as
 		demonstrated in figures~\ref{fig:wrapped-triple-tiling}b and
 		\ref{fig:wrapped-triple-tiling}c.
@@ -149,19 +149,20 @@
 			\center
 			\buildfig{figures/triad-tiling.tex}
 			
-			\caption[Triads tile a hexagonal torus topology.]%
-			{Demonstration that a triad tiles a hexagonal torus topology.}
+			\caption[Triads of triples tile a hexagonal torus.]%
+			{Demonstration that a triad shares translational symmetry with a
+			pointy-topped hexagon.}
 			\label{fig:triad-tiling}
 		\end{figure}
 		
 		Because a triple made up of pointy-topped hexagons tiles like a flat-topped
 		hexagon, a triple made up of flat-topped hexagons must share translational
 		symmetry with a pointy-topped hexagon (turn
-		figure~\ref{fig:wrapped-triple-tiling} \SI{30}{\degree} to visualise this).
+		figure~\ref{fig:wrapped-triple-tiling} \SI{30}{\degree} to verify this).
 		It follows that three triples arranged as in figure~\ref{fig:triad-tiling}
 		-- a `triad' -- share translational symmetry with pointy-topped hexagons.
-		
-		Consequently, a triple may be used to tile a hexagonal torus topology 
+		Consequently, a triad of triples may be used to tile a hexagonal torus
+		topology 
 	
 	\section{Wrapped triples}
 		
@@ -169,7 +170,8 @@
 			\center
 			\buildfig{figures/wrapped-triple.tex}
 			
-			\caption{A wrapped triple with four layers, labelled by layer number.}
+			\caption[A wrapped triple with four layers.]%
+			{A wrapped triple with four layers, labelled by layer number.}
 			\label{fig:wrapped-triple}
 		\end{figure}
 		
@@ -177,10 +179,10 @@
 		tiled using triads of triples. To increase the number of nodes in the
 		partition, layers of hexagons may be wrapped around a triple to form a
 		`wrapped triple' as in figure~\ref{fig:wrapped-triple}. Wrapped triples
-		have exactly balanced communication requirements to their neighbouring
-		partitions.  Triads of wrapped-triples share translational symmetry with a
-		pointy topped hexagon and thus may be used to tile a hexagonal torus
-		topology.
+		have the same balanced communications as triples and triads of
+		wrapped-triples also share translational symmetry with a pointy topped
+		hexagon. Therefore, triads of wrapped triples may be used to tile a
+		hexagonal torus topology.
 		
 		In SpiNNaker, the network is partitioned into four-layer wrapped triples
 		containing forty~eight nodes each.
