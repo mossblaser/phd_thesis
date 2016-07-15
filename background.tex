@@ -428,6 +428,8 @@
 			\label{fig:topo-compare}
 		\end{figure}
 		
+		\label{sec:hex-vs-h-torus}
+		
 		The hexagonal torus topology used by SpiNNaker and the subject of much of
 		this thesis is not to be confused with the `H-torus' topology.  This
 		topology also uses a hexagonal tiling of nodes and even wraps this tiling
@@ -481,8 +483,9 @@
 		as a $12\times12$ hexagonal torus.
 		
 		Though the chips are physically arranged in a (nearly) $7\times7$ grid on
-		each SpiNNaker board, they logically form a `wrapped triple', a shape
-		described in detail in appendix \ref{sec:partitioning} and illustrated in
+		each SpiNNaker board, they logically form a `wrapped triple'
+		\cite{davidsonWiring}, a shape described in detail in appendix
+		\ref{sec:partitioning} and illustrated in
 		figure~\ref{fig:sata-connections}. Logically, the chips at the periphery of
 		each board connect to their neighbours on adjacent boards. Normally
 		SpiNNaker chips connect using a low power, asynchronous 2-of-7 protocol

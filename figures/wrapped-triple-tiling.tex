@@ -3,7 +3,7 @@
 	
 	% Due to bad automatic clipping...
 	\clip [scale=\scale]
-	      (-8.75,-4.2) rectangle
+	      (-7.25,-4.2) rectangle
 	   ++ (15,7.5);
 	
 	% Scaling factor for big flat-topped hexagons
@@ -83,27 +83,27 @@
 			      ;
 		}
 		
-		\tile{-4}{0}
+		\tile{-2.5}{0}
 		\node at (hex11 |- 0,-4.0) {(a)};
 		
-		\tileimposed{-3}{-1.5}
-		\draw [->,gray,thick]
-		      (hex11.corner 1)
-		      to [out=65,in=-65,looseness=5]
-		      (overlay.side south)
-		      ;
-		\draw [->,gray,thick]
-		      (hex00.corner 3)
-		      to [out=65+120,in=-65+120,looseness=5]
-		      (overlay.side north east)
-		      ;
-		\draw [->,gray,thick]
-		      (hex10.corner 5)
-		      to [out=65-120,in=-65-120,looseness=5]
-		      (overlay.side west)
-		      ;
-		
-		\node at (hex11 |- 0,-4.0) {(b)};
+		%\tileimposed{-3}{-1.5}
+		%\draw [->,gray,thick]
+		%      (hex11.corner 1)
+		%      to [out=65,in=-65,looseness=5]
+		%      (overlay.side south)
+		%      ;
+		%\draw [->,gray,thick]
+		%      (hex00.corner 3)
+		%      to [out=65+120,in=-65+120,looseness=5]
+		%      (overlay.side north east)
+		%      ;
+		%\draw [->,gray,thick]
+		%      (hex10.corner 5)
+		%      to [out=65-120,in=-65-120,looseness=5]
+		%      (overlay.side west)
+		%      ;
+		%
+		%\node at (hex11 |- 0,-4.0) {(b)};
 		
 		\tileimposed{+1}{+1}
 		\tileimposed{-1}{-1}
@@ -113,12 +113,12 @@
 		\tileimposed{-0}{-1}
 		\tileimposed{+0}{+0}
 		
-		\node at (hex11 |- 0,-4.0) {(c)};
+		\node at (hex11 |- 0,-4.0) {(b)};
 		
 		\begin{scope}[xshift=4.5cm]
 			\tileclip
 		\end{scope}
-		\node at (hex11 |- 0,-4.0) {(d)};
+		\node at (hex11 |- 0,-4.0) {(c)};
 	\end{scope}
 \end{tikzpicture}
 
