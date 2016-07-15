@@ -1,0 +1,179 @@
+\begin{tikzpicture}[scale=0.7]
+	
+	\pgfmathsetmacro{\mwidth}{2.5}
+	\pgfmathsetmacro{\mheight}{5}
+	\pgfmathsetmacro{\mdepth}{2}
+	\pgfmathsetmacro{\cabinetspacing}{1.7}
+	
+	\pgfmathtruncatemacro{\numperrow}{4}
+	\pgfmathtruncatemacro{\numrows}{4}
+	
+	\pgfmathtruncatemacro{\numframes}{5}
+	\pgfmathtruncatemacro{\numboards}{5}
+	
+	\tikzstyle{wire style}=[help lines]
+	
+	% #1 position (bottom left corner)
+	% #2 identifier
+	\newcommand{\machine}[2]{
+		% Fill
+		\fill [white]
+		      (#1)
+		      -- ++(\mwidth, 0, 0)
+		      -- ++(0, 0, -\mdepth)
+		      -- ++(0, \mheight, 0)
+		      -- ++(-\mwidth, 0, 0)
+		      -- ++(0, 0, \mdepth)
+		      -- cycle;
+		% Inner lines
+		\draw (#1)++(0, \mheight, 0)
+		      -- ++(\mwidth, 0, 0)
+		      -- ++(0, 0, -\mdepth)
+		      (#1)++(\mwidth, 0, 0)
+		      -- ++(0, \mheight);
+		% Outline
+		\draw [thick]
+		      (#1)
+		      -- ++(\mwidth, 0, 0)  coordinate (#2-bottom-left)
+		      -- ++(0, 0, -\mdepth)
+		      -- ++(0, \mheight, 0) coordinate (#2-top-right)
+		      -- ++(-\mwidth, 0, 0)
+		      -- ++(0, 0, \mdepth)
+		      -- cycle;
+		
+		\foreach \frame in {1,...,\numframes}{
+			\pgfmathsetmacro{\fperc}{\frame/(\numframes + 1)}
+			\foreach \board in {1,...,\numboards}{
+				\pgfmathsetmacro{\bperc}{\board/(\numboards + 1)}
+				\coordinate (#2-frame-\frame-board-\board) at
+				            ([shift={(\mwidth, \fperc*\mheight, \bperc*-\mdepth)}]#1);
+			}
+		}
+	}
+	
+	% #1 identifier
+	\newcommand{\machinecables}[1]{
+		% Y wires
+		\foreach [count=\f] \ff in {2,...,\numframes}{
+			\foreach \b in {1,...,\numboards}{
+				\draw [wire style]
+				      (#1-frame-\f-board-\b)
+				      .. controls +(0.1*\mwidth, 0, 0) and +(0.1*\mwidth, 0, 0) ..
+				      (#1-frame-\ff-board-\b);
+			}
+		}
+		% X wires
+		\foreach \f in {1,...,\numframes}{
+			\foreach [count=\b] \bb in {2,...,\numboards}{
+				\draw [wire style]
+				      (#1-frame-\f-board-\b)
+				      .. controls +(0.1*\mwidth, 0, 0) and +(0.1*\mwidth, 0, 0) ..
+				      (#1-frame-\f-board-\bb);
+			}
+		}
+		% Z wires
+		\foreach [count=\f] \ff in {2,...,\numframes}{
+			\foreach [count=\b] \bb in {2,...,\numboards}{
+				\draw [wire style]
+				      (#1-frame-\f-board-\b)
+				      .. controls +(0.1*\mwidth, 0, 0) and +(0.1*\mwidth, 0, 0) ..
+				      (#1-frame-\ff-board-\bb);
+			}
+		}
+	}
+	
+	% #1 identifier closer
+	% #2 identifier further
+	\newcommand{\rowmachinecables}[2]{
+		% X wires
+		\foreach \f in {1,...,\numframes}{
+			\draw [wire style]
+			      (#1-frame-\f-board-\numboards)
+			      .. controls +(0.1*\mwidth, 0, 0) and +(0.1*\mwidth, 0, 0) ..
+			      (#2-frame-\f-board-1);
+		}
+		% Z wires
+		\foreach [count=\f] \ff in {2,...,\numframes}{
+			\draw [wire style]
+			      (#1-frame-\f-board-\numboards)
+			      .. controls +(0.1*\mwidth, 0, 0) and +(0.1*\mwidth, 0, 0) ..
+			      (#2-frame-\ff-board-1);
+		}
+	}
+	
+	% #1 identifier left
+	% #2 identifier right
+	\newcommand{\interrowmachinecables}[2]{
+		\pgfmathsetmacro{\yoffset}{\mheight/\numframes}
+		\pgfmathsetmacro{\xoffset}{\mwidth*0.1}
+		
+		% X wires
+		\foreach \b in {1,...,\numboards}{
+			\draw [wire style]
+			      (#1-frame-\numframes-board-\b)
+			      .. controls +(45:0.1*\mwidth) and +(0, -0.1*\mwidth, 0) ..
+			      ([shift={(\xoffset,\yoffset,0)}]#1-frame-\numframes-board-\b)
+			      .. controls +(0, 0.1*\mwidth, 0) and +(0, 0.1*\mwidth, 0) ..
+			      ([shift={(0,\yoffset,0)}]#2-frame-\numframes-board-\b)
+			      .. controls +(-45:0.1*\mwidth) and +(45:0.1*\mwidth) ..
+			      (#2-frame-\numframes-board-\b);
+		}
+		% Z wires
+		\foreach [count=\b] \bb in {2,...,\numboards}{
+			\draw [wire style]
+			      (#1-frame-\numframes-board-\bb)
+			      .. controls +(45:0.1*\mwidth) and +(0, -0.1*\mwidth, 0) ..
+			      ([shift={(\xoffset,\yoffset,0)}]
+			       $(#1-frame-\numframes-board-\bb)!0.5!
+			        (#1-frame-\numframes-board-\b)$)
+			      .. controls +(0, 0.1*\mwidth, 0) and +(0, 0.1*\mwidth, 0) ..
+			      ([shift={(0,\yoffset,0)}]
+			       $(#2-frame-\numframes-board-\b)!0.5!
+			        (#2-frame-\numframes-board-\bb)$)
+			      .. controls +(-45:0.1*\mwidth) and +(45:0.1*\mwidth) ..
+			      (#2-frame-\numframes-board-\b);
+		}
+	}
+	
+	% #1 identifier left
+	% #2 identifier right
+	\newcommand{\rowinterrowmachinecables}[2]{
+		\pgfmathsetmacro{\xoffset}{\mwidth*0.1}
+		\pgfmathsetmacro{\yoffset}{\mheight/\numframes}
+		\pgfmathsetmacro{\zoffset}{\mdepth*0.1}
+		
+		\draw [wire style]
+		      (#1-frame-\numframes-board-1)
+		      .. controls +(45:0.1*\mwidth) and +(0, -0.1*\mwidth, 0) ..
+		      ([shift={(\xoffset,\yoffset,\zoffset)}]#1-frame-\numframes-board-1)
+		      .. controls +(0, 0.1*\mwidth, 0) and +(0, 0.1*\mwidth, 0) ..
+		      ([shift={(0,\yoffset,-\zoffset)}]#2-frame-\numframes-board-\numboards)
+		      .. controls +(-45:0.1*\mwidth) and +(45:0.1*\mwidth) ..
+		      (#2-frame-\numframes-board-\numboards);
+	}
+	
+	% Draw cabinets and non-inter-row wiring
+	\foreach \x in {1,...,\numrows}{
+		% Draw cabinets and internal wiring
+		\foreach \z in {1,...,\numperrow}{
+			\pgfmathsetmacro{\zz}{\numperrow - \z}
+			\machine{\x * \mwidth * \cabinetspacing, 0,\zz * -\mdepth}{machine-\x-\z}
+			\machinecables{machine-\x-\z}
+		}
+		
+		% Inter-cabinet within-row wiring
+		\foreach [count=\z] \zz in {2,...,\numperrow}{
+			\rowmachinecables{machine-\x-\zz}{machine-\x-\z}
+		}
+	}
+	
+	% Draw inter-row cabinets
+	\foreach [count=\x] \xx in {2,...,\numrows}{
+		\foreach \z in {1,...,\numperrow}{
+			\interrowmachinecables{machine-\x-\z}{machine-\xx-\z}
+		}
+		\foreach [count=\z] \zz in {2,...,\numperrow}{
+			\rowinterrowmachinecables{machine-\x-\z}{machine-\xx-\zz}
+		}
+	}
+\end{tikzpicture}

@@ -1,0 +1,89 @@
+\pgfmathsetmacro{\scale}{0.24}%
+\begin{tikzpicture}[thick, scale=\scale, line cap=round]
+	
+	% Drop a hexagon and advance by 'cur' the specified vector
+	% #1 advance vector x
+	% #2 advance vector y
+	% #3 advance vector z
+	% #4 label
+	\newcommand{\hex}[4]{
+		% Draw hexagon
+		\draw (center) ++([hexagonXYZ]\curchipx,\curchipy,\curchipz) coordinate (cur);
+		\node (#4) at (cur)
+		      [ hexagon
+		      , draw
+		      , thin
+		      , inner sep=0
+		      , minimum width=\scale*1cm
+		      ]
+		      {};
+		
+		% Move on
+		\pgfmathtruncatemacro{\x}{\curchipx + #1}
+		\pgfmathtruncatemacro{\y}{\curchipy + #2}
+		\pgfmathtruncatemacro{\z}{\curchipz + #3}
+		\global\let\curchipx=\x
+		\global\let\curchipy=\y
+		\global\let\curchipz=\z
+	}
+	
+	% #1 origin
+	% #2 Number of layers
+	% #3 label
+	\newcommand{\wrappedtriple}[3]{
+		\pgfmathtruncatemacro{\nlayers}{#2-1}
+		
+		\begin{scope}[hexagonXYZ]
+			\coordinate (center) at (#1);
+			\pgfmathtruncatemacro{\zero}{0}
+			\global\let\curchipx=\zero
+			\global\let\curchipy=\zero
+			\global\let\curchipz=\zero
+			\foreach \layer in {0,...,\nlayers}{
+				\ifthenelse{\layer < 1}{}{
+					\foreach \n in {1,...,\layer}{
+						\hex{0}{-1}{0}{#3-\layer--y-\n}
+					}
+				}
+				
+				\ifthenelse{\layer < 1}{}{
+					\foreach \n in {1,...,\layer}{
+						\hex{0}{0}{1}{#3-\layer-+z-\n}
+					}
+				}
+				
+				\foreach \n in {0,...,\layer}{
+					\hex{-1}{0}{0}{#3-\layer--x-\n}
+				}
+				
+				\ifthenelse{\layer < 1}{}{
+					\foreach \n in {1,...,\layer}{
+						\hex{0}{1}{0}{#3-\layer-+y-\n}
+					}
+				}
+				
+				\foreach \n in {0,...,\layer}{
+					\hex{0}{0}{-1}{#3-\layer--z-\n}
+				}
+				
+				\foreach \n in {0,...,\layer}{
+					\hex{1}{0}{0}{#3-\layer-+x-\n}
+				}
+			}
+		\end{scope}
+	}
+	
+	% Draw the triads of boards
+	\pgfmathsetmacro{\spacing}{4}
+	\pgfmathtruncatemacro{\width}{4}
+	\pgfmathtruncatemacro{\height}{2}
+	
+	\foreach \y in {1,...,\height}{
+		\foreach \x in {1,...,\width}{
+			\wrappedtriple{3*\spacing*\x + 0        ,3*\spacing*\y + 0,       0}{4}{\x\y1}
+			\wrappedtriple{3*\spacing*\x + -\spacing,3*\spacing*\y + 0,       \spacing}{4}{\x\y0}
+			\wrappedtriple{3*\spacing*\x + -\spacing,3*\spacing*\y + \spacing,0}{4}{\x\y2}
+		}
+	}
+
+\end{tikzpicture}
