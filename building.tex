@@ -90,8 +90,8 @@
 		\end{figure}
 		
 		In conventional torus topologies, the need for long cables is eliminated by
-		folding and interleaving units of the network \cite{dally04}. This process
-		is illustrated for a 1D torus topology (a ring network) in
+		folding and interleaving units of the network \cite[chapter~5]{dally04}.
+		This process is illustrated for a 1D torus topology (a ring network) in
 		\ref{fig:ring-folding}. A na\"ive arrangement of units in this topology
 		results in a long cable connecting the units at the ends of the ring
 		(figure~\ref{fig:ring-folding-row}).  To eliminate these long connections,
@@ -715,12 +715,12 @@
 			
 			Super computer architectures such as BlueGene/Q make use of large custom
 			`midplane' PCBs in place of some cables to interconnect units within a
-			cabinet \cite{prickett10}. This scheme can greatly reduce wiring
-			complexity since only coarser-grain, cabinet-to-cabinet connectivity is
-			implemented by cables. Unfortunately this technique is expensive and
-			constrains the dimensions of the network topology supported by the
-			machine. Since the SpiNNaker platform is designed to scale from desktop
-			machines to machine-room installations, this scheme is not practical.
+			cabinet \cite{milano13}. This scheme can greatly reduce wiring complexity
+			since only coarser-grain, cabinet-to-cabinet connectivity is implemented
+			by cables. Unfortunately this technique is expensive and constrains the
+			dimensions of the network topology supported by the machine. Since the
+			SpiNNaker platform is designed to scale from desktop machines to
+			machine-room installations, this scheme is not practical.
 			
 			\begin{figure}
 				\center

@@ -136,8 +136,8 @@
 		The SpiNNaker router employs an unconventional design which, despite its
 		compact size and small energy requirements, implements a flexible multicast
 		routing scheme. Unlike conventional routers which often employ hard-coded
-		routing rules \cite{dally04}, the SpiNNaker router uses a programmable
-		`routing table' to determine how packets should be forwarded.
+		routing rules \cite[chapter~8]{dally04}, the SpiNNaker router uses a
+		programmable `routing table' to determine how packets should be forwarded.
 		
 		In addition, to avoid deadlocks, SpiNNaker's router employs a simple
 		timeout-based mechanism which exploits the ability of neural networks to
@@ -382,21 +382,22 @@
 		Despite its unusual coordinate system, hexagonal torus topologies compare
 		favourably with more conventional network topologies such as 2D and 3D
 		toruses (sometimes known as 2-ary $N$-cubes and 3-ary $N$-cubes
-		respectively) \cite{dally04} illustrated in figure~\ref{fig:torus-compare}.
-		Compared with the 2D torus topology, a hexagonal torus has double the
-		bisection bandwidth even though it only requires 50\% more node-to-node
-		links \cite{navaridas09}.  Compared with a 3D torus topology, however, the
-		hexagonal torus topology has half the bisection bandwidth even though each
-		node has the same number of links. Once embedded into a real world data
-		centre, however, three, and higher-dimensional (and higher) torus
-		topologies become more expensive to construct in practice.  Since large
-		machine rooms approximate a 2D space, longer cables are required to
-		interconnect nodes which are adjacent in the higher dimensional space of
-		the network but not in a 2D projection. As chapter~\ref{sec:building}
-		demonstrates, hexagonal toruses may be assembled in a machine room -- in a
-		similar way to a 2D topology -- using only short cables. Overall, the
-		hexagonal torus topology achieves the scalability of a 2D torus while
-		gaining some of the bisection bandwidth benefits of the 3D torus topology.
+		respectively) \cite[chapters~3~and~5]{dally04} illustrated in
+		figure~\ref{fig:torus-compare}.  Compared with the 2D torus topology, a
+		hexagonal torus has double the bisection bandwidth even though it only
+		requires 50\% more node-to-node links \cite{navaridas09}.  Compared with a
+		3D torus topology, however, the hexagonal torus topology has half the
+		bisection bandwidth even though each node has the same number of links.
+		Once embedded into a real world data centre, however, three, and
+		higher-dimensional (and higher) torus topologies become more expensive to
+		construct in practice.  Since large machine rooms approximate a 2D space,
+		longer cables are required to interconnect nodes which are adjacent in the
+		higher dimensional space of the network but not in a 2D projection. As
+		chapter~\ref{sec:building} demonstrates, hexagonal toruses may be assembled
+		in a machine room -- in a similar way to a 2D topology -- using only short
+		cables. Overall, the hexagonal torus topology achieves the scalability of a
+		2D torus while gaining some of the bisection bandwidth benefits of the 3D
+		torus topology.
 		
 		Most torus topologies, including hexagonal 2D and 3D toruses, are related
 		to an equivalent `mesh' topology. Mesh topologies maintain the same general

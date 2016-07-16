@@ -24,12 +24,12 @@
 	will show, these algorithms are not portable and rely on, or attempt to work
 	around, specific features of their target network architecture. In
 	particular, existing work is dominated by the challenge of developing routing
-	schemes which avoid or resolve network deadlocks \cite{dally04}. Due to
-	SpiNNaker's unconventional use of timeout-based flow-control, it is not
-	subject to the routing restrictions present in other architectures intended
-	to cope with deadlocks. The post-processing technique proposed in this
-	chapter utilises SpiNNaker's built-in deadlock avoidance capability allowing
-	it to generate arbitrary routes to avoid faults.
+	schemes which avoid or resolve network deadlocks \cite[chapter~14]{dally04}.
+	Due to SpiNNaker's unconventional use of timeout-based flow-control, it is
+	not subject to the routing restrictions present in other architectures
+	intended to cope with deadlocks. The post-processing technique proposed in
+	this chapter utilises SpiNNaker's built-in deadlock avoidance capability
+	allowing it to generate arbitrary routes to avoid faults.
 	
 	To assess the performance of the proposed routing technique, a number of
 	experiments have been performed using both software models and SpiNNaker
@@ -446,7 +446,7 @@
 			\end{description}
 			
 			The uniform traffic pattern is widely used in networks research
-			\cite{dally04,davies12} while the 3-centroids model was developed
+			\cite[chapter~23]{dally04} while the 3-centroids model was developed
 			specifically to reproduce the traffic patterns found in the neural
 			applications SpiNNaker is designed for \cite{navaridas14}.
 			
@@ -695,8 +695,8 @@
 				The number of routes passing through the most-used link is recorded,
 				giving an indication of the peak congestion in the network.  In
 				general, network throughput is bounded by the slowest, or in this case,
-				most congested link in the system \cite{dally04} making this metric a
-				suitable proxy for peak throughput.
+				most congested link in the system \cite[chapter~1]{dally04} making this
+				metric a suitable proxy for peak throughput.
 				
 				\begin{figure}
 					\center

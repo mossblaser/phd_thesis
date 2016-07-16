@@ -42,7 +42,7 @@ where processor counts are growing exponentially \cite{meuer16j}, mimicking the
 growth of the number of components in the processors themselves predicted by
 Gordon Moore's famous `law' \cite{moore75}. As a result of this growth, the
 interconnection networks which enable these processors to work together have
-grown in importance \cite{dally04}.  Network designers must carefully balance
+grown in importance \cite{dally01}. Network designers must carefully balance
 performance against practicality and financial cost.  SpiNNaker's network is no
 exception to this rule and, as the systems scale up from desktop prototypes to
 machine-room scale installations, the reality of building and exploiting these
@@ -51,10 +51,10 @@ machines presents an array of challenges.
 As in all super computers, SpiNNaker's network interconnects its processors in
 a particular network topology which defines how different processors may
 communicate with each other. Unlike the tree and $N$-dimensional torus
-topologies found in contemporary super computers \cite{dally04}, SpiNNaker
-employs a `hexagonal torus topology'. In this topology, nodes in SpiNNaker's
-network fit together in a honeycomb-like pattern where messages may `hop' from
-node to node to reach their destination. As we will see in
+topologies found in contemporary super computers \cite[chapter~3]{dally04},
+SpiNNaker employs a `hexagonal torus topology'. In this topology, nodes in
+SpiNNaker's network fit together in a honeycomb-like pattern where messages may
+`hop' from node to node to reach their destination. As we will see in
 chapter~\ref{sec:background}, the hexagonal torus topology, in theory, sits at
 a `sweet spot' in terms of network performance and practicality. As the first
 known large-scale installation of the hexagonal torus topology, however, there
