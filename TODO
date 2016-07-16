@@ -1,4 +1,60 @@
-Known TODOs (more specific than just "Write the missing chapters")
-==================================================================
+TODOs
+=====
 
-* Move derivation of folding costs to appendix.
+* MOAR proof reading
+* Write acknowledgements
+* Add git revision to some page (title page?)
+* Add silly counts (figures? hexagons?)
+* Get technical feedback
+  - Ch 1: Introduction: Jim
+  - Ch 2: Background: Jim
+  - Ch 3: Wiring: Simon
+  - Ch 4: Shortest Paths: Mundy(?)
+  - Ch 5: Routing: Javier
+  - Ch 6: Placement: Mundy
+  - Ch 7: Conclusions: Jim
+  - Ap A: Partitioning: Jim, Simon
+  - Ap B: Minimising hex coordinates: Jim
+  - Ap C: Software: Jim
+* Collect & document experiments and results in a git repo
+  - Mapping used (SpiNNer example)
+  - Wire lengths (data)
+  - Install times (data)
+  - Shortest path correctness experiments
+  - Shortest path timing experiment
+  - Routing experiments (work out what these are and find the branches...)
+  - Fault experiment on SpiNNaker (network tester experiment)
+  - Experimental error script for cost functions
+  - Application netlists
+  - Patches for netlist dumping in Nengo & PyNN
+  - Placement static analysis scripts (apps + scalability + faults)
+  - Experiment automation for Nengo experiments
+  - MU0 data path circuit sim script
+* Upload thesis to GitHub
+
+Still-student TODOs
+===================
+
+* Rail card
+* OS map data
+
+Final TODOs
+===========
+
+* Git tag
+* Remove "Draft" footer
+* Check for orphans and widows
+* Check figure placement
+* Check for missing \cites and \refs
+* Check for line-wrapped/nonsensical figure/table list entries
+* Final proofing run
+* Check Figure "pi" is still in the right place...
+* Check PDF ToC
+
+Hand-in TODOs
+=============
+
+* Upload PDF to eSchollar/eProg/etc (3 days before!)
+* Print on good paper (Laser? Inkjet?)
+* Print cover sheet for inclusion with binding
+* Bind

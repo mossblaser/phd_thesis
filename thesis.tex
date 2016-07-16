@@ -88,6 +88,24 @@
 }}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add PDF Metadata
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% HyperRef adds special PDF features e.g. metadata, PDF table of contents and
+% hyperlinks (done at the last moment as advised by the HyperRef manual).
+% The 'hidelinks' option removes the ugly-as-sin border which HyperRef adds by
+% default.
+\usepackage[hidelinks]{hyperref}
+
+% Document metadata (must be set not as part of the \usepackage command, as per
+% the HyperRef manual).
+\hypersetup{pdftitle={\thesistitle},
+            pdfauthor={\thesisauthor},
+            pdfsubject={PhD Thesis},
+            pdfcreator={LaTeX and a lot of random scripts.}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Document body
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
