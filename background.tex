@@ -2,11 +2,10 @@
 	
 	\label{sec:background}
 	
-	The Spiking Neural Network Architecture (SpiNNaker) is a massively parallel
-	computer architecture designed to simulate biologically realistic neural
-	models \cite{furber07}. In this chapter we will explore this unconventional
-	architecture in detail, starting with its purpose before focusing on its most
-	unconventional feature: its network.
+	SpiNNaker is a massively parallel computer architecture designed to simulate
+	biologically realistic neural models \cite{furber07}. In this chapter we will
+	explore this unconventional architecture in detail, starting with its purpose
+	before focusing on its most unconventional feature: its network.
 	
 	% * Purpose
 	%   * Spiking neural simulations
@@ -18,7 +17,7 @@
 		Human brains contain billions of neurons connected together by trillions of
 		synapses. The neurons communicate by transmitting and receiving `spikes'
 		through their synapses. Each spike is `valueless' in that a spike's only
-		significant features are when it arrives and where it came from.
+		significant features are when it arrives and where it has come from.
 		
 		\begin{figure}
 			\center
@@ -44,18 +43,18 @@
 		The computational expense of large scale neural simulations does not arise
 		from the cost of modelling neurons but instead from distributing spikes. In
 		biology, neurons produce spikes at an average rate of \SI{10}{\hertz} and
-		synapses connect each neuron's output to (order) \num{1000} neurons
-		\cite{navaridas09}. In a neural model with, for example, \num{70000000}
-		neurons (approximately the number in a house mouse and under
-		$\nicefrac{1}{10}^\textrm{th}$ of the design target of SpiNNaker),
-		producing \num{700000000} spikes per second. Because each neuron connects
-		to many others, this equates to \num{700000000000} spikes being received
-		per second. If each spike were transmitted as a UDP datagram containing a
-		single \SI{32}{\bit} payload, a total network throughput of
-		\SI{179.2}{\tera\bit\per\second} would be produced. At the time of writing,
-		this is more than double the bisection bandwidth (the theoretical
-		worst-case throughput) of the world's most powerful super computer
-		\cite{dongarra16}.
+		synapses connect each neuron's output to (order) \num{1000}~neurons
+		\cite{navaridas09}. Consider an example neural model with $7\times10^7$
+		neurons, approximately the number in a house mouse and
+		$\nicefrac{1}{10}^\textrm{th}$ of the design target of SpiNNaker. This
+		network might produce $7\times10^8$~spikes per second. Because each neuron
+		connects to many others, this equates to $7\times10^{11}$ spikes being
+		received per second. If each spike were transmitted as a UDP datagram
+		containing a single \SI{32}{\bit} payload, the total network throughput
+		required for this simulation would be \SI{179.2}{\tera\bit\per\second}. At
+		the time of writing, this is more than double the bisection bandwidth (the
+		theoretical worst-case throughput) of the world's most powerful super
+		computer \cite{dongarra16}.
 	
 	\section{Network architecture}
 		
@@ -182,21 +181,22 @@
 				\caption[Multicast routing example.]%
 				{Multicast routing example with \SI{4}{\bit} routing keys. Each
 				box represents a SpiNNaker chip whose router has been programmed with
-				the routing entries shown. Gray lines mark connections between chips.}
+				the routing entries shown. Grey lines mark connections between chips.}
 				\label{fig:routing-example}
 			\end{figure}
 			
 			Consider the simplified example in figure~\ref{fig:routing-example} in
-			which number of (\SI{4}{\bit}) routing table entries have been configured
-			in the routers of a small SpiNNaker network. If a packet with the routing
-			key \texttt{1011} is transmitted by a core in the chip labelled $(0, 0,
-			0)$, this will match the first routing table entry on that chip and will
-			be routed to chip $(1, 0, 0)$. On chip $(1, 0, 0)$, the packet once again
-			matches the first routing entry and is routed to chip $(1, 0, -1)$. On
-			$(1, 0, -1)$, no match is made so the packet is default routed to $(1, 0,
-			-2)$. On this chip, the packet matches a routing entry which routes the
-			packet to core~7. In this example, default routing allows only three
-			routing table entries to direct a packet through four chips.
+			which a number of (\SI{4}{\bit}) routing table entries have been
+			configured in the routers of a small SpiNNaker network. If a packet with
+			the routing key \texttt{1011} is transmitted by a core in the chip
+			labelled $(0, 0, 0)$, this will match the first routing table entry on
+			that chip and will be routed to chip $(1, 0, 0)$. On chip $(1, 0, 0)$,
+			the packet once again matches the first routing entry and is routed to
+			chip $(1, 0, -1)$. On $(1, 0, -1)$, no match is made so the packet is
+			default routed to $(1, 0, -2)$. On this chip, the packet matches a
+			routing entry which routes the packet to core~7. In this example, default
+			routing allows only three routing table entries to direct a packet
+			through four chips.
 			
 			As a second example, if a packet with the routing key \texttt{0010} is
 			transmitted by a core on chip $(0, 0, 0)$, this key will be matched by
@@ -250,17 +250,17 @@
 			The timeout-based packet dropping mechanism is designed to defuse
 			deadlocks in the network. For example, if two routers are trying to send
 			each other a packet at the same time they may become deadlocked, each
-			waiting for the other router to accept the packet they're sending before
-			processing any other packets. SpiNNaker's timeout mechanism breaks
-			deadlocks by dropping the packets which have been blocked for some time
-			and therefore may be in a deadlock. Once a packet has been dropped it is
-			left to the software to either tolerate the missing packet or trigger a
-			retransmission. In neural simulations, as in biology, the loss of a
-			single spike is unlikely to have a significant impact on the behaviour of
-			a neural model and therefore these simulations are inherently tolerant of
-			occasional dropped packets. During application loading and other system
-			tasks, a higher level software driven protocol based on acknowledgements
-			and retransmissions is used to ensure guaranteed delivery.
+			waiting for the other router to accept a packet before processing any
+			other packets. SpiNNaker's timeout mechanism breaks deadlocks by dropping
+			the packets which have been blocked for some time and therefore may be in
+			a deadlock. Once a packet has been dropped it is left to the software to
+			either tolerate the missing packet or trigger a retransmission. In neural
+			simulations, as in biology, the loss of a single spike is unlikely to
+			have a significant impact on the behaviour of a neural model and
+			therefore these simulations are inherently tolerant of occasional dropped
+			packets. During application loading and other system tasks, a higher
+			level software driven protocol based on acknowledgements and
+			retransmissions is used to ensure guaranteed delivery.
 			
 			% TODO: MENTION TIMEOUT VALUE USED?
 			% Router timeouts must be configured to be long enough that delays in
@@ -271,7 +271,7 @@
 	
 	\section{The hexagonal torus topology}
 		
-		Each SpiNNaker chips is a node in a `hexagonal torus topology' as
+		Each SpiNNaker chip is a node in a `hexagonal torus topology' as
 		illustrated in figure~\ref{fig:hexagonalTorusTopology}. Network packets
 		sent by SpiNNaker's processor cores may `hop' through several nodes in the
 		network to reach their intended destination. In each hop, a packet may
@@ -342,7 +342,7 @@
 		
 		Counter intuitively, individual nodes in hexagonal torus topologies may be
 		described by many different coordinates, for example $(3, 1, 0)$ and $(1,
-		-1, -2)$ are also a valid coordinates for node $\beta$. These dual
+		-1, -2)$ are also valid coordinates for node $\beta$. These dual
 		coordinates emerge from the fact that adding $(1, 1, 1)$ to a coordinate
 		produces an equivalent, but different, coordinate. This phenomenon is
 		explained in detail in appendix~\ref{app:minimal-hex-coordinates} and
@@ -385,16 +385,18 @@
 		respectively) \cite{dally04} illustrated in figure~\ref{fig:torus-compare}.
 		Compared with the 2D torus topology, a hexagonal torus has double the
 		bisection bandwidth even though it only requires 50\% more node-to-node
-		links \cite{navaridas09}. 3D torus topologies also have six node-to-node
-		links per node but double the bisection bandwidth again. However, since a
-		network topology must eventually be embedded into a real world data centre
-		(which, at large scales, approximate a 2D space), 3D, or higher-dimensional
-		torus topologies may become more expensive to construct in practice due to
-		the need for longer cables to interconnect nodes. As
-		chapter~\ref{sec:building} demonstrates, hexagonal toruses may be assembled
-		in a machine room in a similar way to a 2D topology. The hexagonal torus
-		topology achieves the scalability of a 2D torus while gaining some of the
-		bisection bandwidth benefits of the 3D torus topology.
+		links \cite{navaridas09}.  Compared with a 3D torus topology, however, the
+		hexagonal torus topology has half the bisection bandwidth even though each
+		node has the same number of links. Once embedded into a real world data
+		centre, however, three, and higher-dimensional (and higher) torus
+		topologies become more expensive to construct in practice.  Since large
+		machine rooms approximate a 2D space, longer cables are required to
+		interconnect nodes which are adjacent in the higher dimensional space of
+		the network but not in a 2D projection. As chapter~\ref{sec:building}
+		demonstrates, hexagonal toruses may be assembled in a machine room -- in a
+		similar way to a 2D topology -- using only short cables. Overall, the
+		hexagonal torus topology achieves the scalability of a 2D torus while
+		gaining some of the bisection bandwidth benefits of the 3D torus topology.
 		
 		Most torus topologies, including hexagonal 2D and 3D toruses, are related
 		to an equivalent `mesh' topology. Mesh topologies maintain the same general
@@ -430,14 +432,14 @@
 		
 		\label{sec:hex-vs-h-torus}
 		
-		The hexagonal torus topology used by SpiNNaker and the subject of much of
-		this thesis is not to be confused with the `H-torus' topology.  This
-		topology also uses a hexagonal tiling of nodes and even wraps this tiling
-		into in a torus-like topology \cite{zhao08}. However, H-torus topologies
-		have very different characteristics to the hexagonal torus topology are
-		closely related to `twisted torus' topologies \cite{camara10}.
-		Figure~\ref{fig:topo-compare} illustrates one major difference in the way
-		paths wrap around the peripheries of both topologies.
+		The hexagonal torus topology is not to be confused with the `H-torus'
+		topology. This topology also uses a hexagonal tiling of nodes and even
+		wraps this tiling into a torus-like topology \cite{zhao08}. However,
+		H-torus topologies have very different characteristics to the hexagonal
+		torus topology and are related to `twisted torus' topologies
+		\cite{camara10}. For example, figure~\ref{fig:topo-compare} illustrates one
+		major difference in the way paths wrap around the peripheries of both
+		topologies.
 	
 	\section{Scaling-up SpiNNaker machines}
 		
@@ -475,12 +477,12 @@
 			\label{fig:spinnaker-boards}
 		\end{figure}
 		
-		To build large SpiNNaker systems comprising tens of thousands of
-		SpiNNaker chips, groups of forty-eight chips are mounted onto printed
-		circuit boards as illustrated in figure~\ref{fig:spinnakerBoard}. These
-		boards may be connected together to form larger systems.
-		Figure~\ref{fig:threeboard} shows a prototype three board system configured
-		as a $12\times12$ hexagonal torus.
+		To build large SpiNNaker systems comprising of tens of thousands of
+		SpiNNaker chips, groups of forty-eight chips are mounted onto circuit
+		boards as illustrated in figure~\ref{fig:spinnakerBoard}. These boards may
+		be connected together to form larger systems.  Figure~\ref{fig:threeboard}
+		shows a prototype three board system configured as a $12\times12$ hexagonal
+		torus.
 		
 		Though the chips are physically arranged in a (nearly) $7\times7$ grid on
 		each SpiNNaker board, they logically form a `wrapped triple'
@@ -492,15 +494,15 @@
 		requiring sixteen wires per bidirectional chip-to-chip link
 		\cite{bainbridge03}. If this link technology were used to connect chips on
 		neighbouring boards, each pair of boards would need to be connected with a
-		128~wire cable. Cables and connectors supporting this may signals are
+		128~wire cable. Cables and connectors supporting this many signals are
 		expensive and physically large making them unsuitable for use with
 		SpiNNaker. Instead, chip-to-chip connections between boards are multiplexed
 		and demultiplexed onto a single High-Speed Serial (HSS) link
-		\cite{athavale05} carried via commodity S-ATA cables often used to
-		connected hard disks in desktop computers and servers \cite{sata3spec}.
-		The six high-speed links are implemented by three onboard FPGAs (the three
-		large chips at the top of the SpiNNaker board) and are logically
-		transparent to the underlying network.
+		\cite{athavale05} carried via commodity S-ATA cables often used to connect
+		hard disks in desktop computers and servers \cite{sata3spec}.  The six
+		high-speed links are implemented by three onboard FPGAs (the three large
+		chips at the top of the SpiNNaker board) and are logically transparent to
+		the underlying network.
 		
 		In chapter~\ref{sec:building} I describe how very large SpiNNaker machines
 		may be constructed using over one thousand SpiNNaker boards.
