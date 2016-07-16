@@ -14,14 +14,14 @@ architecture designed to simulate biologically realistic models of brains in
 real time \cite{furber07}. Though neurons, the building blocks of the brain,
 are relatively well understood, their complex interactions remain mysterious.
 Just as understanding the workings of a transistor is insufficient to
-understand a modern microprocessor, neuroscientists believe that the brain's
-connectivity is key to understanding its higher level functions
-\cite{eliasmith13,eliasmith14}. Experiments on real brains, however, are
-fraught with difficulty. Variations between individuals can be significant and
-it is only possible to record tens or hundreds of the trillions of signals in
-the brain, and even then only limited control over which signals are recorded
-is possible. Computer simulations of models of large neural networks, however,
-enable researchers to develop repeatable experiments and gain complete
+understand a modern microprocessor, neuroscientists believe that understanding
+the neurons in isolation cannot explain the brain and that understanding their
+connectivity is key \cite{eliasmith13,eliasmith14}. Experiments on real brains,
+however, are fraught with difficulty. Variations between individuals can be
+significant and it is only possible to record tens or hundreds of the trillions
+of signals in the brain, and even then only with limited control over which
+signals are recorded. Computer simulations of models of large neural networks,
+however, enable researchers to develop repeatable experiments and gain complete
 visibility of any signal and any neuron. Models such as SPAUN
 \cite{eliasmith12}, built from millions of simulated neurons, have shown great
 promise in expanding our understanding of higher level brain functions such as
@@ -54,7 +54,7 @@ communicate with each other. Unlike the tree and $N$-dimensional torus
 topologies found in contemporary super computers \cite{dally04}, SpiNNaker
 employs a `hexagonal torus topology'. In this topology, nodes in SpiNNaker's
 network fit together in a honeycomb-like pattern where messages may `hop' from
-node to node to reach their destination. As we'll see in
+node to node to reach their destination. As we will see in
 chapter~\ref{sec:background}, the hexagonal torus topology, in theory, sits at
 a `sweet spot' in terms of network performance and practicality. As the first
 known large-scale installation of the hexagonal torus topology, however, there
@@ -77,7 +77,7 @@ located on logically `nearby' nodes to reduce network load. The neural models
 for which SpiNNaker is designed are often described abstractly, rather than
 geometrically, using modelling languages such as PyNN~\cite{davison08} and
 Nengo~\cite{eliasmith04}.  Because of this, the communication requirements of
-simulations can be highly irregular making a efficient placement of processes
+simulations can be highly irregular making an efficient placement of processes
 onto processors in the machine non-trivial.
 
 %Contributions
@@ -124,17 +124,17 @@ particular, describes its hexagonal torus topology and network architecture.
 In chapter~\ref{sec:building}, I develop a cabling scheme for large hexagonal
 torus topologies which enables arbitrarily large networks to be constructed
 using only short, inexpensive cables. This theoretical work is then evaluated
-through the construction a range of prototype SpiNNaker systems. The largest of
-these prototypes contains over half a million processor cores and spans several
-machine room cabinets. In addition, I propose the use of built-in diagnostic
-facilities to assist technicians performing network installation and
+through the construction of a range of prototype SpiNNaker systems. The largest
+of these prototypes contains over half a million processor cores and spans
+several machine room cabinets. In addition, I propose the use of built-in
+diagnostic facilities to assist technicians performing network installation and
 maintenance. This technique is found to greatly reduce the effort required and
 the number of mistakes made.
 
 In chapters~\ref{sec:shortestPaths}~and~\ref{sec:routing} I develop new routing
 techniques for SpiNNaker's network. Chapter~\ref{sec:shortestPaths} develops a
-new approach to finding shortest paths through hexagonal torus topologies, an
-integral part of many routing algorithms. The newly proposed approach is
+new approach to finding the shortest paths through hexagonal torus topologies,
+an integral part of many routing algorithms. This newly proposed approach is
 cheaper to compute than the state of the art and, unlike previous efforts, is
 able to discover all valid short paths through the topology. This theoretical
 advance brings hexagonal torus topologies in line with conventional topologies
