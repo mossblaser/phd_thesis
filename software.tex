@@ -1,0 +1,68 @@
+\chapter{Software}
+	\label{sec:software}
+	
+	The techniques described in this thesis have been implemented in various
+	software systems now in use in the wider SpiNNaker ecosystem. These
+	implementations may prove instructive to future researchers hoping to
+	leverage or extend the techniques described by this work. With one exception,
+	all software is written in the Python programming language.
+	
+	\begin{description}
+		
+		\item [SpiNNer:] A collection of tools for generating cabling plans, guiding
+		installation and assisting with maintenance using the techniques described
+		in chapter~\ref{sec:building}.
+		\\
+		\vspace*{-1.25em}
+		\\
+		\begin{tabular}{ll}
+			Source & \url{https://github.com/SpiNNakerManchester/SpiNNer} \\
+			Manual & \url{http://spinner.readthedocs.org/} \\
+		\end{tabular}
+		
+		\item [Rig:] A library for SpiNNaker application writers which implements
+		the shortest-path vector geometry functions introduced in
+		chapter~\ref{sec:shortestPaths}, the NER/PGS repair routing algorithm
+		described in chapter~\ref{sec:routing} and the simulated annealing based
+		placement algorithm from chapter~\ref{sec:placement}.
+		\\
+		\vspace*{-1.25em}
+		\\
+		\begin{tabular}{ll}
+			Source & \url{https://github.com/project-rig/rig} \\
+			Manual & \url{http://rig.readthedocs.org/} \\
+		\end{tabular}
+		
+		\item [Rig C SA:] A C implementation of the simulated annealing based
+		placement algorithm from chapter~\ref{sec:placement}. An optional add-on
+		for the Rig library.
+		\\
+		\vspace*{-1.25em}
+		\\
+		\begin{tabular}{ll}
+			Source & \url{https://github.com/project-rig/rig_c_sa} \\
+		\end{tabular}
+		
+		\item [Network Tester:] A library for quickly building and running
+		experiments on SpiNNaker's network and used to perform experiments in
+		chapters~\ref{sec:routing} and \ref{sec:placement}.
+		\\
+		\vspace*{-1.25em}
+		\\
+		\begin{tabular}{ll}
+			Source & \url{https://github.com/project-rig/network_tester} \\
+			Manual & \url{http://network-tester.readthedocs.org/} \\
+		\end{tabular}
+		
+		\item [Spalloc:] A centralised system which partitions large SpiNNaker
+		machines into smaller ones on demand. This system was used to allow many of
+		the experiments performed to be carried out in parallel.
+		\\
+		\vspace*{-1.25em}
+		\\
+		\begin{tabular}{ll}
+			Source & \url{https://github.com/project-rig/spalloc_server} \\
+			Manual & \url{http://spalloc-server.readthedocs.org/} \\
+		\end{tabular}
+		
+	\end{description}
