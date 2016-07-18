@@ -6,9 +6,10 @@
 	% #2 advance vector y
 	% #3 advance vector z
 	% #4 label
-	% #5 text
+	% #5 layer
 	\newcommand{\hex}[5]{
 		% Draw hexagon
+		\pgfmathsetmacro{\perc}{mod(#5, 2) * 100}
 		\draw (center) ++([hexagonXYZ]\curchipx,\curchipy,\curchipz) coordinate (cur);
 		\node (#4) at (cur)
 		      [ hexagon
@@ -17,8 +18,9 @@
 		      , inner sep=0
 		      , minimum width=\scale*1cm
 		      , font=\footnotesize
+		      , fill=paperback!\perc!white
 		      ]
-		      {#5};
+		      {};
 		
 		% Move on
 		\pgfmathtruncatemacro{\x}{\curchipx + #1}

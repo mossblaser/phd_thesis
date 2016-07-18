@@ -2,7 +2,7 @@
 	\label{sec:software}
 	
 	The techniques described in this thesis have been implemented in various
-	software systems now in use in the wider SpiNNaker ecosystem. These
+	software systems which are now in use in the wider SpiNNaker ecosystem. These
 	implementations may prove instructive to future researchers hoping to
 	leverage or extend the techniques described by this work. With one exception,
 	all software is written in the Python programming language.
@@ -34,8 +34,8 @@
 		\end{tabular}
 		
 		\item [Rig C SA:] A C implementation of the simulated annealing based
-		placement algorithm from chapter~\ref{sec:placement}. An optional add-on
-		for the Rig library.
+		placement algorithm from chapter~\ref{sec:placement}. An optional drop-in
+		replacement for Python implementation of the algorithm in the Rig library.
 		\\
 		\vspace*{-1.25em}
 		\\
@@ -44,8 +44,8 @@
 		\end{tabular}
 		
 		\item [Network Tester:] A library for quickly building and running
-		experiments on SpiNNaker's network and used to perform experiments in
-		chapters~\ref{sec:routing} and \ref{sec:placement}.
+		experiments on SpiNNaker's network and used to perform some of the
+		experiments in chapters~\ref{sec:routing} and \ref{sec:placement}.
 		\\
 		\vspace*{-1.25em}
 		\\
@@ -55,8 +55,9 @@
 		\end{tabular}
 		
 		\item [Spalloc:] A centralised system which partitions large SpiNNaker
-		machines into smaller ones on demand. This system was used to allow many of
-		the experiments performed to be carried out in parallel.
+		machines into smaller ones on demand. This system was used to perform many
+		experiments in parallel. This system is also widely used by researchers to
+		share access to large SpiNNaker machines.
 		\\
 		\vspace*{-1.25em}
 		\\

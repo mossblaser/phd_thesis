@@ -1,26 +1,19 @@
 TODOs
 =====
 
-* Jim conclusion suggestions
-  - Add review of SpiNNaker architecture in intro
-  - Mention re-routing by alternative dimension order in future work
-  - Mention runtime fault tolerance
-  - Closing remarks should be a bit broader in scope
-  - Talk about changes in SpiNNaker requirements after design??
-  - Close with nod to SpiNNaker 2 also using same topology, router.
 * MOAR proof reading
 * Write acknowledgements
 * Add git revision to some page (title page?)
 * Add silly counts (figures? hexagons?)
 * Get technical feedback
-  - Ch 1: Introduction: Jim
-  - Ch 2: Background: Jim
-  - Ch 3: Wiring: Simon
+  - Ch 1: Introduction: Jim (SENT)
+  - Ch 2: Background: Jim (SENT)
+  - Ch 3: Wiring: Simon (SENT)
   - Ch 4: Shortest Paths: Mundy(?)
   - Ch 5: Routing: Javier
   - Ch 6: Placement: Mundy
   - Ch 7: Conclusions: Jim
-  - Ap A: Partitioning: Jim, Simon
+  - Ap A: Partitioning: Jim, Simon(?)
   - Ap B: Minimising hex coordinates: Jim
   - Ap C: Software: Jim
 * Collect & document experiments and results in a git repo
@@ -38,6 +31,9 @@ TODOs
   - Experiment automation for Nengo experiments
   - MU0 data path circuit sim script
 * Upload thesis to GitHub
+* Document SC&MP boot process
+* Spalloc Server(?) Date+Time fix
+* Spalloc request specific set of boards
 
 Still-student TODOs
 ===================

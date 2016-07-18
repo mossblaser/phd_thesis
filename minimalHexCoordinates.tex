@@ -2,14 +2,13 @@
 	\label{app:minimal-hex-coordinates}
 	
 	As in conventional mesh and torus topologies, coordinates in a hexagonal
-	torus topology are given in terms of the offset of a point from the origin
-	along each axis of the topology. Hexagonal topologies, however, unusually
-	have three non-orthogonal axes. In a conventional 2D topology, for example,
-	moving along the X axis does not alter your position on the Y axis because
-	the X and Y axes are orthogonal. In a hexagonal coordinate system, moving
-	along any of the three axes results in some movement in the other two. A
-	consequence of this is that multiple coordinates may exist for the same
-	position.
+	torus topology are given in terms of the offset of a point along each axis of
+	the topology from the origin. Hexagonal topologies, however, unusually have
+	three non-orthogonal axes. In a conventional 2D topology, for example, moving
+	along the X axis does not alter your position on the Y axis because the X and
+	Y axes are orthogonal. In a hexagonal coordinate system, moving along any of
+	the three axes results in some movement in the other two. A consequence of
+	this is that multiple coordinates may exist for the same position.
 	
 	\begin{figure}
 		\center
@@ -54,13 +53,14 @@
 	
 	\end{itemize}
 	
-	These cases indicate that a vector containing at least one zero element with
-	the remaining elements of opposite sign are minimal since adding or
-	subtracting $(1,1,1)$ will always increase the magnitude of the vector.
+	These cases indicate that vectors and coordinates containing at least one
+	zero element with the remaining elements having opposite signs are minimal
+	since adding or subtracting $(1,1,1)$ will always increase the magnitude of
+	the vector.
 	
-	To minimise a vector in a hexagonal mesh topology, the following function may
-	be used, producing a unique coordinate vector for any given point.
-	
+	To minimise a coordinate vector in a hexagonal mesh topology, the following
+	function may be used, producing a unique coordinate for any given point:
+	%
 	\begin{equation*}
 		\operatorname{minimiseVector}(x,y,z) =
 			(x,y,z) - \operatorname{median}(x,y,z) \cdot (1,1,1)
