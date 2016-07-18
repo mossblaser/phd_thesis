@@ -188,7 +188,7 @@
 		An analogous `parallelogram' partitioning scheme exists for hexagonal torus
 		topologies, however, this results in imbalanced connectivity requirements
 		between neighbouring partitions. In
-		figure~\ref{fig:parallelogram-parti;ioning}, for example, the partitions
+		figure~\ref{fig:parallelogram-partitioning}, for example, the partitions
 		above, below, left and right of the central partition are connected by
 		seven node-to-node connections each while the nodes above-right and
 		below-left are connected by just a single node each. To simplify assembly,
@@ -198,10 +198,10 @@
 		increasing design complexity.
 		
 		To avoid connectivity imbalance, SpiNNaker uses a `wrapped triple'
-		partitioning scheme, as illustrated in
+		partitioning scheme \cite{davidsonWiring}, as illustrated in
 		figure~\ref{fig:wrapped-triple-partitioning}, described in detail in
 		appendix \ref{sec:partitioning}. In this partitioning scheme, the same
-		number of connections connect all six neighbouring units. As detailed in
+		number of connections connect all six neighbouring units. As explained in
 		the appendix, a hexagonal torus topology is constructed from groups of
 		three partitions.
 		

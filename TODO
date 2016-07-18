@@ -1,6 +1,13 @@
 TODOs
 =====
 
+* Jim conclusion suggestions
+  - Add review of SpiNNaker architecture in intro
+  - Mention re-routing by alternative dimension order in future work
+  - Mention runtime fault tolerance
+  - Closing remarks should be a bit broader in scope
+  - Talk about changes in SpiNNaker requirements after design??
+  - Close with nod to SpiNNaker 2 also using same topology, router.
 * MOAR proof reading
 * Write acknowledgements
 * Add git revision to some page (title page?)

@@ -1,0 +1,32 @@
+# My bibtex file which is sym-linked from elsewhere...
+references.bib
+
+# Tempoary files
+*.swp
+.*
+
+# LaTeX intermediate files
+*.brf
+*.aux
+*.toc
+*.lot
+*.log
+*.lof
+*.blg
+*.bbl
+*.out
+*.wordcount
+*.date
+*.hash
+*.gitchanges
+_minted*/
+
+# Compiled output files
+thesis.pdf
+
+# Random Python junk...
+*.pyc
+pip-selfcheck.json
+bin/*
+lib/*
+include/*
