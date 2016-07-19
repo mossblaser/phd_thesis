@@ -10,12 +10,12 @@ TODOs
   - Ch 2: Background: Jim (SENT)
   - Ch 3: Wiring: Simon (SENT)
   - Ch 4: Shortest Paths: Mundy(?)
-  - Ch 5: Routing: Javier
+  - Ch 5: Routing: Javier (SENT)
   - Ch 6: Placement: Mundy
-  - Ch 7: Conclusions: Jim
-  - Ap A: Partitioning: Jim, Simon(?)
-  - Ap B: Minimising hex coordinates: Jim
-  - Ap C: Software: Jim
+  - Ch 7: Conclusions: Jim (SENT)
+  - Ap A: Partitioning: Jim (SENT), Simon(?)
+  - Ap B: Minimising hex coordinates: Jim (SENT)
+  - Ap C: Software: Jim (SENT)
 * Collect & document experiments and results in a git repo
   - Mapping used (SpiNNer example)
   - Wire lengths (data)
