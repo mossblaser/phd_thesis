@@ -83,8 +83,8 @@
 				assigned to the corresponding node in the network topology.
 				
 				Unfortunately, this technique only applies to a very narrow class of
-				applications and is not applicable to the types of neural models
-				SpiNNaker is designed to run.
+				applications and is not applicable to many of the types of neural
+				models SpiNNaker is designed to run.
 			
 			\subsubsection{Sequential placement}
 				
@@ -252,8 +252,9 @@
 				placements having lower-costs. In Steele's work, the cost of a
 				placement is computed by finding the shortest path routes between all
 				connected vertices using Dijkstra's algorithm. Rather than repeating
-				this relatively expensive computation after each swap, the cost was
-				updated by only recomputing the routes connecting the swapped vertices.
+				this relatively expensive computation after each swap, Steele's
+				implementation updated the previously calculated cost by recomputing
+				only the routes connecting the swapped vertices.
 				
 				The number of swaps to attempt and the rate at which the temperature is
 				changed is dictated by an `annealing schedule' and can have a major
@@ -812,8 +813,8 @@
 				schedule being known to work well, alternatives have not been
 				considered in this thesis.
 				
-				Starting with an initial random (but valid) placement, the first $N$
-				are performed with no distance limit to gather satistics about the
+				Starting with an initial random (but valid) placement, $N$ swaps
+				are performed with no distance limit to gather statistics about the
 				problem, where $N$ is the number of vertices in the graph. The initial
 				annealing temperature, $T$, is then set to 20 times the standard
 				deviation of the cost changes produced by the $N$ swaps.
@@ -891,11 +892,11 @@
 		\label{sec:placement-results}
 		
 		A good placement application should produce placements which result in
-		efficient use of network resources. In SpiNNaker, routing table usage is
-		also an important concern since routing table entries are a finite
-		resource. The runtime of the placement algorithm itself is also
-		relevant since, especially in applications where experiments are
-		short-lived, placement runtime should not dominate application runtime.
+		efficient use of network resources. Secondly, in SpiNNaker, routing table
+		usage is an important concern since routing table entries are a finite
+		resource. Finally, the runtime of the placement algorithm itself is
+		relevant since, especially in applications where experiments are of short
+		duration, placement runtime should not dominate application runtime.
 		
 		In this evaluation, the simulated annealing based placement algorithm
 		introduced in this chapter is compared with a number of baseline algorithms
@@ -944,9 +945,9 @@
 			
 			Table~\ref{tab:real-benchmarks} summarises each of the benchmarks. While
 			these applications are much smaller than those expected to run on new,
-			large-scale SpiNNaker systems, these benchmarks are hoped to provide a
-			meaningful indicator of the types of connectivity which might be present
-			in future networks.
+			large-scale SpiNNaker systems, these benchmarks provide a meaningful
+			indicator of the types of connectivity which might be present in future
+			networks.
 			
 			\begin{table}
 				\center
@@ -995,8 +996,8 @@
 				Each benchmark's connectivity graph was placed on into an idealised $13
 				\times 13$ hexagonal torus topology and the routed using the NER
 				algorithm. This process was repeated \num{1000} times with various
-				performance metrics recorded which are analysed below. All experiments
-				were conducted on a cluster of idle workstations with 3.10~GHz Intel
+				performance metrics recorded which are analysed below. Experiments were
+				conducted on a cluster of idle workstations with 3.10~GHz Intel
 				Core-i5-2400 CPUs and 8~GB of RAM.
 			
 				\begin{figure}
@@ -1005,8 +1006,8 @@
 						\center
 						\buildrplot{figures/application-benchmarks-quality.R}
 						
-						\caption{Placement quality (routed net length, normalised to
-						Hilbert placer)}
+						\caption{Placement quality (routed net length reduction vs. Hilbert
+						placer)}
 						\label{fig:application-benchmarks-quality}
 					\end{subfigure}
 					
@@ -1044,9 +1045,7 @@
 				in pre-existing SpiNNaker software.
 				
 				In the majority of benchmarks, the simulated annealing based placement
-				algorithm achieves the greatest reduction in hop counts, reducing the
-				total number of hops required to $\frac{2}{7}^\textrm{ths}$ of those
-				required by the Hilbert placer in the `CConv' benchmark. The RCM and
+				algorithm achieves the greatest reduction in hop counts. The RCM and
 				Random placement algorithms both consistently produce results similar
 				or worse than those of the Hilbert placement algorithm.
 				
@@ -1058,12 +1057,16 @@
 				
 				The second metric considered is the number of routing table entries
 				required in the worst case after placement and is shown in
-				figure~\ref{fig:application-benchmarks-tables}. Though many of the
-				benchmarks do not run out of routing tables when placed with any of the
-				algorithms, the `CConv' network notably runs out of table entries when
-				placed by all but the simulated annealing and random placement
-				algorithms. This can be attributed to the large number of nets the
-				`CConv' network uses by comparison with other models.
+				figure~\ref{fig:application-benchmarks-tables}. As is the practice of
+				the applications modelled by these benchmarks, routing tables are
+				compressed by the `Ordered Covering' algorithm \cite{mundy16} and
+				default-routing is used when possible.
+				
+				Though many of the benchmarks do not run out of routing tables when
+				placed with any of the algorithms, the `CConv' network notably runs out
+				of table entries when placed by all but the simulated annealing and
+				random placement algorithms. This can be attributed to the large number
+				of nets the `CConv' network uses by comparison with other models.
 				
 				The random placement algorithm can often achieve competitive routing
 				table sizes because it tends to spread out vertices over the entire
@@ -1074,11 +1077,11 @@
 				$13\times13$ hexagonal torus topology supplied meaning that some
 				networks can become spread out by the random placer. Though routing
 				table usage drops, network utilisation, and potentially congestion,
-				increasesu. This is because the number of routing entries required by a
+				increases. This is because the number of routing entries required by a
 				route is usually independent of length due to default routing.
 				
 				The third metric considered is the runtime of the placement algorithm,
-				shown in figure~\ref{fig:application-benchmarks-tables}. The simulated
+				shown in figure~\ref{fig:application-benchmarks-runtime}. The simulated
 				annealing algorithm requires much longer runtimes than the baseline
 				placement algorithms considered; in several cases an order of magnitude
 				longer. This is unsurprising since the baseline algorithms are
@@ -1191,7 +1194,7 @@
 				\end{figure}
 				
 				The circuit simulator may be configured to run at higher speeds,
-				directly increasing the quantity of network traffic generated. To judge
+				directly increasing the density of network traffic generated. To judge
 				the relative quality of all four placement algorithms the simulation
 				was executed at a range of different speeds to determine when or if the
 				network becomes saturated.
@@ -1384,7 +1387,7 @@
 		
 		Synthetic benchmarks have demonstrated that the proof-of-concept simulated
 		annealing based placement algorithm developed as part of this work is able
-		maintain good placement quality in networks containing over one million
+		to maintain good placement quality in networks containing over one million
 		vertices. Though runtimes are considerably slower than existing application
 		placement algorithms, taking over twelve hours for one million vertex
 		networks, at these scales simulated annealing is the only placement
@@ -1407,9 +1410,9 @@
 		become more challenging. A key difference between the circuit and
 		application placement problems is that, while super computer network
 		topologies come in many shapes and forms, chips are largely 2D.  Because of
-		this modern circuit placement techniques are increasingly exploiting
-		geometric properties of the circuit placement problem which may be more
-		difficult to adapt to super computer network topologies.  However, at their
-		current rate of growth, placement problems in super computers are likely to
-		remain tractable to simulated annealing based placement techniques for a
-		number of years to come. 
+		this modern circuit placement techniques increasingly exploit geometric
+		properties of the circuit placement problem which may be more difficult to
+		adapt to super computer network topologies.  However, at their current rate
+		of growth, placement problems in super computers are likely to remain
+		tractable to simulated annealing based placement techniques for a number of
+		years to come. 
