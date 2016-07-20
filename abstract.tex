@@ -27,20 +27,20 @@
 	
 	SpiNNaker is an unconventional super computer architecture designed to
 	simulate up to one billion biologically realistic neurons in real time. To
-	achieve this goal, SpiNNaker employs an unconventional network architecture
-	which poses a number of practical problems in scaling up from desktop
-	prototypes to machine room filling installations.
+	achieve this goal, SpiNNaker employs a novel network architecture which poses
+	a number of practical problems in scaling up from desktop prototypes to
+	machine room filling installations.
 	
 	SpiNNaker's hexagonal torus network topology has received mostly theoretical
 	treatment in the literature. This thesis tackles some of the challenges
-	encountered when building `real-world' systems.  Firstly, a scheme is devised
-	for laying out hexagonal torus topologies in machine rooms which avoids long
-	cables and demonstrated on a half-million core SpiNNaker prototype. Secondly,
-	to improve the performance of existing routing algorithms, a more efficient
-	process is proposed for finding short paths through hexagonal torus
-	topologies. This is complemented by a formula which provides routing
-	algorithms greater flexibility when finding paths, potentially resulting in
-	more balanced network utilisation.
+	encountered when building `real world' systems.  Firstly, a scheme is devised
+	for physically laying out hexagonal torus topologies in machine rooms which
+	avoids long cables; this is demonstrated on a half-million core SpiNNaker
+	prototype.  Secondly, to improve the performance of existing routing
+	algorithms, a more efficient process is proposed for finding (logically)
+	short paths through hexagonal torus topologies. This is complemented by a
+	formula which provides routing algorithms greater flexibility when finding
+	paths, potentially resulting in a more balanced network utilisation.
 	
 	The scale of SpiNNaker's network and the models intended for it also present
 	their own challenges. Placement and routing algorithms are developed which
@@ -49,8 +49,8 @@
 	placement algorithm is inspired by techniques used in chip design and is
 	shown to enable larger applications to run on SpiNNaker -- with good
 	performance -- than the previous state-of-the-art. Likewise the routing
-	algorithm developed is able to tolerate network faults inevitably present in
-	large scale systems with little performance overhead.
+	algorithm developed is able to tolerate network faults, inevitably present in
+	large scale systems, with little performance overhead.
 	
 	
 	% Required to ensure single line spacing is used for this whole block
