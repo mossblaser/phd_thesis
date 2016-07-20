@@ -1,0 +1,43 @@
+\pgfmathsetmacro{\scale}{0.5}%
+\begin{tikzpicture}[thick, line cap=round, scale=\scale]
+	
+	\pgfmathtruncatemacro{\width}{2}
+	\pgfmathtruncatemacro{\height}{4}
+	\pgfmathtruncatemacro{\sep}{2}
+	\pgfmathsetlengthmacro{\arcrad}{0.2em}
+	
+	\pgfmathsetmacro{\rightxoffset}{\width + \sep}
+	\foreach \side/\xoffset in {left/0,right/\rightxoffset}{
+		\foreach \x in {1,...,\width}{
+			\foreach \y in {1,...,\height}{
+				\node [ rectangle
+				      , thin
+				      , draw
+				      , minimum width=\scale * 1cm
+				      , minimum height=\scale * 1cm
+				      , inner sep=0
+				      ]
+				      (node-\side-\x-\y)
+				      at (\x + \xoffset, \y)
+				      {};
+			}
+		}
+	}
+	
+	% West - east
+	\foreach \y in {1,...,\height}{
+		% Inner
+		\draw (node-left-\width-\y.east)
+		      --
+		      (node-right-1-\y.west);
+		
+		% Outer
+		\draw (node-left-1-\y.west)
+		      arc (270:90:\arcrad)
+		      --
+		      ([yshift=2*\arcrad]node-right-\width-\y.east)
+		      arc (90:-90:\arcrad);
+	}
+	
+\end{tikzpicture}
+

@@ -1,0 +1,131 @@
+\pgfmathsetmacro{\scale}{0.33}%
+\begin{tikzpicture}[thick, scale=\scale, line cap=round]
+	
+	\definecolor{colour0}{gray}{0.95}
+	\definecolor{colour1}{gray}{0.75}
+	\definecolor{colour2}{gray}{0.45}
+	
+	% Drop a hexagon and advance by 'cur' the specified vector
+	% #1 advance vector x
+	% #2 advance vector y
+	% #3 advance vector z
+	% #4 label
+	% #5 color
+	\newcommand{\hex}[5]{
+		% Draw hexagon
+		\node (#4) at ([hexagonXYZ]\curchipx,\curchipy,\curchipz)
+		      [ hexagon
+		      , draw
+		      , thin
+		      , inner sep=0
+		      , minimum width=\scale*1cm
+		      ] [#5]
+		      {};
+		
+		% Move on
+		\pgfmathsetmacro{\x}{\curchipx + #1}
+		\pgfmathsetmacro{\y}{\curchipy + #2}
+		\pgfmathsetmacro{\z}{\curchipz + #3}
+		\global\let\curchipx=\x
+		\global\let\curchipy=\y
+		\global\let\curchipz=\z
+	}
+	
+	% #1 origin x
+	% #2 origin y
+	% #3 origin y
+	% #4 Number of layers
+	% #5 label
+	% #6 colour
+	\newcommand{\wrappedtriple}[6]{
+		\pgfmathtruncatemacro{\nlayers}{#4-1}
+		
+		\begin{scope}[hexagonXYZ]
+			\pgfmathsetmacro{\x}{#1}
+			\pgfmathsetmacro{\y}{#2}
+			\pgfmathsetmacro{\z}{#3}
+			\global\let\curchipx=\x
+			\global\let\curchipy=\y
+			\global\let\curchipz=\z
+			\foreach \layer in {0,...,\nlayers}{
+				\ifthenelse{\layer < 1}{}{
+					\foreach \n in {1,...,\layer}{
+						\hex{0}{-1}{0}{#5-\layer--y-\n}{#6}
+					}
+				}
+				
+				\ifthenelse{\layer < 1}{}{
+					\foreach \n in {1,...,\layer}{
+						\hex{0}{0}{1}{#5-\layer-+z-\n}{#6}
+					}
+				}
+				
+				\foreach \n in {0,...,\layer}{
+					\hex{-1}{0}{0}{#5-\layer--x-\n}{#6}
+				}
+				
+				\ifthenelse{\layer < 1}{}{
+					\foreach \n in {1,...,\layer}{
+						\hex{0}{1}{0}{#5-\layer-+y-\n}{#6}
+					}
+				}
+				
+				\foreach \n in {0,...,\layer}{
+					\hex{0}{0}{-1}{#5-\layer--z-\n}{#6}
+				}
+				
+				\foreach \n in {0,...,\layer}{
+					\hex{1}{0}{0}{#5-\layer-+x-\n}{#6}
+				}
+			}
+		\end{scope}
+	}
+	
+	\pgfmathsetmacro{\spacing}{4.2}
+	
+	\wrappedtriple{\spacing + 0}{\spacing - 1}{ 0}{4}{b}{fill=colour0}
+	\wrappedtriple{3*\spacing + 0}{2*\spacing - 1}{ 0}{4}{b}{fill=colour1}
+	\wrappedtriple{2*\spacing + 0}{3*\spacing - 1}{ 0}{4}{b}{fill=colour2}
+	
+	\begin{scope}[hexagonXYZ, line cap=butt, line width=\scale * 0.3cm, inner sep=0]
+		% Bottom left
+		\draw (0, 0, 1) [colour0]
+		      +(2, 0, 0) --
+		      +(0, 0, 0) coordinate (corner) --
+		      +(0, 2, 0);
+		\draw (corner) ++(-120:0.9cm) node {$a$};
+		% Top right
+		\draw (0.8, 0.8, -12) [colour0]
+		      +(2, 0, 0) --
+		      +(0, 0, 0) coordinate (corner) --
+		      +(0, 2, 0);
+		\draw (corner) ++(60:1.0cm) node {$a'$};
+		
+		% Top left
+		\draw (1.4, 9 + 0.8, -7) [colour2]
+		      +(0, 0, 2) --
+		      +(0, 0, 0) coordinate (corner) --
+		      +(2, 0, 0);
+		\draw (corner) ++(120:0.9cm) node {$c$};
+		% Bottom right
+		\draw (5.2, 0, -3.2) [colour2]
+		      +(0, 0, 2) --
+		      +(0, 0, 0) coordinate (corner) --
+		      +(2, 0, 0);
+		\draw (corner) ++(-60:1.0cm) node {$c'$};
+		
+		% Right
+		\draw (17, 7.4, 0) [colour1]
+		      +(0, 2, 0) --
+		      +(0, 0, 0) coordinate (corner) --
+		      +(0, 0, 2);
+		\draw (corner) ++(0:0.9cm) node {$b$};
+		% Lef8
+		\draw (3, 7.4, 0) [colour1]
+		      +(0, 2, 0) --
+		      +(0, 0, 0) coordinate (corner) --
+		      +(0, 0, 2);
+		\draw (corner) ++(180:1.0cm) node {$b'$};
+	\end{scope}
+	
+\end{tikzpicture}

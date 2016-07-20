@@ -1,0 +1,83 @@
+\pgfmathsetmacro{\scale}{0.5}%
+\begin{tikzpicture}[thick, line cap=round, scale=\scale]
+	
+	\pgfmathtruncatemacro{\width}{2}
+	\pgfmathtruncatemacro{\height}{4}
+	\pgfmathtruncatemacro{\depth}{4}
+	\pgfmathtruncatemacro{\sep}{2}
+	\pgfmathsetlengthmacro{\arcrad}{0.2em}
+	
+	\pgfmathtruncatemacro{\heightt}{\height-1}
+	
+	% #1 x-offset
+	\newcommand{\drawside}[1]{
+		\foreach \x in {1,...,\width}{
+			\foreach \y in {1,...,\height}{
+				\foreach \z in {1,...,\depth}{
+					\draw [fill=white, thin]
+					      (\x + #1, \y, \z)
+					      -- ++(1, 0, 0)
+					      -- ++(0, 0, -1)
+					      -- ++(0, 1, 0)
+					      -- ++(-1, 0, 0)
+					      -- ++(0, 0, 1)
+					      -- cycle;
+					\draw [ultra thin]
+					      (\x + #1, \y, \z)
+					      +(0, 1, 0) -- +(1, 1, 0) -- +(1, 1, -1)
+					      +(1, 0, 0) -- +(1, 1, 0);
+				}
+			}
+		}
+	}
+	
+	\pgfmathsetmacro{\rightxoffset}{\width + \sep}
+	
+	% Left-end of outer connections
+	\foreach \y in {1,...,\height}{
+		\foreach \z in {1,...,\depth}{
+			\draw (1, \y + 0.5, \z - 0.5)
+			      arc (270:90:0.25)
+			      ;
+		}
+	}
+	
+	\drawside{0}
+	
+	% West - east
+	\foreach \y in {1,...,\height}{
+		\foreach \z in {1,...,\depth}{
+			% Inner
+			\draw (\width + 1, \y + 0.5, \z - 0.5)
+			      --
+			      (\rightxoffset + 1, \y + 0.5, \z - 0.5);
+			
+			% Wrap around connections going 
+			\draw (\width + 1, \y + 1, \z - 0.5)
+			      --
+			      (\rightxoffset + 1, \y + 1, \z - 0.5);
+		}
+	}
+	
+	\drawside{\rightxoffset}
+	
+	% Right-end of outer connections
+	\foreach \y in {1,...,\height}{
+		\foreach \z in {1,...,\depth}{
+			\draw (\rightxoffset+\width + 1, \y + 0.5, \z - 0.5)
+			      arc (-90:90:0.25)
+			      ;
+		}
+	}
+	
+	% Connections going over the top
+	\foreach \z in {1,...,\depth}{
+		\draw (\rightxoffset+\width + 1, \height + 1, \z - 0.5)
+		      --
+		      (1, \height + 1, \z - 0.5)
+		      ;
+	}
+	
+\end{tikzpicture}
+
+
