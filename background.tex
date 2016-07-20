@@ -137,15 +137,12 @@
 		routing scheme. Unlike conventional routers which often employ hard-coded
 		routing rules \cite[chapter~8]{dally04}, the SpiNNaker router uses a
 		programmable `routing table' to determine how packets should be forwarded.
-		
 		In addition, to avoid deadlocks, SpiNNaker's router employs a simple,
 		timeout-based mechanism which exploits the ability of neural networks to
 		tolerate occasional missing packets. As we will see in chapter
-		\ref{sec:routing}, this mechanism greatly simplifies the task
-		of routing in SpiNNaker's network.
-		
-		In this section we'll see how both of these distinctive features of
-		SpiNNaker's router are used.
+		\ref{sec:routing}, this mechanism greatly simplifies the task of routing in
+		SpiNNaker's network. In this section we'll look at these features in
+		greater detail.
 		
 		\subsection{Routing tables}
 		
@@ -224,14 +221,6 @@
 		
 		\subsection{Timeouts}
 			
-			\begin{figure}
-				\center
-				\buildfig{figures/router-architecture.tex}
-				
-				\caption{SpiNNaker router architecture}
-				\label{fig:router-architecture}
-			\end{figure}
-			
 			SpiNNaker's router is built on a pipeline architecture. As shown in
 			figure~\ref{fig:router-architecture}, the router is fed packets by an
 			arbiter which serialises packets arriving from other chips and local
@@ -245,6 +234,14 @@
 			the remote receiver to become ready. For example, a receiving processor
 			core may be busy performing some computation or a receiving router may be
 			blocked waiting for some of its outputs to become ready.
+			
+			\begin{figure}
+				\center
+				\buildfig{figures/router-architecture.tex}
+				
+				\caption{SpiNNaker router architecture}
+				\label{fig:router-architecture}
+			\end{figure}
 			
 			The timeout-based packet dropping mechanism is designed to defuse
 			deadlocks in the network. For example, if two routers are trying to send
