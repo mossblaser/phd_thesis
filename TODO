@@ -4,18 +4,17 @@ TODOs
 * Make consistent
   - 'realtime' vs 'real time' vs 'real-time'
   - 'runtime(s)' vs 'run time(s)' vs 'run-time(s)'
-* Apply Jim conclusions/abstract feedback
-* Apply Andrew placement feedback
+* Apply Jim abstract feedback
 * Non-breaking space before cites...
 * MOAR proof reading
 * Write acknowledgements
 * Add git revision to some page (title page?)
 * Add silly counts (figures? hexagons?)
 * Get technical feedback
+  - Abstract: Jim
   - Ch 3: Wiring: Simon (SENT)
   - Ch 4: Shortest Paths: Mundy(?)
   - Ch 5: Routing: Javier (SENT)
-  - Ch 6: Placement: Mundy
   - Ch 7: Conclusions: Jim (SENT)
   - Ap A: Partitioning: Jim (SENT), Simon(?)
   - Ap B: Minimising hex coordinates: Jim (SENT)
