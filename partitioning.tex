@@ -52,15 +52,30 @@
 		hexagonal torus which is drawn (by convention) in a parallelogram-shaped
 		arrangement.
 		
+		Any partition which shares the `translational symmetry' of a pointy-topped
+		hexagon must also tile a hexagonal torus. For example, in
+		figure~\ref{fig:tiling-a-torus} we can see that $2\times2$ parallelograms
+		can tile a $9\times9$ hexagonal torus topology.  In
+		figure~\ref{fig:parallelogram-tiling}, I demonstrate that this
+		parallelogram partition shares its translational symmetry with a
+		pointy-topped hexagon. In figure~\ref{fig:parallelogram-tiling}a, the
+		$2\times2$ partition is shown with each node shaded differently and, in
+		figure~\ref{fig:parallelogram-tiling}b, a pointy-topped hexagon is
+		superimposed. By tiling several copies of the partition
+		(figure~\ref{fig:parallelogram-tiling}c), we can see that repeating pattern
+		of the parallelogram matches that of the pointy-topped hexagon. I refer to
+		this property as the parallelogram sharing the translational symmetry of a
+		pointy-topped hexagon.
+		
 		\begin{figure}
 			\center
 			\buildfig{figures/tiling-a-torus.tex}
 			
 			\caption{Tiling a hexagonal torus with parallelograms.}
 			\label{fig:tiling-a-torus}
-		 \end{figure}
-		 
-		 \begin{figure}
+		\end{figure}
+		
+		\begin{figure}
 			\center
 			\buildfig{figures/parallelogram-tiling.tex}
 			
@@ -70,21 +85,6 @@
 			\label{fig:parallelogram-tiling}
 		\end{figure}
 		
-		Any partition which shares the `translational symmetry' of a pointy-topped
-		hexagon must also tile a hexagonal torus. For example, in
-		figure~\ref{fig:tiling-a-torus} we can see that a $2\times2$ parallelograms
-		can tile a $9\times9$ hexagonal torus topology.  In
-		figure~\ref{fig:parallelogram-tiling}, I will demonstrate that this
-		parallelogram partition shares its translational symmetry with a
-		pointy-topped hexagon. In figure~\ref{fig:parallelogram-tiling}a, the
-		$2\times2$ partition is shown with each node shaded differently and in
-		figure~\ref{fig:parallelogram-tiling}b, a pointy-topped hexagon is
-		superimposed. By tiling several copes of the partition
-		(figure~\ref{fig:parallelogram-tiling}c), we can see that repeating pattern
-		of the parallelogram matches that of the pointy-topped hexagon. I refer to
-		this property as the parallelogram sharing the translational symmetry of a
-		pointy-topped hexagon.
-		
 		Notice that the parallelogram partition can be redrawn such that all parts
 		protruding from the overlaid pointy-topped hexagon wrap around to fill the
 		gaps on opposite sides producing a pointy-topped hexagon shaped tile as
@@ -92,8 +92,14 @@
 		
 	
 	\section{How \emph{not} to tile a hexagonal torus}
+	
+		An `obvious' partitioning scheme for a hexagonal topology which evenly
+		distributes links between six sides is to use a hexagonal partition. Such a
+		partition might na\"ively be formed by wrapping `layers' of hexagons around
+		a central hexagon. Figure~\ref{fig:wrapped-hexagon-tiling}a illustrates a
+		simple partition with a single layer of hexagons.
 		
-		\begin{figure}[h]
+		\begin{figure}
 			\center
 			\buildfig{figures/wrapped-hexagon-tiling.tex}
 			
@@ -102,12 +108,6 @@
 			symmetry with a pointy-topped hexagon.}
 			\label{fig:wrapped-hexagon-tiling}
 		\end{figure}
-	
-		An `obvious' partitioning scheme for a hexagonal topology which evenly
-		distributes links between six sides is to use a hexagonal partition. Such a
-		partition might na\"ively be formed by wrapping `layers' of hexagons around
-		a central hexagon. Figure~\ref{fig:wrapped-hexagon-tiling}a illustrates a
-		simple partition with a single layer of hexagons.
 	
 		While this type of partition exposes six equally-sized edges (satisfying
 		the requirement that connections between partitions should have a balanced
@@ -125,16 +125,6 @@
 	
 	\section{Triads of triples}
 		
-		\begin{figure}
-			\center
-			\buildfig{figures/wrapped-triple-tiling.tex}
-			
-			\caption[Triples share translational symetry with flat-topped hexagons.]%
-			{Visual proof that a triple shares the same translational
-			symmetry as a flat-topped hexagon.}
-			\label{fig:wrapped-triple-tiling}
-		\end{figure}
-		
 		A `triple' is a partition made up of three nodes arranged as in
 		figure~\ref{fig:wrapped-triple-tiling}a. This partition's edges may be
 		broken into six groups with an equal number of connections, meeting the
@@ -147,6 +137,25 @@
 		
 		\begin{figure}
 			\center
+			\buildfig{figures/wrapped-triple-tiling.tex}
+			
+			\caption[Triples share translational symetry with flat-topped hexagons.]%
+			{Visual proof that a triple shares the same translational
+			symmetry as a flat-topped hexagon.}
+			\label{fig:wrapped-triple-tiling}
+		\end{figure}
+		
+		Because a triple made up of pointy-topped hexagons shares translational
+		symmetry with a flat-topped hexagon, a triple made up of flat-topped
+		hexagons must share it with a pointy-topped hexagon (turn
+		figure~\ref{fig:wrapped-triple-tiling} \SI{30}{\degree} to verify this).
+		It follows that three triples arranged as in figure~\ref{fig:triad-tiling}
+		-- a `triad' -- share translational symmetry with pointy-topped hexagons.
+		Consequently, triads of triples may be used to tile a hexagonal torus
+		topology 
+		
+		\begin{figure}
+			\center
 			\buildfig{figures/triad-tiling.tex}
 			
 			\caption[Triads of triples tile a hexagonal torus.]%
@@ -154,26 +163,8 @@
 			pointy-topped hexagon.}
 			\label{fig:triad-tiling}
 		\end{figure}
-		
-		Because a triple made up of pointy-topped hexagons tiles like a flat-topped
-		hexagon, a triple made up of flat-topped hexagons must share translational
-		symmetry with a pointy-topped hexagon (turn
-		figure~\ref{fig:wrapped-triple-tiling} \SI{30}{\degree} to verify this).
-		It follows that three triples arranged as in figure~\ref{fig:triad-tiling}
-		-- a `triad' -- share translational symmetry with pointy-topped hexagons.
-		Consequently, triads of triples may be used to tile a hexagonal torus
-		topology 
 	
 	\section{Wrapped triples}
-		
-		\begin{figure}
-			\center
-			\buildfig{figures/wrapped-triple.tex}
-			
-			\caption[A wrapped triple with four layers.]%
-			{A wrapped triple with four layers. Layers are shaded alternately.}
-			\label{fig:wrapped-triple}
-		\end{figure}
 		
 		A triple forms a partition which can be used to tile a hexagonal torus when
 		tiled using triads of triples. To increase the number of nodes in the
@@ -184,5 +175,49 @@
 		hexagon. Therefore, triads of wrapped triples may be used to tile a
 		hexagonal torus topology.
 		
+		\begin{figure}
+			\center
+			\buildfig{figures/wrapped-triple.tex}
+			
+			\caption[A wrapped triple with four layers.]%
+			{A wrapped triple with four layers. Layers are shaded alternately.}
+			\label{fig:wrapped-triple}
+		\end{figure}
+		
 		In SpiNNaker, each board partitions the network into a four-layer wrapped
-		triple containing forty~eight chips (nodes) each.
+		triple containing forty~eight chips (nodes) each, convenient for
+		implementation on a standard-sized $220.00\times233.35$~\si{\milli\meter}
+		Eurocard circuit board \cite{ieee11011}.
+		
+		A triad of boards can be interconnected to form a $12\times12$ hexagonal
+		torus as illustrated in figure~\ref{fig:threeboard-apdx}. Six boards can be
+		interconnected to form a $12\times24$ or $24\times12$ topology. Nine can
+		form a $12\times36$ or $36\times12$ topology. At twelve boards, a `square'
+		$24\times24$ topology may be formed, corresponding to half a frame in a
+		large SpiNNaker installation. The architectural limit of the SpiNNaker
+		architecture combines \num{1200} boards to produce a $240\times240$
+		hexagonal torus topology.
+		
+		\begin{figure}
+			\center
+			\begin{subfigure}[b]{0.45\linewidth}
+				\center
+				\buildfig{figures/threeboard-separate.tex}
+				
+				\caption{A triad of boards}
+				\label{fig:threeboard-separate-apdx}
+			\end{subfigure}
+			~~~
+			\begin{subfigure}[b]{0.45\linewidth}
+				\center
+				\buildfig{figures/threeboard-wrapped.tex}
+				
+				\caption{\ldots{}as a parallelogram}
+				\label{fig:threeboard-wrapped-apdx}
+			\end{subfigure}
+			
+			\caption[Logical connectivity of chips in a triad of SpiNNaker boards.]%
+			{Logical connectivity of chips (hexagons) in a triad of SpiNNaker
+			boards. Reproduced from figure~\ref{fig:spinnaker-boards}.}
+			\label{fig:threeboard-apdx}
+		\end{figure}

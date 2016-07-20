@@ -1,6 +1,9 @@
 TODOs
 =====
 
+* Make consistent
+  - 'realtime' vs 'real time' vs 'real-time'
+  - 'runtime(s)' vs 'run time(s)' vs 'run-time(s)'
 * Apply Jim conclusions/abstract feedback
 * Apply Andrew placement feedback
 * Non-breaking space before cites...

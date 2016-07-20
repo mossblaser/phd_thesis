@@ -1,14 +1,15 @@
 \chapter{Minimising hexagonal mesh coordinates}
 	\label{app:minimal-hex-coordinates}
 	
-	As in conventional mesh and torus topologies, coordinates in a hexagonal
+	As in non-hexagonal mesh and torus topologies, coordinates in a hexagonal
 	torus topology are given in terms of the offset of a point along each axis of
-	the topology from the origin. Hexagonal topologies, however, unusually have
-	three non-orthogonal axes. In a conventional 2D topology, for example, moving
-	along the X axis does not alter your position on the Y axis because the X and
-	Y axes are orthogonal. In a hexagonal coordinate system, moving along any of
-	the three axes results in some movement in the other two. A consequence of
-	this is that multiple coordinates may exist for the same position.
+	the topology from an arbitrary origin. Hexagonal topologies, however,
+	unusually are considered as having three, non-orthogonal axes. In a
+	conventional 2D topology, for example, moving along the X axis does not alter
+	your position on the Y axis because the X and Y axes are orthogonal. In a
+	hexagonal coordinate system, moving along any of the three axes results in
+	some movement in the other two.  A consequence of this is that multiple
+	coordinates may exist for the same position.
 	
 	\begin{figure}
 		\center
@@ -30,8 +31,8 @@
 	Adding $(1,1,1)$ once more produces the vector $(4, -1, 1)$ of magnitude 6
 	again.
 	
-	In a hexagonal mesh, every point has a unique vector whose magnitude is
-	minimal. To demonstrate this by cases, consider:
+	In a hexagonal mesh, every point has a unique coordinate vector whose
+	magnitude is minimal. To demonstrate this by cases, consider:
 	
 	\begin{itemize}
 	
@@ -49,7 +50,7 @@
 		magnitude of one.
 		
 		\item Similar arguments may be made for vectors with negative elements and
-		the addition of $(1,1,1)$.
+		the \emph{addition} of $(1,1,1)$.
 	
 	\end{itemize}
 	
