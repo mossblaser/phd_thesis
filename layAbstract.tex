@@ -25,32 +25,32 @@
 	
 	% The lay abstract
 	
-	SpiNNaker is a super computer designed to simulate neural networks like those
-	found in the brain. Unlike biological experiments, computer simulations make
-	it easy for neuroscientists to see what is going on in a neural network and
-	easily test new theories. Though it is extremely unlikely that SpiNNaker will
-	ever `think', it may give researchers a better understanding of how different
-	parts of the brain work, and what makes them go wrong.
+	SpiNNaker is a super computer designed to simulate neural networks, such as
+	those that make up the brain. Unlike biological experiments, simulations
+	running on SpiNNaker allow neuroscientists to control and observe the
+	behaviour of these networks and easily test new theories while avoiding
+	animal experiments. Though it is extremely unlikely that SpiNNaker will ever
+	`think', it may enable a better understanding of the functions and failure
+	modes of the brain.
 	
 	Like most super computers, SpiNNaker is made up of many smaller computers
-	which all work together on the same problem. When completed SpiNNaker, will
-	contain over one million computer processors, each responsible for simulating
-	several hundred neurons at once.
+	interconnected by a network. When the largest planned machine is completed,
+	SpiNNaker, will contain over one million computer processors, each
+	responsible for simulating several hundred neurons.
 	
-	This thesis makes three contributions towards tackling the challenge of
-	building and using a full-sized SpiNNaker machine. Firstly I devised a new
-	way of organising the many computers that make up SpiNNaker such that only
-	short cables are required to connect everything together, even in big
-	machines.  These techniques make SpiNNaker cheaper and easier to build.
-	Secondly, I developed a method that allows the individual computers in
-	SpiNNaker to communicate reliably, even if some of the connections between
-	them break -- an unavoidable situation in super computers. Finally, I adapted
-	a technique normally used to design computer chips to decide how to assign
-	neurons to SpiNNaker's processors. This method keeps neurons which are
-	connected to each other close together inside SpiNNaker. By doing this, the
-	signals exchanged between neurons have to travel less distance through
-	SpiNNaker's computer network and do not get in each other's way. This makes
-	it possible to simulate bigger and more complex neural networks.
+	This thesis makes three contributions towards the construction and operation
+	of a full-sized SpiNNaker machine. Firstly I devised a new way of organising
+	the physical components which make up a large SpiNNaker machine such that
+	only short cables are required to construct its network making SpiNNaker
+	cheaper and easier to build. Secondly, I developed a method that makes it
+	possible for computers in SpiNNaker's network to communicate reliably, even
+	when some connections are faulty -- an unavoidable situation in practice.
+	Finally, I adapted a technique normally used to design computer chips to
+	assign neural models to SpiNNaker's processors. This method ensures connected
+	neurons are assigned to nearby computers inside SpiNNaker's network meaning
+	that signals between neurons have to travel less distance and are not as
+	likely to get in each other's way. This makes it possible to simulate larger
+	and more complex neural networks.
 	
 	% Required to ensure single line spacing is used for this whole block
 	\par%
