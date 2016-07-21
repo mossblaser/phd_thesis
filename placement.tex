@@ -9,20 +9,20 @@
 	SpiNNaker. This traffic pattern exhibits locality with most communication
 	occurring between adjacent nodes.  In reality, neural simulation applications
 	are not conveniently specified geometrically but rather as abstract graphs of
-	communicating neurons \cite{davison08,eliasmith04}. Though neural models
+	communicating neurons~\cite{davison08,eliasmith04}. Though neural models
 	often exhibit localised connectivity this can only be exploited if they are
 	laid out sensibly within a network. Producing optimal placements is an
-	NP-complete problem \cite{hoefler11}.
+	NP-complete problem~\cite{hoefler11}.
 	
-	In this chapter I evaluate the effectiveness of simulated annealing
-	\cite{kirkpatrick83} for placement of SpiNNaker applications. Though
-	simulated annealing fell out of favour for use in application placement in
-	the 1990s, I argue that it is time to re-evaluate its suitability for modern
-	placement problems. Looking to the field of chip design, where circuit
-	placement problems have also been growing in scale exponentially for the past
-	few decades, simulated annealing was considered ideal for placement problems
-	whose sizes are comparable to that of modern super computer placement
-	problems.
+	In this chapter I evaluate the effectiveness of simulated
+	annealing~\cite{kirkpatrick83} for placement of SpiNNaker applications.
+	Though simulated annealing fell out of favour for use in application
+	placement in the 1990s, I argue that it is time to re-evaluate its
+	suitability for modern placement problems. Looking to the field of chip
+	design, where circuit placement problems have also been growing in scale
+	exponentially for the past few decades, simulated annealing was considered
+	ideal for placement problems whose sizes are comparable to that of modern
+	super computer placement problems.
 	
 	In experiments on existing SpiNNaker applications I find that simulated
 	annealing achieves placement solutions substantially better than contemporary
@@ -41,12 +41,12 @@
 		
 		Attempts to address the problem of placing applications in super computer
 		networks have utilised a variety of approaches ranging from simple greedy
-		algorithms to sophisticated combinatorial optimisation algorithms
-		\cite{jeannot14}. In the parallel field of digital circuit placement for
-		chip and FPGA design, placement algorithms have also received intense
-		study.  In this section I survey the work carried out on application
-		placement before looking to the work done in chip design to see what can be
-		learnt from this perhaps more advanced field.
+		algorithms to sophisticated combinatorial optimisation
+		algorithms~\cite{jeannot14}. In the parallel field of digital circuit
+		placement for chip and FPGA design, placement algorithms have also received
+		intense study.  In this section I survey the work carried out on
+		application placement before looking to the work done in chip design to see
+		what can be learnt from this perhaps more advanced field.
 		
 		In the application placement literature, the placement problem is often
 		referred by the umbrella term `mapping'. Unfortunately `mapping' is often
@@ -74,13 +74,13 @@
 					\label{fig:fem-partitioning}
 				\end{figure}
 				
-				In certain applications such as finite element modelling
-				\cite{bermejo13}, a problem's structure defines a `natural' placement
-				of the problem onto the target machine. For example when simulating a
-				3D volume in a super computer with a $3 \times 4 \times 2$ 3D torus or
-				mesh topology network, the modelled volume might be divided into as in
-				figure~\ref{fig:fem-partitioning}. Each cuboid in the model is then
-				assigned to the corresponding node in the network topology.
+				In certain applications such as finite element
+				modelling~\cite{bermejo13}, a problem's structure defines a `natural'
+				placement of the problem onto the target machine. For example when
+				simulating a 3D volume in a super computer with a $3 \times 4 \times 2$
+				3D torus or mesh topology network, the modelled volume might be divided
+				into as in figure~\ref{fig:fem-partitioning}. Each cuboid in the model
+				is then assigned to the corresponding node in the network topology.
 				
 				Unfortunately, this technique only applies to a very narrow class of
 				applications and is not applicable to many of the types of neural
@@ -121,8 +121,8 @@
 					\label{fig:sequential}
 				\end{figure}
 				
-				Super computer management software such as SLURM \cite{yoo03} and Blue
-				Gene's system software \cite{gilge14} by default na\"ively iterate over
+				Super computer management software such as SLURM~\cite{yoo03} and Blue
+				Gene's system software~\cite{gilge14} by default na\"ively iterate over
 				vertices in an application communication graph in the order they are
 				defined by the application. The nodes in the target machine are
 				iterated over using a simple space-filling curve.
@@ -133,13 +133,13 @@
 				(figure~\ref{fig:sequential-alternating}) curves illustrate 2D versions
 				of the default node assignment orders provided by the SLURM and
 				BlueGene systems.  The Cray extensions to SLURM software provide a
-				Hilbert curve \cite{hilbert91} node assignment order
+				Hilbert curve~\cite{hilbert91} node assignment order
 				(figure~\ref{fig:sequential-hilbert}). The Hilbert curve specifically
 				attempts to maintain the property that points that are close together
-				along the length of the curve are also close together in the 2D mapping
-				\cite{moon01, zumbusch99}. Since the vertex iteration order is also
-				chosen such that connected vertices tend to be closer together, this
-				property may lead to improved placement solutions.
+				along the length of the curve are also close together in the 2D
+				mapping~\cite{moon01, zumbusch99}. Since the vertex iteration order is
+				also chosen such that connected vertices tend to be closer together,
+				this property may lead to improved placement solutions.
 				
 				\begin{figure}
 					\center
@@ -168,8 +168,8 @@
 				good vertex and chip iteration orders, typically using a
 				graph-traversal based heuristic. An example typical of this type of
 				technique is `graph similarity based mapping' described by Hoefler and
-				Snir \cite{hoefler11}. This algorithm exploits the Reverse
-				Cuthill-McKee (RCM) algorithm \cite{cuthill69} to select a linear
+				Snir~\cite{hoefler11}. This algorithm exploits the Reverse
+				Cuthill-McKee (RCM) algorithm~\cite{cuthill69} to select a linear
 				ordering of vertices in which connected vertices tend to appear close
 				together. Internally the RCM algorithm uses a breadth-first-search-like
 				algorithm to order vertices.
@@ -212,7 +212,7 @@
 				the ordering well suited for use with a sequential placement algorithm.
 				
 				In small-scale and densely connected applications such as early neural
-				simulations running on prototype SpiNNaker machines \cite{galluppi10},
+				simulations running on prototype SpiNNaker machines~\cite{galluppi10},
 				these techniques have proven sufficient.  As my experiments demonstrate
 				later, however, sequential placement is insufficient for some SpiNNaker
 				applications.
@@ -223,7 +223,7 @@
 				
 				In the academic community, a number of attempts have been made to use
 				sophisticated optimisation algorithms for the placement of
-				applications. In 1985, Steele \cite{steele85} first proposed the use of
+				applications. In 1985, Steele~\cite{steele85} first proposed the use of
 				simulated annealing for placing applications in the 6D torus topology
 				of the 64 node `Caltech Cosmic Cube'. The proposed algorithm is
 				described below.
@@ -266,32 +266,32 @@
 				Towards the end of the 1980s, application placement appeared to be
 				becoming less important as super computer network architectures
 				improved, appearing to render computationally intensive placement
-				algorithms unnecessary \cite{dally87}.  In addition, network and
+				algorithms unnecessary~\cite{dally87}.  In addition, network and
 				problem sizes remained small: so small in fact that exact
 				linear-programming based placement algorithms remained a meaningful
-				point of comparison in application placement research \cite{xu91}. In
+				point of comparison in application placement research~\cite{xu91}. In
 				this environment, simpler sequential placement algorithms gained favour
 				over more computationally expensive algorithms such as simulated
 				annealing.
 				
 				In contemporary application placement algorithms, `low temperature'
 				simulated annealing algorithms are occasionally employed as a
-				post-processing step for by other placement algorithms
-				\cite{hoefler11}, preferring other heuristics to generate an initial
-				placement solution.
+				post-processing step for by other placement
+				algorithms~\cite{hoefler11}, preferring other heuristics to generate an
+				initial placement solution.
 				
 				% Outside of badly attempting 90s scale problems at least... \cite{chen06}
 			
 			\subsubsection{Recursive partitioning}
 				
 				As problem and machine sizes have grown and network utilisation has
-				once again become an important factor in application performance
-				\cite{navaridas09b} more complex optimisation algorithms have
-				reappeared in the literature. One popular approach employs graph
-				partitioning algorithms such as METIS \cite{karypis98} to perform
-				recursive bipartitioning based placement
-				\cite{phillips14,hoefler11,pellegrini96}.  This placement process is
-				illustrated in figure~\ref{fig:partitioning}.
+				once again become an important factor in application
+				performance~\cite{navaridas09b} more complex optimisation algorithms
+				have reappeared in the literature. One popular approach employs graph
+				partitioning algorithms such as METIS~\cite{karypis98} to perform
+				recursive bipartitioning based
+				placement~\cite{phillips14,hoefler11,pellegrini96}.  This placement
+				process is illustrated in figure~\ref{fig:partitioning}.
 				
 				\begin{figure}
 					\center
@@ -314,9 +314,9 @@
 				are then placed on their associated node in the connectivity graph.
 				
 				Unfortunately recursive partitioning-based techniques are known to
-				perform sub-optimally when the number of nodes is not a power of two
-				\cite{simon97}. In addition, placement problems are often subject to
-				multiple orthogonal constraints. For example a vertex in an
+				perform sub-optimally when the number of nodes is not a power of
+				two~\cite{simon97}. In addition, placement problems are often subject
+				to multiple orthogonal constraints. For example a vertex in an
 				application's communication graph may consume a certain number of
 				processors and some quantity of SDRAM. Partitioning algorithms require
 				a metric with which the size of each partition may be measured to
@@ -330,7 +330,7 @@
 				
 				Other approaches employ other optimisation techniques are specialised
 				for use with applications and networks with specific connectivity
-				patterns, for example trees \cite{jeannot14,traff02}. Unfortunately
+				patterns, for example trees~\cite{jeannot14,traff02}. Unfortunately
 				these algorithms cater neither to SpiNNaker's hexagonal torus topology
 				nor the range of communication topologies found in its target
 				applications.
@@ -348,12 +348,12 @@
 				\caption[Historical core counts for the `Top500' super computers.]%
 				{Historical processor (core) counts for the `Top500' super
 				computer installations. The line shows the mean number of processsors and
-				grey ribbon indicates the range. Data reported by the `Top500 List'
-				\cite{meuer16j}.}
+				grey ribbon indicates the range. Data reported by the `Top500
+				List'~\cite{meuer16j}.}
 				\label{fig:top500-num-processors}
 			\end{figure}
 			
-			Following the march of Moore's `Law' \cite{moore75}, the number of
+			Following the march of Moore's `Law'~\cite{moore75}, the number of
 			components in modern chips and FPGAs has been increasing at an
 			exponential rate similar to that of core counts of super computers (see
 			figure \ref{fig:top500-num-processors}). Today, in 2016, the largest
@@ -369,8 +369,8 @@
 			placement size it appears reasonable to look to chip placement to suggest
 			future application placement techniques.
 			
-			Circuit placement techniques can be grouped into three broad categories
-			\cite{kahng11}:
+			Circuit placement techniques can be grouped into three broad
+			categories~\cite{kahng11}:
 			
 			\begin{description}
 				
@@ -391,28 +391,28 @@
 			I briefly introduce each technique before assessing its suitability for
 			use in application placement in SpiNNaker. The interested reader is
 			encouraged to refer to `VLSI physical design: from graph partitioning to
-			timing closure' by Kahng \emph{et al.} \cite{kahng11} for a more thorough
+			timing closure' by Kahng \emph{et al.}~\cite{kahng11} for a more thorough
 			introduction to the field of circuit placement and the techniques I
 			summarise here.
 			
 			\subsubsection{Partitioning-based placement}
 				
 				Partitioning based placement has a long history with early examples
-				dating back to the 1970s \cite{breuer77}. As in recursive partitioning
+				dating back to the 1970s~\cite{breuer77}. As in recursive partitioning
 				based application placement algorithms, the input circuit is
 				partitioned alongside the target topology to assign placements. Again,
-				graph partitioning software such as METIS \cite{karypis98} is used to
+				graph partitioning software such as METIS~\cite{karypis98} is used to
 				partition the circuits but since the target topology is the 2D surface
 				of a chip, simple geometric partitioning is used to divide the surface
-				of the chip. Modern partitioning based placers such as Capo
-				\cite{roy05} employ additional heuristics such as `terminal
+				of the chip. Modern partitioning based placers such as
+				Capo~\cite{roy05} employ additional heuristics such as `terminal
 				propagation' where connections between adjacent partitions are
 				considered to attempt to align components on either side of a cut.
 				
 				Unfortunately, as with its use in application placement, these
 				partitioning techniques are not ideal.  Consequently, partitioning
-				based placement techniques have largely been superseded in chip design
-				\cite{markov15}.
+				based placement techniques have largely been superseded in chip
+				design~\cite{markov15}.
 			
 			\subsubsection{Analytical placement}
 				
@@ -422,14 +422,15 @@
 				approaches is modelling the components to be placed as point-like
 				objects. As the number of components in digital circuits has grown,
 				this approximation improved resulting in analytical placement becoming
-				the most popular approach in use today \cite{markov15}.
+				the most popular approach in use today~\cite{markov15}.
 				
-				One popular analytical technique is `quadratic placement'
-				\cite{kahng11,spindler08}. In this algorithm the components in a
-				circuit are approximated as infinitesimal objects with wires between
-				them modelled as spring-like forces. Unlike physical springs, which
-				obey Hooke's law, the force exerted by a connection is proportional to
-				the \emph{square} of the distance between its terminals.
+				One popular analytical technique is `quadratic
+				placement'~\cite{kahng11,spindler08}. In this algorithm the components
+				in a circuit are approximated as infinitesimal objects with wires
+				between them modelled as spring-like forces. Unlike physical springs,
+				which obey Hooke's law, the force exerted by a connection is
+				proportional to the \emph{square} of the distance between its
+				terminals.
 				
 				\begin{figure}
 					\center
@@ -476,7 +477,7 @@
 				same coordinates. In circuit placement, the locations of `pads' used to
 				connect components in a circuit to the outside world are typically
 				fixed and provide convenient anchors during placement. Algorithms such
-				as SimPL \cite{kim12b} employ a combination of analytical techniques
+				as SimPL~\cite{kim12b} employ a combination of analytical techniques
 				to add virtual `anchor' components which prevent degenerate
 				solutions from forming. Unfortunately this approach further adds to the
 				difficulty of porting the technique to non-euclidean geometries. These
@@ -489,23 +490,24 @@
 			\subsubsection{Simulated annealing}
 				
 				Simulated annealing was originally developed specifically to be applied
-				to the problem of circuit placement \cite{kirkpatrick83}. Throughout
+				to the problem of circuit placement~\cite{kirkpatrick83}. Throughout
 				the late 1980s and early 1990s simulated annealing was the dominant
 				circuit placement technique when the first chips breaching one million
-				components appeared \cite{betz97,sechen85}. Due to the increased
+				components appeared~\cite{betz97,sechen85}. Due to the increased
 				effectiveness of quadratic placement as problems grew beyond tens of
 				millions of nodes, simulated annealing has fallen out of fashion as a
 				circuit placement technique. Despite this, various efforts continue to
 				be made to enhance the simulated annealing process' performance by
 				attempting to partition the input problem into several independent
-				problems \cite{choong10,haldar00} and parallelise the algorithm
-				\cite{ludwin08}.
+				problems~\cite{choong10,haldar00} and parallelise the
+				algorithm~\cite{ludwin08}.
 				
 				Simulated annealing notably remains popular as a stand-alone placement
 				tool in niche applications where flexibility is important. For example,
-				the flexible, multi-FPGA, Verilog-To-Routing (VTR) software suite
-				\cite{luu14} and Open Source Arachne-PNR \cite{cseed} use simulated
-				annealing to produce placements within multiple FPGA architectures.
+				the flexible, multi-FPGA, Verilog-To-Routing (VTR) software
+				suite~\cite{luu14} and Open Source Arachne-PNR~\cite{cseed} use
+				simulated annealing to produce placements within multiple FPGA
+				architectures.
 				
 				Since application placement problems are only now beginning to reach
 				the scales at which simulated annealing became popular in circuit
@@ -670,7 +672,7 @@
 				`cost' must also be determined. In principle, the ideal `cost' function
 				should accurately predict network congestion by performing routing and
 				modelling the resulting network traffic. This approach was used by
-				early application placement algorithms \cite{steele85} but incurs a
+				early application placement algorithms~\cite{steele85} but incurs a
 				large performance overhead. Since the simulated annealing algorithm
 				must re-evaluate the cost function before and after every swap, a cost
 				function which is slow to evaluate can result in unacceptable runtime
@@ -681,7 +683,7 @@
 				consumed. In the case of multicast nets, rather than computing
 				efficient multicast routes, an estimate is made based on the relative
 				locations of the vertices. Two popular techniques are the star model
-				and the Half Perimeter Wire Length (HPWL) \cite{kahng11} which are
+				and the Half Perimeter Wire Length (HPWL)~\cite{kahng11} which are
 				described below.
 				
 				\begin{figure}
@@ -739,8 +741,8 @@
 				topology, the HPWL model exactly matches the length of an optimal
 				multicast route for nets with two or three vertices. In nets with a
 				greater number of vertices, HPWL under-estimates the length of an
-				optimal route by a factor of $\sqrt{n}$ for nets with $n$ vertices
-				\cite{chung79}.
+				optimal route by a factor of $\sqrt{n}$ for nets with $n$
+				vertices~\cite{chung79}.
 				
 				The three non-orthogonal axes of hexagonal mesh and torus networks mean
 				that there are several ways in which a bounding box may be defined.
@@ -808,9 +810,9 @@
 				\label{sec:placement-schedule-acceptance}
 				
 				The annealing schedule and acceptance function described below are
-				taken directly from that used by the VPR FPGA placement software
-				\cite{betz97}. Due to a combination of time constraints and this
-				schedule being known to work well, alternatives have not been
+				taken directly from that used by the VPR FPGA placement
+				software~\cite{betz97}. Due to a combination of time constraints and
+				this schedule being known to work well, alternatives have not been
 				considered in this thesis.
 				
 				Starting with an initial random (but valid) placement, $N$ swaps
@@ -921,8 +923,8 @@
 				breadth-first traversal order of the application communication graph.
 				
 				\item[RCM] The `graph similarity based mapping' algorithm described by
-				Hoefler and Snir \cite{hoefler11}. This assigns vertices and fills
-				chips in Reverse Cuthill McKee order \cite{cuthill69}.
+				Hoefler and Snir~\cite{hoefler11}. This assigns vertices and fills
+				chips in Reverse Cuthill McKee order~\cite{cuthill69}.
 				
 				\item[Random] A random placement algorithm which places vertices
 				uniform-randomly with no regard for connectivity. This algorithm serves
@@ -956,30 +958,32 @@
 					Name & Vertices & Nets & Fan out & Notes \\
 					\midrule
 					Microcircuit   & \num{1338} & \num{760} & 94.50 (98) &
-						Spiking neural model of a cortical microcircuit \cite{potjans14}
-						implemented in `PyNN SpiNNaker' \cite{knight16}. \\
+						Spiking neural model of a cortical microcircuit~\cite{potjans14}
+						implemented in `PyNN SpiNNaker'~\cite{knight16}. \\
 					\addlinespace
 					Sudoku         & \num{299} & \num{109} & 15.86 (21) &
 						Spiking neural model which solves Sudoku puzzles implemented in `PyNN
-						SpiNNaker' \cite{knight16}. \\
+						SpiNNaker'~\cite{knight16}. \\
 					\addlinespace
 					Card-Sorting   & \num{469} & \num{919} & 1.06\newline (3) & 
-						Spiking neural model which solves the Wisconsin card sorting test
-						\cite{aubin15} implemented in `Nengo SpiNNaker' \cite{mundy15}. \\
+						Spiking neural model which solves the Wisconsin card sorting
+						test~\cite{aubin15} implemented in `Nengo
+						SpiNNaker'~\cite{mundy15}. \\
 					\addlinespace
 					CConv          & \num{2560} & \num{12020} & 3.48 (17) &
-						Spiking neural model which performs 512D circular convolution
-						\cite{eliasmith13} implemented in `Nengo SpiNNaker' \cite{mundy15}. A
-						key component in the Spaun neural model \cite{eliasmith12}. \\
+						Spiking neural model which performs 512D circular
+						convolution~\cite{eliasmith13} implemented in `Nengo
+						SpiNNaker'~\cite{mundy15}. A key component in the Spaun neural
+						model~\cite{eliasmith12}. \\
 					\addlinespace
 					Parse          & \num{855} & \num{3046} & 3.26 (64) &
 						Spiking neural model which performs simple sentence parsing
-						implemented in `Nengo SpiNNaker' \cite{mundy15}. \\
+						implemented in `Nengo SpiNNaker'~\cite{mundy15}. \\
 					\addlinespace
 					MU0            & \num{1084} & \num{1084} & 1.38\newline (3) &
 						A digital circuit simulation of the data path of a simple computer
-						processor \cite{nutter16} implemented using the digital circuit
-						simulator example program included with `Rig' \cite{rig15}. \\
+						processor~\cite{nutter16} implemented using the digital circuit
+						simulator example program included with `Rig'~\cite{rig15}. \\
 					\bottomrule
 				\end{tabular}
 				
@@ -1059,7 +1063,7 @@
 				required in the worst case after placement and is shown in
 				figure~\ref{fig:application-benchmarks-tables}. As is the practice of
 				the applications modelled by these benchmarks, routing tables are
-				compressed by the `Ordered Covering' algorithm \cite{mundy16} and
+				compressed by the `Ordered Covering' algorithm~\cite{mundy16} and
 				default-routing is used when possible.
 				
 				Though many of the benchmarks do not run out of routing tables when

@@ -6,7 +6,7 @@
 	poses many practical challenges in terms of arranging, installing and
 	maintaining the hundreds of metres of network cables required.  For
 	conventional architectures and network topologies techniques are well
-	understood and embodied by industry standards such as TAI-942 \cite{tia2006}.
+	understood and embodied by industry standards such as TAI-942~\cite{tia2006}.
 	SpiNNaker's use of the hexagonal torus topology render existing mappings
 	insufficient.
 	
@@ -58,7 +58,7 @@
 			\item[Cost:] Shorter cables are cheaper than long ones.  Longer cables
 			imply more cabling in a given space making the task of cable installation
 			and system maintenance more difficult, increasing labour costs by as much
-			as $5\times$ \cite{curtis12}.
+			as $5\times$~\cite{curtis12}.
 			
 		\end{description}
 		
@@ -90,7 +90,7 @@
 		\end{figure}
 		
 		In conventional torus topologies, the need for long cables is eliminated by
-		folding and interleaving units of the network \cite[chapter~5]{dally04}.
+		folding and interleaving units of the network~\cite[chapter~5]{dally04}.
 		This process is illustrated for a 1D torus topology (a ring network) in
 		\ref{fig:ring-folding}. A na\"ive arrangement of units in this topology
 		results in a long cable connecting the units at the ends of the ring
@@ -179,7 +179,7 @@
 		The nodes in super computer networks are usually relatively small, for
 		example a single chip. Tens of nodes are packed together into a single
 		unit, such as a circuit board or server blade, to simplify assembly and
-		share common power and cooling resources \cite{gilge14,ajima12}. In
+		share common power and cooling resources~\cite{gilge14,ajima12}. In
 		commercial super computers built on non-hexagonal torus topologies, each
 		unit's nodes represent a hypercube partition of the overall topology as
 		illustrated in figure~\ref{fig:hypercube-partitioning}
@@ -198,7 +198,7 @@
 		increasing design complexity.
 		
 		To avoid connectivity imbalance, SpiNNaker uses a `wrapped triple'
-		partitioning scheme \cite{davidsonWiring}, as illustrated in
+		partitioning scheme~\cite{davidsonWiring}, as illustrated in
 		figure~\ref{fig:wrapped-triple-partitioning}, described in detail in
 		appendix \ref{sec:partitioning}. In this partitioning scheme, the same
 		number of connections connect all six neighbouring units. As explained in
@@ -653,8 +653,8 @@
 			too slack, the excess obstructs access to the machine and can easily
 			become tangled \cite{cisco07}.
 			
-			In this case study the `rule of (three-)thumbs' proposed by Mazaris
-			\cite{mazaris97} is used which suggests that a minimum of
+			In this case study the `rule of (three-)thumbs' proposed by
+			Mazaris~\cite{mazaris97} is used which suggests that a minimum of
 			\SI{5}{\centi\meter} of slack be provided. As SpiNNaker uses
 			off-the-shelf S-ATA cables, only standard lengths of cable are available.
 			For any given span, the shortest length of cable providing at least
@@ -693,29 +693,29 @@
 					\label{fig:bgWiringInstallation}
 				\end{subfigure}
 				
-				\caption{BlueGene/Q cable installation \cite{cscs13}.}
+				\caption{BlueGene/Q cable installation~\cite{cscs13}.}
 				\label{fig:bgWiring}
 			\end{figure}
 			
 			In other large scale architectures, the task of cable installation is
 			completed by a team of technicians aided by the use of standardised
-			labelling for cables and sockets \cite{tia2006} as illustrated in
+			labelling for cables and sockets~\cite{tia2006} as illustrated in
 			figure~\ref{fig:bgWiring}. In these architectures the cabling patterns
 			required are relatively straight forward, thanks to the coarseness of the
-			units used \cite{lakner07} or the use network topologies whose cabling
-			centres around high-fan-in switches \cite{cisco07,csernai15}.
+			units used~\cite{lakner07} or the use network topologies whose cabling
+			centres around high-fan-in switches~\cite{cisco07,csernai15}.
 			
 			It has been reported in the literature that when copper cables are used,
-			labour costs dominate \cite{popa10} and while cable costs are expected to
-			decline, labour costs are not \cite{mudigonda11}. Many researchers have
+			labour costs dominate~\cite{popa10} and while cable costs are expected to
+			decline, labour costs are not~\cite{mudigonda11}. Many researchers have
 			attempted to control cable installation costs by trying to reduce the
 			number or length of cables required by developing alternative network
-			topologies \cite{curtis12, popa10, mudigonda11}.  Unfortunately, these
+			topologies~\cite{curtis12, popa10, mudigonda11}.  Unfortunately, these
 			techniques do not apply to SpiNNaker since its network topology is fixed.
 			
 			Super computer architectures such as BlueGene/Q make use of large custom
 			`midplane' PCBs in place of some cables to interconnect units within a
-			cabinet \cite{milano13}. This scheme can greatly reduce wiring complexity
+			cabinet~\cite{milano13}. This scheme can greatly reduce wiring complexity
 			since only coarser-grain, cabinet-to-cabinet connectivity is implemented
 			by cables. Unfortunately this technique is expensive and constrains the
 			dimensions of the network topology supported by the machine. Since the
@@ -770,7 +770,7 @@
 			user interface and audible instructions delivered via headphones.  These
 			instructions explicitly specify the length of cable to use for each
 			connection avoiding the common problem of technicians over-estimating the
-			cable length required \cite{mazaris97}. Diagnostic registers in the
+			cable length required~\cite{mazaris97}. Diagnostic registers in the
 			network hardware are then used to verify the correct installation of each
 			cable in realtime ensuring mistakes are highlighted and fixed
 			immediately.
@@ -811,11 +811,11 @@
 			the one person working alone.  Figure~\ref{fig:install-histogram} shows
 			the histogram of cable installation times for the two cabinet machine.
 			These results confirm the observation by Mudigonda \emph{et al.} that
-			cables which span cabinets and frames take longer to install
-			\cite{mudigonda11}, even though these distances are still very short in
-			SpiNNaker. Compared with commercial installation efforts, per-cable
-			installation times are much shorter for SpiNNaker taking seconds compared
-			with minutes in other architectures \cite{mudigonda11}.
+			cables which span cabinets and frames take longer to
+			install~\cite{mudigonda11}, even though these distances are still very
+			short in SpiNNaker. Compared with commercial installation efforts,
+			per-cable installation times are much shorter for SpiNNaker taking
+			seconds compared with minutes in other architectures~\cite{mudigonda11}.
 			
 			The positive impact of real-time validation of installed cables can
 			clearly be seen by comparing the installation times of the one and two
@@ -845,13 +845,13 @@
 			The completed five cabinet system is photographed in
 			figure~\ref{fig:halfMillionCoreComplete}. A video showing the
 			construction and cable installation of this machine is available on
-			YouTube \cite{heathcote16}.
+			YouTube~\cite{heathcote16}.
 			
 		\subsection{Thermal implications}
 			
 			Conventional guidance on data centre design suggests that the cooling
 			performance of a system can be seriously impaired by routing cables
-			freely in front of the machine, as they are in SpiNNaker \cite{cisco07}.
+			freely in front of the machine, as they are in SpiNNaker~\cite{cisco07}.
 			To determine whether cabling had a significant impact on cooling a test
 			program was executed to simulate heavy load before and after cable
 			installation.  The temperatures reported by the sensors on the top of

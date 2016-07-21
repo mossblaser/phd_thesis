@@ -6,10 +6,10 @@
 	example in SpiNNaker each node is a single chip. To allow several nodes to
 	share resources such as power supplies and simplify construction, tens of
 	nodes are typically packed together into a single unit such as a circuit
-	board or server blade \cite{gilge14,ajima12}. In commercial super computers
+	board or server blade~\cite{gilge14,ajima12}. In commercial super computers
 	built on non-hexagonal torus topologies, units usually represent a hypercube
 	partition of the overall topology as illustrated in figure
-	\ref{fig:apdx-hypercube-partitioning} \cite{chen11,ajima12}.
+	\ref{fig:apdx-hypercube-partitioning}~\cite{chen11,ajima12}.
 	
 	\begin{figure}
 		\center
@@ -42,7 +42,7 @@
 	This adds both to design complexity and system cost.
 	
 	In this appendix, I describe how, and why, the `wrapped triple' partitioning
-	scheme devised by Davidson for SpiNNaker works \cite{davidsonWiring}.
+	scheme devised by Davidson for SpiNNaker works~\cite{davidsonWiring}.
 	
 	\section{Tiling}
 		
@@ -120,7 +120,7 @@
 		
 		Consequently, it is not possible to construct a hexagonal torus from
 		partitions of this shape. As an aside, it is possible to construct a
-		H-torus topology \cite{zhao08}, a related, but different, topology
+		H-torus topology~\cite{zhao08}, a related, but different, topology
 		mentioned briefly in \S\ref{sec:hex-vs-h-torus}.
 	
 	\section{Triads of triples}
@@ -187,7 +187,7 @@
 		In SpiNNaker, each board partitions the network into a four-layer wrapped
 		triple containing forty~eight chips (nodes) each, convenient for
 		implementation on a standard-sized $220.00\times233.35$~\si{\milli\meter}
-		Eurocard circuit board \cite{ieee11011}.
+		Eurocard circuit board~\cite{ieee11011}.
 		
 		A triad of boards may be interconnected to form a $12\times12$ hexagonal
 		torus as illustrated in figure~\ref{fig:threeboard-apdx}. Six boards may be

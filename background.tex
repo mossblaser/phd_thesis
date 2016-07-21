@@ -3,7 +3,7 @@
 	\label{sec:background}
 	
 	SpiNNaker is a massively parallel computer architecture designed to simulate
-	biologically realistic neural models \cite{furber07}. In this chapter we will
+	biologically realistic neural models~\cite{furber07}. In this chapter we will
 	explore this unconventional architecture in detail, starting with its purpose
 	before focusing on its most unconventional feature: its network.
 	
@@ -30,12 +30,12 @@
 		Though some detailed models of the electrochemical processes occurring
 		inside neurons are computationally intensive, simplified models such as the
 		Leaky Integrate-and-Fire (LIF) model can be implemented in just a handful
-		of CPU instructions \cite{vainbrand11}. Figure~\ref{fig:lif-neuron}
+		of CPU instructions~\cite{vainbrand11}. Figure~\ref{fig:lif-neuron}
 		illustrates a simple LIF neuron in which incoming spikes cause charge to
 		build up (integrated) which over time, leaks away. If an incoming spike
 		causes the charge to rise above a certain threshold, the neuron `fires'
 		producing an outgoing spike. Despite the simplicity of this model, large
-		neural networks such as Spaun \cite{eliasmith12} -- built entirely from LIF
+		neural networks such as Spaun~\cite{eliasmith12} -- built entirely from LIF
 		neurons -- exhibit complex behaviours such as fine motor control and
 		problem solving.
 		
@@ -53,12 +53,12 @@
 		required for this simulation would be \SI{179.2}{\tera\bit\per\second}. At
 		the time of writing, this is more than double the bisection bandwidth (the
 		theoretical worst-case throughput) of the world's most powerful super
-		computer \cite{dongarra16}.
+		computer~\cite{dongarra16}.
 	
 	\section{Network architecture}
 		
-		Architectures such as IBM's Blue Gene \cite{chiu11} and Cray's XK7
-		\cite{ornl16} employ powerful compute nodes connected together using
+		Architectures such as IBM's Blue Gene~\cite{chiu11} and Cray's
+		XK7~\cite{ornl16} employ powerful compute nodes connected together using
 		networks designed to transfer multi-kilobyte blocks of data between nodes.
 		Since neural models have relatively light computational requirements and
 		communications are based on small pieces of data (spikes), this type of
@@ -89,7 +89,7 @@
 		\end{figure}
 		
 		The fundamental building block of the SpiNNaker architecture is the
-		SpiNNaker chip (figure \ref{fig:spinnakerChip}) \cite{furber13}. Each chip
+		SpiNNaker chip (figure~\ref{fig:spinnakerChip})~\cite{furber13}. Each chip
 		contains eighteen low power ARM 968 processor cores each capable of
 		simulating between \num{200} and \num{2000} LIF neurons in real time
 		\cite{mundy15}.  Each core has a total of \SI{96}{\kilo\byte} of private
@@ -127,15 +127,15 @@
 		determine how the packet should be directed through the network.
 		
 		The optional \SI{32}{\bit} payload is not used by conventional spiking
-		neural simulations \cite{galluppi10} but has been exploited to enable more
-		efficient simulation of a particular class of neural models \cite{mundy15}.
+		neural simulations~\cite{galluppi10} but has been exploited to enable more
+		efficient simulation of a particular class of neural models~\cite{mundy15}.
 	
 	\section{The SpiNNaker router}
 		
 		The SpiNNaker router employs an unconventional design which, despite its
 		compact size and small energy requirements, implements a flexible multicast
 		routing scheme. Unlike conventional routers which often employ hard-coded
-		routing rules \cite[chapter~8]{dally04}, the SpiNNaker router uses a
+		routing rules~\cite[chapter~8]{dally04}, the SpiNNaker router uses a
 		programmable `routing table' to determine how packets should be forwarded.
 		In addition, to avoid deadlocks, SpiNNaker's router employs a simple,
 		timeout-based mechanism which exploits the ability of neural networks to
@@ -154,7 +154,7 @@
 			routing entry the packet is forwarded along every route specified by that
 			entry, potentially duplicating the packet. This `multicast' technique
 			allows packets to be transmitted once but received in a number of places
-			while making efficient use of the network \cite{navaridas12}.
+			while making efficient use of the network~\cite{navaridas12}.
 			
 			Though routing table entries are in finite supply (\num{1024} entries per
 			router), it is still possible for many thousands of traffic flows to be
@@ -216,8 +216,9 @@
 			chapter~\ref{sec:placement} by arranging applications appropriately
 			within SpiNNaker's network, routing table usage can be reduced. In
 			addition, other behaviours of SpiNNaker's router may be exploited to
-			compress an applications routing tables further, however the techniques
-			employed are beyond the scope of this thesis \cite{mundy16}.
+			compress an applications routing tables further~\cite{mundy16}, however
+			discussion of the specific techniques employed are beyond the scope of
+			this thesis.
 		
 		\subsection{Timeouts}
 			
@@ -330,7 +331,7 @@
 		height along the X and Y axes respectively. For example,
 		figure~\ref{fig:hexagonalTorusTopology} shows a $10\times10$ hexagonal
 		torus.  The nodes in a hexagonal torus topology are addressed using
-		hexagonal coordinates of the form $(x, y, z)$ \cite{patel15}. The bottom
+		hexagonal coordinates of the form $(x, y, z)$~\cite{patel15}. The bottom
 		left node (labelled $\alpha$ in the figure) has the coordinate $(0, 0, 0)$
 		and other nodes are assigned coordinates according to the number of hops
 		along each dimension from $(0, 0, 0)$, for example node $\beta$ has the
@@ -345,10 +346,10 @@
 		
 		The hexagonal torus topology was chosen over a more conventional network
 		topology -- such as a 2D or 3D torus (sometimes known as a 2-ary $N$-cube
-		or 3-ary $N$-cube respectively) \cite[chapters~3~and~5]{dally04} -- due to
+		or 3-ary $N$-cube respectively)~\cite[chapters~3~and~5]{dally04} -- due to
 		its balance of theoretical performance and practicality. The bisection
 		bandwidth of a topology indicates the theoretical worst-case total
-		throughput the network is able to sustain \cite[chapter~1]{dally04}.  In
+		throughput the network is able to sustain~\cite[chapter~1]{dally04}.  In
 		networks with homogeneous link throughput, bisection bandwidth is
 		determined by the number of links cut by a balanced bisection of the
 		network.  Figure~\ref{fig:bisection-bandwidth} illustrates the bisections
@@ -407,7 +408,7 @@
 		performance, mesh networks are rarely used as the basis of a network
 		architecture. Mesh networks, however, are occasionally formed when a
 		network is partitioned into several smaller sub-networks to allow multiple
-		users to share a system \cite{spalloc16}.
+		users to share a system~\cite{spalloc16}.
 		
 		\begin{figure}
 			\center
@@ -437,12 +438,12 @@
 		
 		The hexagonal torus topology is not to be confused with the `H-torus'
 		topology. This topology also uses a hexagonal tiling of nodes and even
-		wraps this tiling into a torus-like topology \cite{zhao08}. However,
+		wraps this tiling into a torus-like topology~\cite{zhao08}. However,
 		H-torus topologies have very different characteristics to the hexagonal
-		torus topology and are related to `twisted torus' topologies
-		\cite{camara10}. For example, figure~\ref{fig:topo-compare} illustrates one
-		major difference in the way paths wrap around the peripheries of both
-		topologies.
+		torus topology and are related to `twisted torus'
+		topologies~\cite{camara10}. For example, figure~\ref{fig:topo-compare}
+		illustrates one major difference in the way paths wrap around the
+		peripheries of both topologies.
 	
 	\section{Scaling-up SpiNNaker machines}
 		
@@ -452,11 +453,12 @@
 		be connected together to form larger systems.  Figure~\ref{fig:threeboard}
 		shows a prototype three board system. Though the chips are
 		\emph{physically} arranged in a (nearly) $7\times7$ grid on each SpiNNaker
-		board, they logically form a hexagonal `wrapped triple'
-		\cite{davidsonWiring} (see appendix~\ref{sec:partitioning}) which logically
-		fit together as illustrated in figure~\ref{fig:threeboard-separate}. The
-		labelled exposed corners of the three forty-eight chip boards connect
-		together to form a $12\times12$ hexagonal torus topology as illustrated in
+		board, they logically form a hexagonal `wrapped
+		triple'~\cite{davidsonWiring} (see appendix~\ref{sec:partitioning}) which
+		logically fit together as illustrated in
+		figure~\ref{fig:threeboard-separate}. The labelled exposed corners of the
+		three forty-eight chip boards connect together to form a $12\times12$
+		hexagonal torus topology as illustrated in
 		figure~\ref{fig:threeboard-wrapped}. Larger SpiNNaker machines are
 		assembled by combining more boards.
 		
@@ -507,9 +509,9 @@
 		connected with a 128~wire cable.  Cables and connectors supporting this
 		many signals are expensive, unreliable and physically large. Instead,
 		chip-to-chip connections between boards are multiplexed and demultiplexed
-		onto a single High-Speed Serial (HSS) link \cite{athavale05} carried via
+		onto a single High-Speed Serial (HSS) link~\cite{athavale05} carried via
 		commodity S-ATA cables which are often used to connect hard disks in
-		desktop computers and servers \cite{sata3spec}. The six high-speed links
+		desktop computers and servers~\cite{sata3spec}. The six high-speed links
 		are implemented by three onboard FPGAs (the three large chips at the top of
 		the SpiNNaker board) and are logically transparent to the underlying
 		network. The underlying technology and the choice of S-ATA cables limits

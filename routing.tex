@@ -24,7 +24,7 @@
 	will show, these algorithms are not portable and rely on, or attempt to work
 	around, specific features of their target network architecture. In
 	particular, existing work is dominated by the challenge of developing routing
-	schemes which avoid or resolve network deadlocks \cite[chapter~14]{dally04}.
+	schemes which avoid or resolve network deadlocks~\cite[chapter~14]{dally04}.
 	Due to SpiNNaker's unconventional use of timeout-based flow-control, it is
 	not subject to the routing restrictions present in other architectures
 	intended to cope with deadlocks. The post-processing technique proposed in
@@ -51,7 +51,7 @@
 			hexagonal torus network.
 			
 			In 2012, Davies \emph{et al.} evaluated the use of three common torus
-			routing algorithms in SpiNNaker \cite{davies12}. In each of the
+			routing algorithms in SpiNNaker~\cite{davies12}. In each of the
 			algorithms considered, multicast routes are constructed by merging
 			together unicast routes from the source to each sink. The following
 			underlying unicast routing algorithms were considered:
@@ -110,8 +110,8 @@
 			
 			In 2014, Navaridas \emph{et al.} introduced two new algorithms, `Enhanced
 			Shortest Path Routing' (ESPR) and `Neighbourhood Exploring Routing' (NER)
-			which are explicitly designed to generate multicast routes
-			\cite{navaridas14}.
+			which are explicitly designed to generate multicast
+			routes~\cite{navaridas14}.
 			
 			In both ESPR and NER, the algorithm considers each sink vertex in turn,
 			starting with those nearest to the source. For each vertex the algorithm
@@ -190,11 +190,11 @@
 			To prevent deadlocks, combinations of router microarchitectural features
 			and routing restrictions are often employed. For example, a simple
 			deadlock-free (unicast) routing algorithm for mesh and torus networks
-			mandates the use of DOR \cite{dally93}. Packets travelling in a positive
-			direction along each axis take priority over those travelling in a
-			negative direction. Packets travelling along the Y axis take priority
-			over those travelling along the X dimension. Given these rules it is
-			possible to define a total ordering on all hops in the network.
+			mandates the use of DOR~\cite[chapter~14]{dally04}. Packets travelling in
+			a positive direction along each axis take priority over those travelling
+			in a negative direction. Packets travelling along the Y axis take
+			priority over those travelling along the X dimension. Given these rules
+			it is possible to define a total ordering on all hops in the network.
 			Figure~\ref{fig:deadlock-free-dor} illustrates a $3\times3$ mesh network
 			whose hops have been numbered according to the total ordering defined
 			above.  Any `X-then-Y' DOR route through this network results in the use
@@ -206,9 +206,9 @@
 				\buildfig{figures/deadlock-free-dor.tex}
 			
 				\caption[Deadlock-free routing using DOR in a 2D mesh topology.]%
-				{Deadlock-free routing of two example routes using DOR in a 2D
-				mesh topology. The numbers of the hops taken by each route are given on
-				the right.}
+				{Deadlock-free routing of two example routes using DOR in a 2D mesh
+				topology. The numbers of the hops taken by each route are given on the
+				right. (Figure based on~\cite[figure~14.12]{dally04}.)}
 				\label{fig:deadlock-free-dor}
 			\end{figure}
 			
@@ -217,7 +217,7 @@
 			example, if the node at the bottom-right corner of the figure was faulty,
 			the dotted example route would be blocked as no alternative routes are
 			allowed. Although some routing schemes may feature more `relaxed' routing
-			rules \cite{rodrigo09}, these may still ultimately not tolerate all
+			rules~\cite{rodrigo09}, these may still ultimately not tolerate all
 			faults.
 			
 			\begin{figure}
@@ -230,7 +230,7 @@
 				\label{fig:lamb-nodes}
 			\end{figure}
 			
-			The 3D torus based BlueGene/L supercomputer \cite{adiga02} notably makes
+			The 3D torus based BlueGene/L supercomputer~\cite{adiga02} notably makes
 			use of DOR to ensure deadlock freedom while implementing fault tolerance
 			by disabling so-called `lamb' nodes. Lamb nodes are nodes which, though
 			otherwise healthy, could potentially have their DOR routes blocked by a
@@ -249,7 +249,7 @@
 			
 			Other routing algorithms proposed for BlueGene attempt to avoid the need
 			for lamb nodes by generating routes which reach their destination via a
-			`proxy' node \cite{gomez04}. In this scheme, a pair of nodes DOR route
+			`proxy' node~\cite{gomez04}. In this scheme, a pair of nodes DOR route
 			their messages via a `proxy' node.  This node is chosen such that routes
 			to and from the proxy are not obstructed by the fault.  This approach
 			relieves the need to sacrifice `lamb' nodes at the expense of adding to
@@ -259,8 +259,8 @@
 			efficient but fault intolerant routing algorithm is used which falls back
 			on a less efficient, fault tolerant routing algorithm when faults are
 			encountered. For example, the Immucube network architecture employs three
-			virtual networks which operate independently over the same physical links
-			\cite{puente07}. Initially messages are routed in the first virtual
+			virtual networks which operate independently over the same physical
+			links~\cite{puente07}. Initially messages are routed in the first virtual
 			network using a high-performance routing scheme which may deadlock or be
 			blocked by faults.  If a deadlock occurs, the deadlocked packet is moved
 			into the second virtual network in which packets are routed using a less
@@ -273,19 +273,19 @@
 			Instead of providing multiple routing rules which apply globally, some
 			hybrid routing schemes divide the system up into regions in which
 			different routing rules are used which avoid the particular patterns of
-			faults in those areas \cite{mejia06,boppana95}. As in other hybrid
+			faults in those areas~\cite{mejia06,boppana95}. As in other hybrid
 			approaches, fault tolerance is usually achieved through the use of a
 			relatively inefficient routing algorithm, though their use is constrained
 			to a single region of the system.
 			
 			Other routing algorithms are distributed and use only local information
-			along with limited information from their peers to generate routes
-			\cite{fick09b}. In SpiNNaker applications, route generation is typically
-			carried out centrally, allowing algorithms such as ESPR and NER to take
-			advantage of global information when producing multicast routes. Since
-			routes in SpiNNaker applications are often static, using a centralised
-			routing algorithm to produce high quality routes `up front' may be
-			favourable over potentially faster but lower quality distributed
+			along with limited information from their peers to generate
+			routes~\cite{fick09b}. In SpiNNaker applications, route generation is
+			typically carried out centrally, allowing algorithms such as ESPR and NER
+			to take advantage of global information when producing multicast routes.
+			Since routes in SpiNNaker applications are often static, using a
+			centralised routing algorithm to produce high quality routes `up front'
+			may be favourable over potentially faster but lower quality distributed
 			algorithms.
 			
 			Algorithms for very different network architectures also tend to be a
@@ -293,8 +293,8 @@
 			dynamic and irregular network topology and so the trade-offs made in
 			their routing algorithms are a poor match for the applications considered
 			here.  Similarly work focusing on other architectures whose topology
-			differs significantly from a torus -- for example data centre networks
-			\cite{guo08,liao12} -- are not general enough be of use.
+			differs significantly from a torus -- for example data centre
+			networks~\cite{guo08,liao12} -- are not general enough be of use.
 			
 			%% XXX: Include remark about circuit routing? Probably not since there
 			%%      are an awful lot of routing-like problems and just covering one
@@ -334,7 +334,7 @@
 		computational complexity, their runtime is often bounded by $O(H^D)$ where
 		$H$ is the number of hops in the generated route and $D$ is the number of
 		dimensions in the network.  Since $H$ is likely to be small because faults
-		are rare and isolated in real systems \cite{gara05,alverson12}, the runtime
+		are rare and isolated in real systems~\cite{gara05,alverson12}, the runtime
 		of the graph search will also be small in practice.
 		
 		The PGS repair technique proceeds as follows. A route is initially
@@ -445,10 +445,10 @@
 				
 			\end{description}
 			
-			The uniform traffic pattern is widely used in networks research
-			\cite[chapter~23]{dally04} while the 3-centroids model was developed
-			specifically to reproduce the traffic patterns found in the neural
-			applications SpiNNaker is designed for \cite{navaridas14}.
+			The uniform traffic pattern is widely used in networks
+			research~\cite[chapter~23]{dally04} while the 3-centroids model was
+			developed specifically to reproduce the traffic patterns found in the
+			neural applications SpiNNaker is designed for~\cite{navaridas14}.
 			
 			There is little consensus on the `fan out' of routes in real SpiNNaker
 			applications. As we will see in the next chapter
@@ -510,7 +510,7 @@
 			super computer installations are not widely available, however, published
 			Mean-Time-Between-Failure (MTBF) figures coincidentally place an upper
 			bound on link failure rates at a similar \SI{0.03}{\percent} in
-			one-year-old BlueGene/Q systems \cite{chiu11}.
+			one-year-old BlueGene/Q systems~\cite{chiu11}.
 			
 			In addition to link faults, there is currently an undiagnosed problem
 			with the SDRAM packaged with around \SI{1}{\percent} of SpiNNaker chips
@@ -520,8 +520,8 @@
 			
 			Surprisingly, research into fault tolerant routing in super computers
 			appears to focus on benchmarks with even higher fault rates which range
-			from \SI{3}{\percent} to as high as \SI{7}{\percent}
-			\cite{ho04,gomez04,mejia06}.
+			from \SI{3}{\percent} to as high as
+			\SI{7}{\percent}~\cite{ho04,gomez04,mejia06}.
 			
 			In this evaluation, fault rates ranging from \SI{0.01}{\percent} to
 			\SI{5}{\percent} are considered to cover both realistic fault levels
@@ -532,7 +532,7 @@
 			Since the PGS repair process may be used with any routing algorithm, all
 			experiments have been conducted against routes initially generated by the
 			NER routing algorithm since this algorithm is known to produce high
-			quality routes for SpiNNaker's network \cite{navaridas14}.
+			quality routes for SpiNNaker's network~\cite{navaridas14}.
 			
 		\subsection{Algorithm runtime}
 			
@@ -608,7 +608,7 @@
 			generation scheme is widely used in SpiNNaker applications due to its
 			simplicity and efficient use of routing table entries. Though more
 			effective techniques exist for compressing routing tables for use in
-			SpiNNaker's network \cite{mundy16}, their performance is strongly
+			SpiNNaker's network~\cite{mundy16}, their performance is strongly
 			influenced by other factors such as routing key selection and so are not
 			considered here.
 			
@@ -695,7 +695,7 @@
 				The number of routes passing through the most-used link is recorded,
 				giving an indication of the peak congestion in the network.  In
 				general, network throughput is bounded by the slowest, or in this case,
-				most congested link in the system \cite[chapter~1]{dally04} making this
+				most congested link in the system~\cite[chapter~1]{dally04} making this
 				metric a suitable proxy for peak throughput.
 				
 				\begin{figure}

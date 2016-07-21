@@ -166,7 +166,7 @@
 			hybrid system could be used in which intra-cabinet connections continue
 			to use the current HSS link technology while inter-cabinet links might
 			use optical connections. This type of architecture could be supported by
-			the use of pluggable `SFP+' transceiver modules \cite{sff01}.
+			the use of pluggable `SFP+' transceiver modules~\cite{sff01}.
 		
 		\subsection{Cabling assistance for other architectures}
 			
@@ -179,7 +179,7 @@
 			
 			During the construction of prototype SpiNNaker machines, each cable took
 			seconds to install compared with the minutes reported for existing
-			systems \cite{mudigonda11}. Part of this increase in efficiency appears
+			systems~\cite{mudigonda11}. Part of this increase in efficiency appears
 			to result from the immediate identification of mistakes made during
 			cabling, saving time-consuming backtracking later on.
 			
@@ -203,12 +203,12 @@
 			not just faults which can cause contiguous blockages in the network
 			topology. In reality, researchers do not always require a full-sized
 			SpiNNaker system to perform their experiments so large SpiNNaker systems
-			are soft-partitioned on demand into many smaller machines
-			\cite{spalloc16}. To ensure isolation between partitioned sub-machines,
-			HSS links between boards in different partitions are disabled. Because of
-			SpiNNaker's `wrapped triple' partitioning scheme, the resulting
-			sub-machines have hexagonal \emph{mesh} topologies (i.e.  without
-			wrap-around links) with irregular boundaries as in
+			are soft-partitioned on demand into many smaller
+			machines~\cite{spalloc16}. To ensure isolation between partitioned
+			sub-machines, HSS links between boards in different partitions are
+			disabled. Because of SpiNNaker's `wrapped triple' partitioning scheme,
+			the resulting sub-machines have hexagonal \emph{mesh} topologies (i.e.
+			without wrap-around links) with irregular boundaries as in
 			figure~\ref{fig:spalloc-mesh}.
 			
 			\begin{figure}
@@ -249,7 +249,7 @@
 				reduced by forcing the PGS repair process to take more varied routes
 				around faults. For example, in circuit routing algorithms, routers
 				avoid congestion by increasing the cost of routes which pass through
-				congested areas \cite{kahng11}. A similar technique could be used in
+				congested areas~\cite{kahng11}. A similar technique could be used in
 				PGS repair to spread the routes it produces.
 				
 				An alternative approach would be to adapt the base routing algorithms
@@ -263,7 +263,7 @@
 				for network faults, or irregularities, when estimating the cost of
 				placement solutions.  Future work may exploit techniques used in
 				congestion-aware circuit placement techniques which could be adapted to
-				support application placement \cite{viswanathan07}.
+				support application placement~\cite{viswanathan07}.
 		
 		\subsection{Reducing placement execution time}
 			
@@ -278,13 +278,13 @@
 			simulated-annealing-based placement by shrinking the application graph
 			being placed.
 			
-			For example, graph clustering \cite{schaeffer07} may be used to group
+			For example, graph clustering~\cite{schaeffer07} may be used to group
 			together strongly connected vertices which would then be placed as a
 			single unit.  Unfortunately, clustering can suffer from the same problems
 			as graph-partitioning-based placement: vertices may be grouped together
 			in ways which, in practice, cannot be packed together into a given portion
 			of a machine.  A possible solution to this problem is to use a two-phase
-			placement approach \cite{kahng11}. In a `global' placement phase,
+			placement approach~\cite{kahng11}. In a `global' placement phase,
 			solutions are permitted which can slightly over-allocate resources but
 			overall achieve good placement quality. In the `detailed' placement phase
 			which follows, the solution is `legalised' by making small changes to the
@@ -307,7 +307,7 @@
 			future application behaviour.
 			
 			In the short term, more sophisticated synthetic benchmark generation
-			techniques used by the circuit placement community \cite{nam07} may offer
+			techniques used by the circuit placement community~\cite{nam07} may offer
 			alternative benchmarks for future work. In the longer term, however, it
 			is hoped that the availability of large SpiNNaker systems -- and
 			placement and routing algorithms better suited to exploit them -- will
@@ -325,7 +325,7 @@
 		SpiNNaker's architecture for the first time. The availability of larger
 		SpiNNaker machines paves the way for future large scale neural modelling
 		work built on much larger models such as Spaun, `the world's largest
-		functional brain model' \cite{eliasmith12}.
+		functional brain model'~\cite{eliasmith12}.
 		
 		Outside the SpiNNaker project, the hexagonal torus topology has also been
 		validated as a scalable and practical candidate for future network

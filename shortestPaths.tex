@@ -32,7 +32,7 @@
 	\section{Shortest path vectors}
 		
 		Many popular routing algorithms for torus topologies, including all
-		published algorithms designed for SpiNNaker \cite{davies12,navaridas14},
+		published algorithms designed for SpiNNaker~\cite{davies12,navaridas14},
 		function by computing \emph{shortest path vectors} between the endpoints of
 		a route and generating paths from these. A shortest path vector between two
 		nodes is a vector, $\mathbf{v} = (v_1, v_2, v_3, \ldots)$, whose magnitude,
@@ -67,7 +67,7 @@
 		$\|\mathbf{v}\|$.
 		
 		Many popular routing algorithms such as Dimension Order Routing, Right-Turn
-		Only Routing and Longest Dimension First Routing \cite{davies12} are simply
+		Only Routing and Longest Dimension First Routing~\cite{davies12} are simply
 		defined as a rule for ordering the hops specified by a shortest path
 		vector.
 		
@@ -148,7 +148,7 @@
 		
 		The problem of finding shortest path vectors in hexagonal mesh topologies
 		has been widely considered and formulations may be found in a variety of
-		applications, including computer games \cite{patel15}. Hexagonal
+		applications, including computer games~\cite{patel15}. Hexagonal
 		toruses, by contrast, have only received limited attention. In this section I
 		briefly summarise the solutions proposed for hexagonal mesh topologies
 		before more deeply examining existing solutions for torus topologies.
@@ -163,14 +163,15 @@
 			\end{figure}
 			
 			In hexagonal mesh topologies it is conventional to define three `axes' X,
-			Y and Z as shown in figure~\ref{fig:hex-mesh-topology-coordinates}
-			\cite{patel15}. In this example, the three labelled nodes `A', `B' and
-			`C' may be given position vectors such as $(1, 1, 0)$, $(3, 2, 0)$ and
-			$(0, 0, -7)$ respectively. As in other mesh networks, a vector between
-			two nodes is found by subtracting the nodes' vectors. For example, a
-			vector from `A' to `B' is $(3, 2, 0) - (1, 1, 0) = (2, 1, 0)$. This
-			vector can then be converted into a route in the same way as a mesh
-			network by taking any permutation of the three hops  X$^+\,$X$^+\,$Y$^+$.
+			Y and Z as shown in
+			figure~\ref{fig:hex-mesh-topology-coordinates}~\cite{patel15}. In this
+			example, the three labelled nodes `A', `B' and `C' may be given position
+			vectors such as $(1, 1, 0)$, $(3, 2, 0)$ and $(0, 0, -7)$ respectively.
+			As in other mesh networks, a vector between two nodes is found by
+			subtracting the nodes' vectors. For example, a vector from `A' to `B' is
+			$(3, 2, 0) - (1, 1, 0) = (2, 1, 0)$. This vector can then be converted
+			into a route in the same way as a mesh network by taking any permutation
+			of the three hops  X$^+\,$X$^+\,$Y$^+$.
 			
 			As explained in detail in appendix~\ref{app:minimal-hex-coordinates},
 			there are a multitude of vectors between any two points in a hexagonal
@@ -243,11 +244,11 @@
 			
 			\subsubsection{INSEE Method}
 			
-				The INSEE interconnect simulator has been used in all published research
-				into SpiNNaker's hexagonal torus interconnect to date
-				\cite{navaridas09,ghasempour15}. Internally INSEE finds shortest path
-				vectors by selecting the shortest of a set of twelve candidate vectors
-				known to always contain a shortest path vector.
+				The INSEE interconnect simulator has been used in all published
+				research into SpiNNaker's hexagonal torus interconnect to
+				date~\cite{navaridas09,ghasempour15}. Internally INSEE finds shortest
+				path vectors by selecting the shortest of a set of twelve candidate
+				vectors known to always contain a shortest path vector.
 				
 				\begin{figure}
 					\center
@@ -350,7 +351,7 @@
 			
 				Hoffmann and D\'es\'erable describe a technique for computing shortest
 				path vectors in hexagonal toruses with equal width and height called
-				the XYZ-Protocol \cite{hoffmann15,hoffmann11}. First, the source and
+				the XYZ-Protocol~\cite{hoffmann15,hoffmann11}. First, the source and
 				destination nodes are translated such that the source node lies at the
 				centre of the topology. The authors observe that from the centre of the
 				topology the pattern with which distances grow differs between the four
@@ -483,7 +484,7 @@
 			%
 			This expression has also been derived independently from a
 			graph-theoretic study of Cayley graphs, of which the hexagonal torus
-			topology is a special case, by Xiao and Parhami \cite{xiao04}.
+			topology is a special case, by Xiao and Parhami~\cite{xiao04}.
 		
 		\subsection{Computational efficiency}
 			
@@ -494,9 +495,9 @@
 			To compare the performance of the three shortest path vector functions
 			considered, the runtime of a C implementation of each technique was
 			measured. The C implementation of the INSEE method is taken directly from
-			the INSEE source code \cite{navaridas09}. The C implementation of the
-			XYZ-Protocol is a straight translation of the published pseudocode
-			\cite{hoffmann15}.
+			the INSEE source code~\cite{navaridas09}. The C implementation of the
+			XYZ-Protocol is a straight translation of the published
+			pseudocode~\cite{hoffmann15}.
 			
 			Each function was called approximately 3 billion times: once for every
 			pair of source and destination nodes in a $240\times240$ node hexagonal
