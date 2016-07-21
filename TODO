@@ -1,19 +1,16 @@
 TODOs
 =====
 
+* Check for orphans and widows
+* Check figure placement
 * MOAR proof reading
 * Write acknowledgements
 * Add git revision to some page (title page?)
 * Add silly counts (figures? hexagons?)
 * Get technical feedback
-  - Abstract: Jim
   - Ch 3: Wiring: Simon (SENT)
   - Ch 4: Shortest Paths: Mundy(?)
   - Ch 5: Routing: Javier (SENT)
-  - Ch 7: Conclusions: Jim (SENT)
-  - Ap A: Partitioning: Jim (SENT), Simon(?)
-  - Ap B: Minimising hex coordinates: Jim (SENT)
-  - Ap C: Software: Jim (SENT)
 * Collect & document experiments and results in a git repo
   - Mapping used (SpiNNer example)
   - Wire lengths (data)
