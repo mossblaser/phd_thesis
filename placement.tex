@@ -258,10 +258,10 @@
 				
 				The number of swaps to attempt and the rate at which the temperature is
 				changed is dictated by an `annealing schedule' and can have a major
-				impact on the runtime of the algorithm and the quality of the placement
-				solution. I describe one such schedule in detail later in this chapter
-				when describing my own simulated annealing based application placement
-				algorithm.
+				impact on the execution time of the algorithm and the quality of the
+				placement solution. I describe one such schedule in detail later in
+				this chapter when describing my own simulated annealing based
+				application placement algorithm.
 				
 				Towards the end of the 1980s, application placement appeared to be
 				becoming less important as super computer network architectures
@@ -588,7 +588,7 @@
 			
 			\subsubsection{Additional constraints}
 				
-				Real world applications may also apply some additional constraints on
+				Real-world applications may also apply some additional constraints on
 				placement solutions.
 				
 				Some applications require that certain vertices are always placed on a
@@ -675,8 +675,8 @@
 				early application placement algorithms~\cite{steele85} but incurs a
 				large performance overhead. Since the simulated annealing algorithm
 				must re-evaluate the cost function before and after every swap, a cost
-				function which is slow to evaluate can result in unacceptable runtime
-				for the algorithm as a whole.
+				function which is slow to evaluate can result in unacceptable execution
+				time for the algorithm as a whole.
 				
 				A common alternative to measuring congestion directly used by many
 				circuit placement algorithms is to approximate the network resources
@@ -798,12 +798,12 @@
 				On the basis of these results, the star cost function is rejected on
 				the grounds that it produces the least accurate cost estimates. Though
 				the $\sqrt{n}$-scaled Hexagonal HPWL cost function produces the
-				smallest error in general, its runtime is three times greater than the
-				$\sqrt{n}$-scaled HPWL$_{xy}$ whose accuracy is very similar. Since the
-				execution speed of the cost function has a significant impact on the
-				runtime of the simulated annealing algorithm, I have used the
-				$\sqrt{n}$-scaled HPWL$_{xy}$ net cost function as a trade-off between
-				accuracy and performance in this work.
+				smallest error in general, its execution time is three times greater
+				than the $\sqrt{n}$-scaled HPWL$_{xy}$ whose accuracy is very similar.
+				Since the execution speed of the cost function has a significant impact
+				on the execution time of the simulated annealing algorithm, I have used
+				the $\sqrt{n}$-scaled HPWL$_{xy}$ net cost function as a trade-off
+				between accuracy and performance in this work.
 				
 			\subsubsection{Annealing schedule and acceptance function}
 				
@@ -896,9 +896,10 @@
 		A good placement application should produce placements which result in
 		efficient use of network resources. Secondly, in SpiNNaker, routing table
 		usage is an important concern since routing table entries are a finite
-		resource. Finally, the runtime of the placement algorithm itself is
+		resource. Finally, the execution time of the placement algorithm itself is
 		relevant since, especially in applications where experiments are of short
-		duration, placement runtime should not dominate application runtime.
+		duration, placement execution time should not dominate application
+		execution time.
 		
 		In this evaluation, the simulated annealing based placement algorithm
 		introduced in this chapter is compared with a number of baseline algorithms
@@ -1031,7 +1032,7 @@
 						\center
 						\buildrplot{figures/application-benchmarks-runtime.R}
 						
-						\caption{Placement algorithm runtime}
+						\caption{Placement algorithm execution time}
 						\label{fig:application-benchmarks-runtime}
 					\end{subfigure}
 					
@@ -1084,25 +1085,26 @@
 				increases. This is because the number of routing entries required by a
 				route is usually independent of length due to default routing.
 				
-				The third metric considered is the runtime of the placement algorithm,
-				shown in figure~\ref{fig:application-benchmarks-runtime}. The simulated
-				annealing algorithm requires much longer runtimes than the baseline
-				placement algorithms considered; in several cases an order of magnitude
-				longer. This is unsurprising since the baseline algorithms are
-				comparatively simplistic greedy algorithms. In all applications
-				considered, however, the runtime of the simulated annealing placement
-				algorithm is multiple orders of magnitude shorter than other processes
-				involved in configuring and loading the simulation onto SpiNNaker.
+				The third metric considered is the execution time of the placement
+				algorithm, shown in figure~\ref{fig:application-benchmarks-runtime}.
+				The simulated annealing algorithm requires much longer execution times
+				than the baseline placement algorithms considered; in several cases an
+				order of magnitude longer. This is unsurprising since the baseline
+				algorithms are comparatively simplistic greedy algorithms. In all
+				applications considered, however, the execution time of the simulated
+				annealing placement algorithm is multiple orders of magnitude shorter
+				than other processes involved in configuring and loading the simulation
+				onto SpiNNaker.
 				
 				The `Microcircuit' benchmark is notable in that all of the placement
 				algorithms take a long time to execute compared with the other
-				benchmarks. This longer runtime can be attributed to a preprocessing
-				step shared by every placement algorithm's implementation which handles
-				`same chip' constraints. Unlike the other application graphs, the
-				`Microcircuit' communication graph makes liberal use of these
-				constraints and, due to the na\"ive implementation of the preprocessing
-				step, all of the placement algorithms are slowed down by a constant
-				amount.
+				benchmarks. This longer execution time can be attributed to a
+				preprocessing step shared by every placement algorithm's implementation
+				which handles `same chip' constraints. Unlike the other application
+				graphs, the `Microcircuit' communication graph makes liberal use of
+				these constraints and, due to the na\"ive implementation of the
+				preprocessing step, all of the placement algorithms are slowed down by
+				a constant amount.
 			
 			\subsubsection{Impact of placement on `PyNN SpiNNaker'}
 				
@@ -1270,7 +1272,7 @@
 						\center
 						\buildrplot{figures/placement-scalability-size-runtime.R}
 						
-						\caption{Placement algorithm runtime}
+						\caption{Placement algorithm execution time}
 						\label{fig:placement-scalability-size-runtime}
 					\end{subfigure}
 					
@@ -1282,12 +1284,12 @@
 					\label{fig:placement-scalability-size}
 				\end{figure}
 				
-				This experiment intends to determine how the runtime and placement
-				quality of each algorithm changes as the size of the application graph
-				is increased. In this experiment, each vertex is connected to four
-				randomly picked neighbours whose distribution of distances have a
-				standard-deviation of three hops. The results are shown in
-				figure~\ref{fig:placement-scalability-size}.
+				This experiment intends to determine how the execution time and
+				placement quality of each algorithm changes as the size of the
+				application graph is increased. In this experiment, each vertex is
+				connected to four randomly picked neighbours whose distribution of
+				distances have a standard-deviation of three hops. The results are
+				shown in figure~\ref{fig:placement-scalability-size}.
 				
 				In figure~\ref{fig:placement-scalability-size-quality} we can see that,
 				as the placement problem size grows, existing placement techniques
@@ -1304,14 +1306,15 @@
 				routing these placed graphs requires more memory than was available in
 				the cluster machines and so no results are reported.
 				
-				Figure~\ref{fig:placement-scalability-size-runtime} shows the runtime
-				of the routing algorithms for each problem size. Once again the
-				simulated annealing algorithm's runtime consistently dwarfs the other
-				algorithms but grows approximately linearly with the problem size. For
-				the largest graph in the experiment, the runtime of the annealing based
-				placer reaches approximately 12~hours. While such long runtimes may not
-				be ideal, for large placement problems, simulated annealing produces
-				placements with substantially reduced overhead.
+				Figure~\ref{fig:placement-scalability-size-runtime} shows the execution
+				time of the routing algorithms for each problem size. Once again the
+				simulated annealing algorithm's execution time consistently dwarfs the
+				other algorithms but grows approximately linearly with the problem
+				size. For the largest graph in the experiment, the execution time of
+				the annealing based placer reaches approximately 12~hours. While such
+				long execution times may not be ideal, for large placement problems,
+				simulated annealing produces placements with substantially reduced
+				overhead.
 			
 			\subsubsection{Fan out}
 			
@@ -1341,7 +1344,7 @@
 						\center
 						\buildrplot{figures/placement-scalability-fanout-runtime.R}
 						
-						\caption{Placement algorithm runtime}
+						\caption{Placement algorithm execution time}
 						\label{fig:placement-scalability-fanout-runtime}
 					\end{subfigure}
 					
@@ -1351,14 +1354,14 @@
 					\label{fig:placement-scalability-fanout}
 				\end{figure}
 				
-				Another factor which can have a significant impact on placement runtime
-				is the fan out of the nets in an application graph. A second experiment
-				was conducted to determine the effects of increasing the fan out of the
-				synthetic application graph. The number of vertices in the graph was
-				fixed at \num{16384} and the fan out of the nets connecting these
-				vertices increased. Again, each combination of placement algorithm and
-				fan out was tested twenty times and the results are shown in
-				figure~\ref{fig:placement-scalability-fanout}.
+				Another factor which can have a significant impact on placement
+				execution time is the fan out of the nets in an application graph. A
+				second experiment was conducted to determine the effects of increasing
+				the fan out of the synthetic application graph. The number of vertices
+				in the graph was fixed at \num{16384} and the fan out of the nets
+				connecting these vertices increased. Again, each combination of
+				placement algorithm and fan out was tested twenty times and the results
+				are shown in figure~\ref{fig:placement-scalability-fanout}.
 				
 				As shown in figure~\ref{fig:placement-scalability-fanout-quality}, the
 				quality of the placements produced does not change dramatically as the
@@ -1368,10 +1371,10 @@
 				quality.
 				
 				In all but the random placer (which does not consider connectivity),
-				the placement algorithms' runtimes grow in proportion to the fan out
-				(figure~\ref{fig:placement-scalability-fanout-quality}). Once again,
-				simulated annealing is significantly slower than the other algorithms
-				but scales approximately linearly with problem size.
+				the placement algorithms' execution times grow in proportion to the fan
+				out (figure~\ref{fig:placement-scalability-fanout-quality}). Once
+				again, simulated annealing is significantly slower than the other
+				algorithms but scales approximately linearly with problem size.
 	
 	\section{Conclusions}
 		
@@ -1392,9 +1395,9 @@
 		Synthetic benchmarks have demonstrated that the proof-of-concept simulated
 		annealing based placement algorithm developed as part of this work is able
 		to maintain good placement quality in networks containing over one million
-		vertices. Though runtimes are considerably slower than existing application
-		placement algorithms, taking over twelve hours for one million vertex
-		networks, at these scales simulated annealing is the only placement
+		vertices. Though execution times are considerably longer than existing
+		application placement algorithms, taking over twelve hours for one million
+		vertex networks, at these scales simulated annealing is the only placement
 		algorithm able to deliver results within an order of magnitude of an ideal
 		placement solution.
 		

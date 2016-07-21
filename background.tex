@@ -64,7 +64,7 @@
 		communications are based on small pieces of data (spikes), this type of
 		architecture is poorly suited to the task.
 		
-		SpiNNaker's architectural target is to support realtime simulations of up
+		SpiNNaker's architectural target is to support real-time simulations of up
 		to one billion neurons. Since neural models such as LIF are inexpensive to
 		model and many neurons can be simulated independently in parallel,
 		SpiNNaker employs many small, energy efficient ARM processors
@@ -91,7 +91,7 @@
 		The fundamental building block of the SpiNNaker architecture is the
 		SpiNNaker chip (figure~\ref{fig:spinnakerChip})~\cite{furber13}. Each chip
 		contains eighteen low power ARM 968 processor cores each capable of
-		simulating between \num{200} and \num{2000} LIF neurons in real time
+		simulating between \num{200} and \num{2000} LIF neurons in real-time
 		\cite{mundy15}.  Each core has a total of \SI{96}{\kilo\byte} of private
 		Tightly-Coupled Memory (TCM) and shares access to \SI{128}{\mega\byte} of
 		on-chip SDRAM with other cores on the same chip. Finally, each chip
@@ -523,7 +523,7 @@
 	\section{Conclusions}
 		
 		The SpiNNaker architecture has been designed to enable the simulation of
-		large biologically realistic neural models in real time. To support this,
+		large biologically realistic neural models in real-time. To support this,
 		its network architecture takes on an unconventional design based on a
 		custom router and hexagonal torus topology. In the remainder of this
 		thesis, I will tackle a number of the challenges in scaling up the

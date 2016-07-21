@@ -26,8 +26,8 @@
 	network more evenly.
 	
 	In this chapter, I assume an idealised hexagonal torus topologies without
-	faults or other irregularities. The challenge handling such artefacts in real
-	world systems will be tackled in chapter~\ref{sec:routing}.
+	faults or other irregularities. The challenge handling such artefacts in
+	real-world systems will be tackled in chapter~\ref{sec:routing}.
 	
 	\section{Shortest path vectors}
 		
@@ -493,36 +493,36 @@
 			chosen used can be an important consideration.
 			
 			To compare the performance of the three shortest path vector functions
-			considered, the runtime of a C implementation of each technique was
-			measured. The C implementation of the INSEE method is taken directly from
-			the INSEE source code~\cite{navaridas09}. The C implementation of the
-			XYZ-Protocol is a straight translation of the published
+			considered, the execution time of a C implementation of each technique
+			was measured. The C implementation of the INSEE method is taken directly
+			from the INSEE source code~\cite{navaridas09}. The C implementation of
+			the XYZ-Protocol is a straight translation of the published
 			pseudocode~\cite{hoffmann15}.
 			
 			Each function was called approximately 3 billion times: once for every
 			pair of source and destination nodes in a $240\times240$ node hexagonal
 			torus topology. The total execution time is then divided by the number of
-			calls to the shortest path vector function giving an average runtime.
-			This experiment was repeated 50 times and the overall average runtime of
-			each shortest path vector function was recorded. The experiments were
-			conducted on a cluster of idle workstations with 3.10~GHz Intel
-			Core-i5-2400 CPUs. The function implementations were compiled with GCC
-			5.3.0 with optimisations enabled (\verb|-O2|).
+			calls to the shortest path vector function giving an average execution
+			time.  This experiment was repeated 50 times and the overall average
+			execution time of each shortest path vector function was recorded. The
+			experiments were conducted on a cluster of idle workstations with
+			3.10~GHz Intel Core-i5-2400 CPUs. The function implementations were
+			compiled with GCC 5.3.0 with optimisations enabled (\verb|-O2|).
 			
 			\begin{figure}
 				\center
 				\buildrplot{figures/shortest-path-vector-runtimes.R}
 				
-				\caption[Mean runtime of each shortest path vector function.]%
-				{Mean runtime of each shortest path vector function. Error bars
-				indicate the range of the mean runtimes of the fifty
+				\caption[Mean execution time of shortest path vector functions.]%
+				{Mean execution time of each shortest path vector function. Error bars
+				indicate the range of the mean execution times of the fifty
 				3-billion-combination experiments.}
 				\label{fig:shortest-path-vector-runtimes}
 			\end{figure}
 			
-			Figure~\ref{fig:shortest-path-vector-runtimes} shows the runtimes of each
-			shortest path vector function. From these results we can see that the
-			INSEE method is slower than the other techniques. Although the
+			Figure~\ref{fig:shortest-path-vector-runtimes} shows the execution times
+			of each shortest path vector function. From these results we can see that
+			the INSEE method is slower than the other techniques. Although the
 			XYZ-protocol and IQ method have similar performance, since the IQ method
 			works for any hexagonal torus topology it is the better candidate for use
 			in new applications.

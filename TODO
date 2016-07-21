@@ -2,9 +2,8 @@ TODOs
 =====
 
 * Make consistent
-  - 'realtime' vs 'real time' vs 'real-time'
-  - 'runtime(s)' vs 'run time(s)' vs 'run-time(s)'
   - 'real world' vs 'real-world'
+* Make border widths around distance maps in chapter 4 consistent
 * MOAR proof reading
 * Write acknowledgements
 * Add git revision to some page (title page?)

@@ -104,19 +104,19 @@
 		The simulated-annealing-based placement algorithm consistently outperforms
 		pre-existing placement algorithms included in benchmarks in terms of
 		placement quality.  In the case of one benchmark, simulated-annealing-based
-		placement made it possible to run that neural simulation in real time for
+		placement made it possible to run that neural simulation in real-time for
 		the first time.  At larger scales, simulated annealing was also found to be
 		able to produce good quality placements in benchmarks containing over one
 		million processes -- the largest size supported by the SpiNNaker
 		architecture.
 		
 		The major shortcoming of simulated-annealing-based placement is its
-		execution speed. Though its runtime grows in proportion to the size of the
-		problem, the implementation used took over 12~hours to place a synthetic
-		problem for the largest planned SpiNNaker machine. Though tractable --
-		particularly given the relative output quality compared with the prior
-		state-of-the-art -- the algorithm is unlikely to function comfortably as-is
-		on larger problems.
+		execution speed. Though its execution time grows in proportion to the size
+		of the problem, the implementation used took over 12~hours to place a
+		synthetic problem for the largest planned SpiNNaker machine. Though
+		tractable -- particularly given the relative output quality compared with
+		the prior state-of-the-art -- the algorithm is unlikely to function
+		comfortably as-is on larger problems.
 		
 		The conclusion to be drawn from this result, however, is not just that
 		simulated annealing is a good solution for today's placement problems but
@@ -171,7 +171,7 @@
 		\subsection{Cabling assistance for other architectures}
 			
 			A secondary result of the construction of prototype SpiNNaker systems in
-			chapter~\ref{sec:building} was the use of realtime guidance and feedback
+			chapter~\ref{sec:building} was the use of real-time guidance and feedback
 			to assist cable installation. I am not aware of this technique's use for
 			existing architectures and, following the success experienced in this
 			project, it is possible that the technique may also be useful in
@@ -183,12 +183,12 @@
 			to result from the immediate identification of mistakes made during
 			cabling, saving time-consuming backtracking later on.
 			
-			In many real world network installations, units are less densely packed
+			In many real-world network installations, units are less densely packed
 			than in SpiNNaker and so longer cables are often required. As a
 			consequence, cabling errors may become more likely as cabling patterns
 			are spread over a larger area. Like SpiNNaker, conventional networking
 			hardware is often equipped with a generous range of indicator LEDs and
-			diagnostic facilities which might be used to implement realtime
+			diagnostic facilities which might be used to implement real-time
 			installation guidance. Future work could explore the use of this
 			technique in the construction of other large scale networks, such as data
 			centres.
@@ -274,9 +274,9 @@
 			performance and scalability of this technique.
 			
 			In addition to considering alternative placement algorithms based on
-			other methods, a possible approach is to attempt to reduce the runtime of
-			simulated-annealing-based placement by shrinking the application graph
-			being placed.
+			other methods, a possible approach is to attempt to reduce the execution
+			time of simulated-annealing-based placement by shrinking the application
+			graph being placed.
 			
 			For example, graph clustering~\cite{schaeffer07} may be used to group
 			together strongly connected vertices which would then be placed as a
@@ -294,9 +294,10 @@
 			clustering process to clusters which fit on a single SpiNNaker chip. In
 			typical SpiNNaker application graphs, clustering to this level may reduce
 			placement problem sizes by an order of magnitude and, consequently,
-			reduce runtimes by the same ratio. Preliminary experiments suggest that
-			this approach might result in little placement quality loss for large
-			placement problems while substantially reducing overall runtime.
+			reduce execution times by the same ratio. Preliminary experiments suggest
+			that this approach might result in little placement quality loss for
+			large placement problems while substantially reducing overall execution
+			time.
 		
 		\subsection{Benchmarking}
 			
