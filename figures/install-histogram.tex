@@ -12,11 +12,11 @@
 	            , reverse legend
 	            %, tick align=inside
 	            ]
-		\addplot [white,draw opacity=0,fill=cb3class0] table [x=duration, y=intra_frame, col sep=comma]
+		\addplot [white,draw opacity=0,fill=gray3class0] table [x=duration, y=intra_frame, col sep=comma]
 		         {\filename};
-		\addplot [white,draw opacity=0,fill=cb3class1] table [x=duration, y=inter_frame, col sep=comma]
+		\addplot [white,draw opacity=0,fill=gray3class1] table [x=duration, y=inter_frame, col sep=comma]
 		         {\filename};
-		\addplot [white,draw opacity=0,fill=cb3class2] table [x=duration, y=inter_cabinet, col sep=comma]
+		\addplot [white,draw opacity=0,fill=gray3class2] table [x=duration, y=inter_cabinet, col sep=comma]
 		         {\filename};
 		
 		\legend{Intra-frame,Inter-frame,Inter-cabinet}

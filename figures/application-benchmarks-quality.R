@@ -13,6 +13,7 @@ goodness <- ggplot(d, aes(x=netlist, y=1/total_cost, fill=placer, group=placer))
                         }
                       ) +
     placement_bar_theme +
+    colour_gray4 +
     theme(axis.title.x = element_blank()) +
     theme(plot.margin=unit(c(0,0,0.3,0), "lines")) +
     labs( y="Improvement ($\\times$)"

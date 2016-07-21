@@ -9,6 +9,7 @@ goodness <- ggplot(d, aes(x=netlist, y=max_entries, fill=placer, group=placer)) 
     theme(legend.position = "none") +
     theme(axis.title.x = element_blank()) +
     theme(plot.margin=unit(c(0,0,0.3,0), "lines")) +
+    colour_gray4 +
     labs( y="Max table entries"
         , fill=""
         )

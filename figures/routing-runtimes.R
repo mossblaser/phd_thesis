@@ -45,6 +45,6 @@ runtime_v_faults <- ggplot(d %>% filter( router=="NER"
                               scale_x_discrete(labels = format_decimals(2)) +
                               scale_y_continuous(expand=c(0, 0)) +
                               geom_blank(aes(y=(exectime+post_exectime+post_exectime_ci)*1.05)) +
-                              scale_fill_brewer(palette="Dark2", direction=-1)
+                              colour_gray2
 
 render_diagram(runtime_v_faults, commandArgs(TRUE)[1])

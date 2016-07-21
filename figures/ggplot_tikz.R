@@ -42,6 +42,14 @@ render_diagram <- function (plot, filename, width=5.4, height=5.4) {
 	unlink(working_dir, recursive=TRUE, force=TRUE)
 }
 
+# Colourschemes
+colour_gray2      = scale_fill_manual(values=c("#666666", "#CCCCCC"))
+colour_gray2_line = scale_color_manual(values=c("#666666", "#CCCCCC"))
+colour_gray3      = scale_fill_manual(values=c("#666666", "#999999", "#CCCCCC"))
+colour_gray3_line = scale_color_manual(values=c("#666666", "#999999", "#CCCCCC"))
+colour_gray4      = scale_fill_manual(values=c("#CCCCCC", "#999999", "#666666", "#333333"))
+colour_gray4_line = scale_color_manual(values=c("#CCCCCC", "#999999", "#666666", "#333333"))
+
 # Number formatting function, takes a number of decimal places and returns a
 # function which takes numbers/number-strings and produces a string with the
 # number printed with that many decimal places.
