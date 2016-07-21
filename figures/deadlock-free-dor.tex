@@ -1,6 +1,6 @@
 \begin{tikzpicture}[thick, scale=2.0]
 	
-	\pgfmathtruncatemacro{\width}{3}
+	\pgfmathtruncatemacro{\width}{4}
 	\pgfmathtruncatemacro{\widthh}{\width-1}
 	\pgfmathtruncatemacro{\height}{3}
 	\pgfmathtruncatemacro{\heightt}{\height-1}
@@ -10,7 +10,7 @@
 	                        ]
 	
 	% Compass points
-	\coordinate (compass) at (-0.75, 1.75);
+	\coordinate (compass) at (-0.5, 1.75);
 	\draw [->] (compass) -- ++(0.5, 0) node [anchor=west] {X};
 	\draw [->] (compass) -- ++(0, 0.5) node [anchor=south] {Y};
 	
@@ -83,15 +83,19 @@
 	\end{scope}
 	
 	\begin{scope}[->, dotted]
-		\draw (n11.center) -- (n\width1.center) -- (n\width2.center);
-		\draw (1 + \width, 1.5) --
-		      node [anchor=north] {0, 1, 16}
+		\draw (n21.center) --
+		      (n\width1.center) --
+		      (n\width\height.center);
+		\draw (0.75 + \width, 1.5) --
+		      node [anchor=north,inner sep=0.5em] {1, 2, 24, 25}
 		      ++(1, 0);
 	\end{scope}
 	\begin{scope}[->, dashed]
-		\draw (n\width\height.center) -- (n2\height.center) -- (n22.center);
-		\draw (1 + \width, 2.5) --
-		      node [anchor=north] {10, 20}
+		\draw ([yshift=0.1em]n31.center) --
+		      ([yshift=0.1em]n11.center) --
+		      (n12.center);
+		\draw (0.75 + \width, 2.5) --
+		      node [anchor=north,inner sep=0.5em] {10, 11, 18}
 		      ++(1, 0);
 	\end{scope}
 	
