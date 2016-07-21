@@ -163,13 +163,13 @@
 		\subsection{Fault tolerant routing}
 			
 			Numerous fault tolerant routing algorithms have been proposed for
-			super-computer networks. These algorithms are largely constrained by the
-			need to maintain deadlock freedom. Since SpiNNaker's routers employ a
-			timeout based deadlock-breaking strategy, much of this effort is
-			unnecessary in SpiNNaker. As we see below, this frequently renders
-			existing fault tolerant routing algorithms unnecessarily complex and
-			inflexible making them unable to take advantage of the efficiency savings
-			achieved by algorithms such as NER.
+			super-computer networks but they are largely constrained by the need to
+			maintain deadlock freedom. Since SpiNNaker's routers employ a timeout
+			based deadlock-breaking strategy, much of this effort is unnecessary in
+			SpiNNaker. As we see below, this frequently renders existing fault
+			tolerant routing algorithms unnecessarily complex and inflexible making
+			them unable to take advantage of the efficiency savings achieved by
+			algorithms such as NER.
 			
 			\begin{figure}
 				\center
@@ -319,13 +319,13 @@
 		existing, efficient routing algorithm to be used while falling back on
 		other routes when faults are encountered.  In this section I describe a
 		novel hybrid routing algorithm based on a post-processing scheme called
-		Partial Graph Search (PGS) Repair.  By relying on SpiNNaker's built in
-		timeout-based deadlock avoidance scheme PGS repair is not hampered by the
-		routing restrictions imposed by the architectures considered in other work.
-		For example, expensive router architectural features, such as the multiple
-		virtual networks used by Immucube, are not required. In addition, the
-		routes taken to avoid faults are not constrained to inefficient paths, such
-		as system-wide ring networks, to ensure deadlock freedom.
+		Partial Graph Search (PGS) Repair.  By using SpiNNaker's timeout-based
+		deadlock avoidance scheme, PGS repair is not hampered by the routing
+		restrictions imposed by other architectures. For example, expensive router
+		architectural features, such as the multiple virtual networks used by
+		Immucube, are not required. In addition, the routes taken to avoid faults
+		are not constrained to inefficient paths, such as system-wide ring
+		networks, to ensure deadlock freedom.
 		
 		The PGS repair technique uses a graph search algorithm to find alternative
 		routes around faulty nodes and to repair fault-afflicted routes generated
@@ -397,9 +397,8 @@
 		resulting in a multicast route not obstructed by faults.
 		
 		Because SpiNNaker's network architecture ensures deadlock freedom for any
-		routing pattern, the graph search algorithm used is free to generate any
-		route to avoid a dead link, limiting the overhead introduced when avoiding
-		faults.
+		routing pattern, the graph search algorithm is free to use any route to
+		avoid a dead link, reducing the overhead introduced by avoiding faults.
 		
 	\section{Evaluation \& Results}
 		
@@ -409,14 +408,9 @@
 		fault patterns (excluding those which completely disconnect entire regions
 		of the network). As a consequence, my evaluation focuses on the impact on
 		performance PGS repair imposes rather than its ability to avoid faults.
-		Specifically I concentrate on the impact of PGS repair on the following
-		figures of merit:
-		
-		\begin{itemize}
-			\item Algorithm execution time
-			\item Routing table utilisation
-			\item Network throughput
-		\end{itemize}
+		Specifically I concentrate on the impact of PGS repair on three figures of
+		merit: algorithm execution time, routing table utilisation, and network
+		throughput.
 		
 		\subsection{Traffic Patterns}
 			
@@ -465,14 +459,14 @@
 			\begin{figure}
 				\center
 				\begin{subfigure}{0.48\linewidth}
-					\hspace*{-1.5cm}
+					\hspace*{-0.5cm}
 					\buildfig{figures/fault-example-uniform.tex}
 					
 					\caption{Uniform}
 					\label{fig:fault-example-uniform}
 				\end{subfigure}
 				\begin{subfigure}{0.48\linewidth}
-					\hspace*{-1.5cm}
+					\hspace*{-0.5cm}
 					\buildfig{figures/fault-example-hss.tex}
 					
 					\caption{HSS Link}
@@ -517,7 +511,7 @@
 			with the SDRAM packaged with around \SI{1}{\percent} of SpiNNaker chips
 			which renders them unusable. These faulty chips leave gaps in the network
 			which dominate `true' link faults making the effective link fault rate
-			rise to around \SI{1}{\percent} in practice.
+			rise to \SI{1}{\percent}.
 			
 			Surprisingly, research into fault tolerant routing in super computers
 			appears to focus on benchmarks with even higher fault rates which range
@@ -795,12 +789,12 @@
 		respectively.  As a result of these performance characteristics, PGS repair
 		is a viable option for real SpiNNaker applications.
 		
-		At more extreme fault rates, not anticipated in real-world systems, the
-		algorithm still functions correctly but the results incur much greater
-		routing table and congestion overhead, particularly when faults are
-		concentrated in one area. Future extensions to this algorithm might aim to
-		reduce this overhead by producing longer and more varied routes around
-		faults to even out load.
+		At more extreme fault rates, not anticipated in real-world systems, PGS
+		repair produces routes which are valid but incur much greater congestion
+		and routing table overhead, particularly when faults are concentrated in
+		one area. Future extensions to this algorithm might aim to reduce this
+		overhead by producing longer and more varied routes around faults to even
+		out load.
 		
 		The success of the PGS repair algorithm demonstrates that SpiNNaker's
 		unconventional deadlock avoidance scheme may warrant greater attention in

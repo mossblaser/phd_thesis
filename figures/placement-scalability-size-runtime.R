@@ -22,7 +22,7 @@ scalability <- ggplot(d,
     theme(legend.position = "none") +
     theme(plot.margin=unit(c(0,2,0,0), "lines")) +
     labs(x="Number of vertices",
-         y="Runtime",
+         y="Execution time",
          fill="",
          color="")
 

@@ -21,7 +21,7 @@ scalability <- ggplot(d,
     theme(plot.margin=unit(c(0,1,0,0), "lines")) +
     theme(legend.position = "none") +
     labs(x="Fan out",
-         y="Runtime",
+         y="Execution time",
          fill="",
          color="")
 

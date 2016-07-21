@@ -13,24 +13,24 @@ The Spiking Neural Network Architecture (SpiNNaker) is a novel super computer
 architecture designed to simulate biologically realistic models of brains in
 real-time \cite{furber07}. Though neurons, the building blocks of the brain,
 are relatively well understood, their complex interactions remain mysterious;
-Just as understanding the workings of a transistor is insufficient to
-understand a modern microprocessor, neuroscientists believe that understanding
-a neuron in isolation cannot explain the brain and that understanding their
-connectivity is key \cite{eliasmith13,eliasmith14}. Experiments on real brains,
-however, are fraught with difficulty. In addition to ethical concerns,
-variations between individuals can be significant and it is only possible to
-record tens or hundreds of the trillions of signals in the brain and even then
-only with limited control over which signals are recorded. Computer simulations
-of models of large neural networks, however, enable researchers to develop
-repeatable experiments and gain complete visibility of any signal and any
-neuron. Models such as Spaun~\cite{eliasmith12}, built from millions of
-simulated neurons, have shown great promise in expanding our understanding of
-higher-level brain functions such as memory and simple problem solving.
-Unfortunately these neural models are expensive to simulate because of their
-enormous implicit parallelism, requiring hours of serial compute time to
-simulate each second of neural activity. As well as being inconvenient, this
-precludes the use of robotics to immerse these models in real-world
-environments and also limits studies of long-term behaviours such as learning.
+just as understanding the workings of a transistor is insufficient to
+understand a microprocessor, neuroscientists believe that neurons in isolation
+cannot explain the brain and that understanding their connectivity is key
+\cite{eliasmith13,eliasmith14}. Experiments on real brains, however, are
+fraught with difficulty. In addition to ethical concerns, variations between
+individuals can be significant. Further, it is only possible to record tens or
+hundreds of the brain's trillions of signals and even then only limited control
+is possible over which signals are recorded. Computer simulations of models of
+neural networks, however, enable researchers to develop repeatable experiments
+and gain complete visibility of any signal and any neuron. Models such as
+Spaun~\cite{eliasmith12}, built from millions of simulated neurons, have shown
+great promise in expanding our understanding of higher-level brain functions
+such as memory and simple problem solving. Unfortunately these models are
+expensive to simulate due to their enormous implicit parallelism, requiring
+hours of serial compute time to simulate each second of neural activity. As
+well as being inconvenient, this precludes the use of robotics to immerse these
+models in real-world environments and also limits studies of long-term
+behaviours such as learning.
 
 SpiNNaker is designed to enable the real-time simulation of models containing
 up to one billion neurons -- approximately \SI{1}{\percent} of a human brain or
@@ -59,8 +59,7 @@ SpiNNaker's network fit together in a honeycomb-like pattern where messages may
 chapter~\ref{sec:background}, the hexagonal torus topology, in theory, sits at
 a `sweet spot' in terms of network performance and practicality. As the first
 known large-scale installation of a hexagonal torus topology, however, there
-remain a number of practical challenges for large SpiNNaker machines arising
-from this choice.
+remain a number of practical challenges for large SpiNNaker machines.
 
 As super computer networks have grown in scale to millions of processors the
 task of dealing with previously rare faults has grown.  Though fault rates in
@@ -69,17 +68,17 @@ hundreds of thousands of links meaning that even fault rates of a fraction of a
 percent will impact tens or hundreds of links. To enable reliable operation,
 networks must be able to adapt the routes taken by messages through the network
 to avoid faulty links and nodes. The techniques employed are often closely tied
-to a particular network architecture and consequently SpiNNaker's novel network
-architecture demands its own approach.
+to a particular network architecture and because of this SpiNNaker's novel
+network architecture demands its own approach.
 
 Another challenge introduced by the growing scale of super computers is making
 \emph{efficient} use of network resources. Communicating processes should be
 located on logically `nearby' nodes to reduce network load. The neural models
 for which SpiNNaker is designed are often described abstractly, rather than
 geometrically, using modelling languages such as PyNN~\cite{davison08} and
-Nengo~\cite{eliasmith04}.  Because of this, the communication requirements of
-simulations can be highly irregular making an efficient placement of processes
-onto processors in the machine non-trivial.
+Nengo~\cite{eliasmith04}.  Consequently, communication requirements can be
+irregular making finding `good' placements of neurons onto processors
+non-trivial.
 
 %Contributions
 %

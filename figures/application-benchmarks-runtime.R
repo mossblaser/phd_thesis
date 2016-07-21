@@ -17,7 +17,7 @@ runtime <- ggplot(d, aes(x=netlist, y=runtime, fill=placer, group=placer)) +
     theme(plot.margin=unit(c(0.5,0,0.3,0), "lines")) +
     theme(axis.title.x = element_blank()) +
     colour_gray4 +
-    labs( y="Runtime (\\si{\\second})"
+    labs( y="Execution time (\\si{\\second})"
         , fill=""
         )
 

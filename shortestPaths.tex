@@ -351,11 +351,13 @@
 			
 				Hoffmann and D\'es\'erable describe a technique for computing shortest
 				path vectors in hexagonal toruses with equal width and height called
-				the XYZ-Protocol~\cite{hoffmann15,hoffmann11}. First, the source and
-				destination nodes are translated such that the source node lies at the
-				centre of the topology. The authors observe that from the centre of the
-				topology the pattern with which distances grow differs between the four
-				quadrants outlined in figure~\ref{fig:xyz-protocol-regions}.
+				the XYZ-Protocol~\cite{hoffmann15,hoffmann11}.
+				
+				First, the source and destination nodes are translated such that the
+				source node lies at the centre of the topology. The authors observe
+				that from the centre of the topology the pattern with which distances
+				grow differs between the four quadrants outlined in
+				figure~\ref{fig:xyz-protocol-regions}.
 				
 				If the destination lies in quadrants 1 or 4, a route may be constructed
 				as if in a hexagonal mesh topology. If the destination lies in regions
@@ -557,8 +559,9 @@
 			
 			Unlike non-hexagonal topologies, when the aspect ratio of a hexagonal
 			topology is not $1:1$, some points may have many distinct (but equal
-			magnitude) shortest path vectors.  For example, figure~\ref{fig:spiralling} illustrates the three distinct shortest path vectors
-			between a single pair of nodes. None of the shortest path vector
+			magnitude) shortest path vectors.  For example,
+			figure~\ref{fig:spiralling} illustrates the three distinct shortest path
+			vectors between a single pair of nodes. None of the shortest path vector
 			functions discussed will generate all possible vectors in this situation,
 			potentially limiting the choices available to routing algorithms.  To
 			address this shortcoming, I propose a formula which enumerates every
@@ -566,12 +569,12 @@
 			
 			In a $W \times H$ hexagonal torus topology, the vector $(0, H, 0)$
 			straight-forwardly wraps once around the Y axis arriving back where it
-			started. The vector $(1,1,1)$ also arrives back at its starting point as
+			started. The vector $(1,1,1)$ also returns to its starting point as
 			described in appendix \ref{app:minimal-hex-coordinates}. Consequently
 			$(0,H,0) - H\cdot(1,1,1) = (-H, 0, -H)$ must also be a vector resulting
 			in no movement.  Adding this vector to shortest path vectors of the form
-			$(x, 0, z)$ where $x\ge H$ and $z\le0$ results in a new, distinct,
-			shortest path vector.
+			$(x, 0, z)$ where $x\ge H$ and $z\le0$ results in a new shortest path
+			vector.
 			
 			For example the vector $(10, 0, -1)$ (magnitude 11) in
 			figure~\ref{fig:spiralling} can be added with $(-4, 0, -4)$ yielding $(6,

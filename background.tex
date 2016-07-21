@@ -90,7 +90,7 @@
 		
 		The fundamental building block of the SpiNNaker architecture is the
 		SpiNNaker chip (figure~\ref{fig:spinnakerChip})~\cite{furber13}. Each chip
-		contains eighteen low power ARM 968 processor cores each capable of
+		contains eighteen low power ARM~968 processor cores each capable of
 		simulating between \num{200} and \num{2000} LIF neurons in real-time
 		\cite{mundy15}.  Each core has a total of \SI{96}{\kilo\byte} of private
 		Tightly-Coupled Memory (TCM) and shares access to \SI{128}{\mega\byte} of
@@ -170,17 +170,6 @@
 			to similar destinations share a similar prefix, the number of routing
 			entries required by a simulation is greatly reduced \cite{davies12}.
 			
-			\begin{figure}
-				\center
-				\buildfig{figures/routing-example.tex}
-				
-				\caption[Multicast routing example.]%
-				{Multicast routing example with \SI{4}{\bit} routing keys. Each
-				box represents a SpiNNaker chip whose router has been programmed with
-				the routing entries shown. Grey lines mark connections between chips.}
-				\label{fig:routing-example}
-			\end{figure}
-			
 			Consider the simplified example in figure~\ref{fig:routing-example} in
 			which a number of (\SI{4}{\bit}) routing table entries have been
 			configured in the routers of a small SpiNNaker network. If a packet with
@@ -210,6 +199,17 @@
 			In addition, by using \texttt{X}s in the routing table entry, the same
 			routing entries are sufficient to route packets with the keys
 			\texttt{0000}, \texttt{0001}, \texttt{0010} and \texttt{0011}.
+			
+			\begin{figure}
+				\center
+				\buildfig{figures/routing-example.tex}
+				
+				\caption[Multicast routing example.]%
+				{Multicast routing example with \SI{4}{\bit} routing keys. Each
+				box represents a SpiNNaker chip whose router has been programmed with
+				the routing entries shown. Grey lines mark connections between chips.}
+				\label{fig:routing-example}
+			\end{figure}
 			
 			In spite of these mechanisms, it is still possible for an application to
 			run out of routing table entries. As we will see in
@@ -321,11 +321,11 @@
 		
 		The wrap around connections in the topology are what give it the `torus'
 		part of its name. Figure~\ref{fig:torus-3d-flat} shows a hexagonal torus
-		topology drawn flat as in the previous figure. If the topology is rolled up
-		into a tube such that the top and bottom nodes become directly adjacent, a
-		tube is formed as in figure~\ref{fig:torus-3d-tube}. This tube can then be
-		bent to bring together the nodes at the ends of the tube to form a torus as
-		shown in figure~\ref{fig:torus-3d-torus}.
+		topology drawn flat. If the topology is rolled up into a tube such that the
+		top and bottom nodes become directly adjacent, a tube is formed as in
+		figure~\ref{fig:torus-3d-tube}. This tube can then be bent to bring
+		together the nodes at the ends of the tube to form a torus as shown in
+		figure~\ref{fig:torus-3d-torus}.
 		
 		A hexagonal torus topology is typically defined in terms of its width and
 		height along the X and Y axes respectively. For example,
@@ -340,9 +340,9 @@
 		location. For example $(3, 1, 0)$ and $(1, -1, -2)$ are also valid
 		coordinates for node $\beta$. These dual coordinates emerge from the fact
 		that adding $(1, 1, 1)$ to a coordinate produces an equivalent, but
-		different, coordinate. This phenomenon is explained in detail in
-		appendix~\ref{app:minimal-hex-coordinates} and related phenomena will be
-		discussed in chapter~\ref{sec:shortestPaths}.
+		different, coordinate. The cause of this particular phenomenon is explained
+		in detail in appendix~\ref{app:minimal-hex-coordinates} and related
+		phenomena will be discussed in chapter~\ref{sec:shortestPaths}.
 		
 		The hexagonal torus topology was chosen over a more conventional network
 		topology -- such as a 2D or 3D torus (sometimes known as a 2-ary $N$-cube

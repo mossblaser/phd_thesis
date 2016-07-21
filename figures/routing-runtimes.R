@@ -38,7 +38,7 @@ runtime_v_faults <- ggplot(d %>% filter( router=="NER"
                                                , ymax=exectime+exectime_ci
                                                )) +
                               labs( x="Link Faults (\\%)"
-                                  , y="Mean Runtime ($\\mu s$)"
+                                  , y="Mean Execution Time ($\\mu s$)"
                                   , fill=""
                                   ) +
                               bar_theme +
