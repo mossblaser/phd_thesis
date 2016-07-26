@@ -44,8 +44,6 @@
 % Show version/draft status in header
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% The background package is used to add things to the header
-\usepackage{background}
 
 % Package defines extra nodes relative to the page to allow nice positioning of
 % the notice.
@@ -54,11 +52,14 @@
 % Get commit information
 \makeatletter
 \immediate\write18{git show -s --format="\@percentchar h" > thesis.hash}
+\immediate\write18{git show -s --format="\@percentchar H" > thesis.fullhash}
 \immediate\write18{git show -s --format="\@percentchar aD" | cut -f 1 -d + > thesis.date}
 \immediate\write18{./git_change_summary.sh > thesis.gitchanges}
 \makeatother
 
-% Display at the bottom of the page (comment out to disable)
+% Display draft version at the bottom of every page (comment out to disable)
+% The background package is used to add things to the header
+\usepackage{background}
 \backgroundsetup{pages=all,
                  angle=0, scale=1,
                  color=black, opacity=1, contents={

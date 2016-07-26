@@ -18,6 +18,7 @@ references.bib
 *.wordcount
 *.date
 *.hash
+*.fullhash
 *.gitchanges
 _minted*/
 
