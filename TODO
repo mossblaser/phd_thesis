@@ -4,25 +4,11 @@ TODOs
 * MOAR proof reading
 * Write acknowledgements
 * Add silly counts (figures? hexagons?)
-* Get technical feedback
-  - Ch 4: Shortest Paths: Mundy(?)
-* Collect & document experiments and results in a git repo
-  - Mapping used (SpiNNer example)
-  - Wire lengths (data)
-  - Install times (data)
-  - Shortest path correctness experiments
-  - Shortest path timing experiment
-  - Routing experiments (work out what these are and find the branches...)
-  - Fault experiment on SpiNNaker (network tester experiment)
-  - Experimental error script for cost functions
-  - Application netlists
-  - Patches for netlist dumping in Nengo & PyNN
-  - Placement static analysis scripts (apps + scalability + faults)
-  - Experiment automation for Nengo experiments
-  - MU0 data path circuit sim script
-* Upload thesis to GitHub
+
+Non-thesis TODOs
+================
+
 * Document SC&MP boot process
-* Spalloc Server(?) Date+Time fix
 * Spalloc request specific set of boards
 
 Still-student TODOs
