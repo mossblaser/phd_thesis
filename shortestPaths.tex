@@ -25,7 +25,7 @@
 	path vectors, routing algorithms may be able to produce routes which load a
 	network more evenly.
 	
-	In this chapter, I assume an idealised hexagonal torus topologies without
+	In this chapter, I assume an idealised hexagonal torus topology without
 	faults or other irregularities. The challenge handling such artefacts in
 	real-world systems will be tackled in chapter~\ref{sec:routing}.
 	
@@ -444,10 +444,11 @@
 			\end{enumerate}
 			%
 			From these expressions we can determine which combination of axes the
-			shortest path vector wraps around by find the expression with the minimum
-			value. With this information, the shortest path can be found by
-			minimising the vector associated with that irregular quadrant.  Figure~\ref{fig:iqmethod.py} shows a simple Python implementation of the IQ
-			method.
+			shortest path vector wraps around by finding the expression with the
+			minimum value. With this information, the shortest path can be found by
+			minimising the vector associated with that irregular quadrant.
+			Figure~\ref{fig:iqmethod.py} shows a simple Python implementation of the
+			IQ method.
 			
 			\begin{figure}
 				\inputminted{python}{figures/iqmethod.py}

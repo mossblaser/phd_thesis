@@ -11,7 +11,7 @@
 	which ensures that the generated routes avoid faulty links and nodes.
 	
 	In SpiNNaker, the vast majority of network faults are the result of
-	manufacturing defects which are static and known before of routing time.
+	manufacturing defects which are static and known of before routing time.
 	Though transient faults can occur and new faults may develop as the hardware
 	ages, informal experiments suggest that such faults are unlikely, even during
 	application runs lasting on the order of a day at a time. As a consequence,
@@ -64,7 +64,7 @@
 				traversed is fixed.
 				
 				\item[Right Turn Only Routing (RTOR)] As in DOR except the dimension
-				order is chosen such that routes only contain right-turns.
+				order is chosen so that routes only contain right-turns.
 				
 				\item[Longest Dimension First Routing (LDFR)] As in DOR except the
 				dimension order is chosen in descending order of number of hops in each
@@ -117,7 +117,7 @@
 			starting with those nearest to the source. For each vertex the algorithm
 			attempts to find a nearby vertex to which a route already exists. If a
 			connected vertex is found, an LDFR route from that vertex is added. If no
-			nearby vertices are found the algorithm inserts a LDFR route from the
+			nearby vertices are found, the algorithm inserts a LDFR route from the
 			source vertex. By producing routes which connect to already-connected
 			nearby vertices, ESPR and NER hope to reduce the number of long-distance
 			routes from the source.
@@ -250,7 +250,7 @@
 			Other routing algorithms proposed for BlueGene attempt to avoid the need
 			for lamb nodes by generating routes which reach their destination via a
 			`proxy' node~\cite{gomez04}. In this scheme, a pair of nodes DOR route
-			their messages via a `proxy' node.  This node is chosen such that routes
+			their messages via a `proxy' node.  This node is chosen so that routes
 			to and from the proxy are not obstructed by the fault.  This approach
 			relieves the need to sacrifice `lamb' nodes at the expense of adding to
 			the workload of the proxy nodes and increasing routing complexity.
@@ -454,7 +454,7 @@
 			(\S\ref{sec:existing-applications}), fan outs in existing applications
 			vary between unicast routes and multicast routes with almost one hundred
 			sinks. Since informal experimentation has suggested that fan out does not
-			have a significant impact on the performance of PGS repair and I have
+			have a significant impact on the performance of PGS repair I have
 			simplified this evaluation by only considering routes with a single
 			source node and exactly sixteen sink nodes.
 		

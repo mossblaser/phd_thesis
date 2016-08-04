@@ -18,15 +18,15 @@ understand a microprocessor, neuroscientists believe that neurons in isolation
 cannot explain the brain and that understanding their connectivity is key
 \cite{eliasmith13,eliasmith14}. Experiments on real brains, however, are
 fraught with difficulty. In addition to ethical concerns, variations between
-individuals can be significant. Further, it is only possible to record tens or
-hundreds of the brain's trillions of signals and even then only limited control
-is possible over which signals are recorded. Computer simulations of models of
-neural networks, however, enable researchers to develop repeatable experiments
-and gain complete visibility of any signal and any neuron. Models such as
-Spaun~\cite{eliasmith12}, built from millions of simulated neurons, have shown
-great promise in expanding our understanding of higher-level brain functions
-such as memory and simple problem solving. Unfortunately these models are
-expensive to simulate due to their enormous implicit parallelism, requiring
+individuals can be significant. Furthermore, it is only possible to record tens
+or hundreds of the brain's trillions of signals and even then only limited
+control is possible over which signals are recorded. Computer simulations of
+models of neural networks however, enable researchers to develop repeatable
+experiments and gain complete visibility of any signal and any neuron. Models
+such as Spaun~\cite{eliasmith12}, built from millions of simulated neurons,
+have shown great promise in expanding our understanding of higher-level brain
+functions such as memory and simple problem solving. Unfortunately these models
+are expensive to simulate due to their enormous implicit parallelism, requiring
 hours of serial compute time to simulate each second of neural activity. As
 well as being inconvenient, this precludes the use of robotics to immerse these
 models in real-world environments and also limits studies of long-term
@@ -135,7 +135,7 @@ In chapters~\ref{sec:shortestPaths}~and~\ref{sec:routing} I develop new routing
 techniques for SpiNNaker's network. Chapter~\ref{sec:shortestPaths} develops an
 improved approach to finding the shortest paths through hexagonal torus
 topologies, an integral part of many routing algorithms. This approach is
-cheaper to compute than the state of the art and, unlike previous efforts, is
+cheaper to compute than the state-of-the-art and, unlike previous efforts, is
 able to discover all valid short paths through the topology. This theoretical
 advance brings hexagonal torus topologies in line with conventional topologies
 by providing routing algorithms with complete information about the paths
@@ -148,9 +148,9 @@ overheads reported in this chapter.
 
 Finally, in chapter~\ref{sec:placement}, I explore the problem of application
 placement in SpiNNaker's network. As in other networks and applications, neural
-simulations should be arranged such that communication occurs primarily between
+simulations should be arranged so that communication occurs primarily between
 processors close together in the network to control network load. Due to the
-irregular connectivity and large-scale of the neural models expected to run on
+irregular connectivity and large scale of the neural models expected to run on
 SpiNNaker, an automated approach is necessary. I develop a novel placement
 algorithm based on algorithms used for circuit layout in computer chips. My
 algorithm is found to allow some larger neural models to run on SpiNNaker for

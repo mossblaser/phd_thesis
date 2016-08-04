@@ -149,7 +149,7 @@
 			When a multicast packet arrives at a SpiNNaker router (either from a
 			local core or a neighbouring chip), the router looks up the routing key
 			in its routing table. This table consists of \num{1024} programmable
-			table entries, each specifying a routing key bit pattern and mask to
+			table entries, each specifying a routing key, bit pattern and mask to
 			match and a set of routes.  When a multicast packet's key is matched by a
 			routing entry the packet is forwarded along every route specified by that
 			entry, potentially duplicating the packet. This `multicast' technique
@@ -160,15 +160,16 @@
 			router), it is still possible for many thousands of traffic flows to be
 			routed through a single router. The bit pattern and mask in each routing
 			entry matches against the 32~bits of a routing key as either
-			`\texttt{1}', `\texttt{0}' or `\texttt{X}' (don't care).  This means that
-			a single routing entry may, for example, be used to match all routing
-			keys with a certain prefix. If a routing key is not matched by any entry
-			in the routing table then the packet is `default routed' in a straight
-			line. For example if a packet with an unmatched key is received from the
-			chip to the left, the packet will be default routed to the chip on the
-			right. By assigning routing keys such that neurons whose spikes are sent
-			to similar destinations share a similar prefix, the number of routing
-			entries required by a simulation is greatly reduced \cite{davies12}.
+			`\texttt{1}', `\texttt{0}' or `\texttt{X}' (`don't care').  This means
+			that a single routing entry may, for example, be used to match all
+			routing keys with a certain prefix. If a routing key is not matched by
+			any entry in the routing table then the packet is `default routed' in a
+			straight line. For example if a packet with an unmatched key is received
+			from the chip to the left, the packet will be default routed to the chip
+			on the right. By assigning routing keys such that neurons whose spikes
+			are sent to similar destinations share a similar prefix, the number of
+			routing entries required by a simulation is greatly reduced
+			\cite{davies12}.
 			
 			Consider the simplified example in figure~\ref{fig:routing-example} in
 			which a number of (\SI{4}{\bit}) routing table entries have been
@@ -216,7 +217,7 @@
 			chapter~\ref{sec:placement} by arranging applications appropriately
 			within SpiNNaker's network, routing table usage can be reduced. In
 			addition, other behaviours of SpiNNaker's router may be exploited to
-			compress an applications routing tables further~\cite{mundy16}, however
+			compress an application's routing tables further~\cite{mundy16}, however
 			discussion of the specific techniques employed are beyond the scope of
 			this thesis.
 		
@@ -255,7 +256,7 @@
 			biology, the loss of a single spike is unlikely to have a significant
 			impact on the behaviour of a neural model and therefore these simulations
 			are inherently tolerant of occasional dropped packets. During application
-			loading and other system tasks, a higher level, software driven protocol
+			loading and other system tasks, a higher level, software-driven protocol
 			based on acknowledgements and retransmissions is used to ensure
 			guaranteed delivery.
 			
@@ -447,7 +448,7 @@
 	
 	\section{Scaling-up SpiNNaker machines}
 		
-		To build large SpiNNaker systems comprising of tens of thousands of
+		To build large SpiNNaker systems comprising tens of thousands of
 		SpiNNaker chips, groups of forty-eight chips are mounted onto circuit
 		boards as illustrated in figure~\ref{fig:spinnakerBoard}. These boards may
 		be connected together to form larger systems.  Figure~\ref{fig:threeboard}
@@ -515,7 +516,7 @@
 		are implemented by three onboard FPGAs (the three large chips at the top of
 		the SpiNNaker board) and are logically transparent to the underlying
 		network. The underlying technology and the choice of S-ATA cables limits
-		each board-to-board connection to spanning at most one metre gaps. In
+		each board-to-board connection to spanning, at most, one metre gaps. In
 		chapter~\ref{sec:building} I present a cabling scheme for hexagonal torus
 		topologies which enable large SpiNNaker systems to be assembled using only
 		short cables between boards.

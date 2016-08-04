@@ -49,12 +49,12 @@
 		can be learnt from this perhaps more advanced field.
 		
 		In the application placement literature, the placement problem is often
-		referred by the umbrella term `mapping'. Unfortunately `mapping' is often
-		used more broadly to include other tasks such as routing and application
-		partitioning. To avoid ambiguity I use the term `placement', as preferred
-		by the chip and FPGA design communities, to refer specifically to the
-		problem of assigning vertices in an application's communication graph to
-		nodes in a machine's connectivity graph: the focus of this chapter.
+		referred to by the umbrella term `mapping'. Unfortunately `mapping' is
+		often used more broadly to include other tasks such as routing and
+		application partitioning. To avoid ambiguity I use the term `placement', as
+		preferred by the chip and FPGA design communities, to refer specifically to
+		the problem of assigning vertices in an application's communication graph
+		to nodes in a machine's connectivity graph: the focus of this chapter.
 		
 		\subsection{Application placement algorithms}
 			
@@ -68,7 +68,7 @@
 					\center
 					\buildfig{figures/fem-partitioning.tex}
 					
-					\caption[Partitioning of a 3D volumn for a $3\times4\times2$ torus.]%
+					\caption[Partitioning of a 3D volume for a $3\times4\times2$ torus.]%
 					{Example partitioning of a 3D volume to fit into a super
 					computer with a $3\times4\times2$ torus or mesh topology.}
 					\label{fig:fem-partitioning}
@@ -79,8 +79,8 @@
 				placement of the problem onto the target machine. For example when
 				simulating a 3D volume in a super computer with a $3 \times 4 \times 2$
 				3D torus or mesh topology network, the modelled volume might be divided
-				into as in figure~\ref{fig:fem-partitioning}. Each cuboid in the model
-				is then assigned to the corresponding node in the network topology.
+				as in figure~\ref{fig:fem-partitioning}. Each cuboid in the model is
+				then assigned to the corresponding node in the network topology.
 				
 				Unfortunately, this technique only applies to a very narrow class of
 				applications and is not applicable to many of the types of neural
@@ -123,9 +123,9 @@
 				
 				Super computer management software such as SLURM~\cite{yoo03} and Blue
 				Gene's system software~\cite{gilge14} by default na\"ively iterate over
-				vertices in an application communication graph in the order they are
-				defined by the application. The nodes in the target machine are
-				iterated over using a simple space-filling curve.
+				vertices in an application communication graph in the order in which
+				they are defined by the application. The nodes in the target machine
+				are iterated over using a simple space-filling curve.
 				Figure~\ref{fig:sequential} illustrates three popular space filling
 				curves.
 				
@@ -147,7 +147,7 @@
 					
 					\caption[Relationship between space filling curve offset and 2D space.]%
 					{Relationship between distance along a space filling curve
-					and between the 2D positions assigned. Results shown for a
+					and between the 2D positions assigned. Results shown for
 					Manhattan distances in a $32\times32$ 2D mesh.}
 					\label{fig:space_filling_curves_comparison}
 				\end{figure}
@@ -328,18 +328,18 @@
 				
 			\subsubsection{Topology-specific approaches}
 				
-				Other approaches employ other optimisation techniques are specialised
-				for use with applications and networks with specific connectivity
-				patterns, for example trees~\cite{jeannot14,traff02}. Unfortunately
-				these algorithms cater neither to SpiNNaker's hexagonal torus topology
-				nor the range of communication topologies found in its target
-				applications.
+				Other approaches employ other optimisation techniques that are
+				specialised for use with applications and networks with specific
+				connectivity patterns, for example trees~\cite{jeannot14,traff02}.
+				Unfortunately these algorithms cater neither for SpiNNaker's hexagonal
+				torus topology nor the range of communication topologies found in its
+				target applications.
 	
 		\subsection{Circuit placement algorithms}
 			
 			The circuit placement problem in chip and FPGA design is similar to that
 			of application placement: communicating components must be assigned
-			positions in a chip such that wiring congestion is controlled.
+			positions in a chip so that wiring congestion is controlled.
 			
 			\begin{figure}
 				\center
@@ -392,7 +392,7 @@
 			use in application placement in SpiNNaker. The interested reader is
 			encouraged to refer to `VLSI physical design: from graph partitioning to
 			timing closure' by Kahng \emph{et al.}~\cite{kahng11} for a more thorough
-			introduction to the field of circuit placement and the techniques I
+			introduction to the field of circuit placement and the techniques that I
 			summarise here.
 			
 			\subsubsection{Partitioning-based placement}
@@ -421,7 +421,7 @@
 				closed-form solutions. One of the common trade-offs of these approaches
 				is modelling the components to be placed as point-like objects. As the
 				number of components in digital circuits has grown, this approximation
-				improved resulting in analytical placement becoming the most popular
+				improved, resulting in analytical placement becoming the most popular
 				approach in use today~\cite{markov15}.
 				
 				One popular analytical technique is `quadratic
