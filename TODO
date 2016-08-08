@@ -1,28 +1,14 @@
-TODOs
-=====
-
-* Luis' feedback
-  - Try and collect some more hard-hitting/headline conclusions if possible
-  - Try and collect some smaller conclusions too
-* Dad's feedback (still awaiting)
-* MOAR proof reading
-* Write acknowledgements
-
 Non-thesis TODOs
 ================
 
 * Document SC&MP boot process
 * Spalloc request specific set of boards
-
-Still-student TODOs
-===================
-
 * Rail card
-* OS map data
 
 Final TODOs
 ===========
 
+* MOAR proof reading
 * Git tag
 * Remove "Draft" footer
 * Check for orphans and widows
@@ -30,8 +16,6 @@ Final TODOs
 * Check for missing \cites and \refs
 * Check for line-wrapped/nonsensical figure/table list entries
 * Final proofing run
-* Check Figure "pi" is still in the right place...
-* Check PDF ToC
 * Check thesis experiments repository figure numbers are correct.
 
 Hand-in TODOs
