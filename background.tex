@@ -5,7 +5,7 @@
 	SpiNNaker is a massively parallel computer architecture designed to simulate
 	biologically realistic neural models~\cite{furber07}. In this chapter we will
 	explore this unconventional architecture in detail, starting with its purpose
-	before focusing on its most unconventional feature: its network.
+	before focusing on its most distinctive feature: its network.
 	
 	% * Purpose
 	%   * Spiking neural simulations
@@ -32,12 +32,12 @@
 		Leaky Integrate-and-Fire (LIF) model can be implemented in just a handful
 		of CPU instructions~\cite{vainbrand11}. Figure~\ref{fig:lif-neuron}
 		illustrates a simple LIF neuron in which incoming spikes cause charge to
-		build up (integrated) which over time, leaks away. If an incoming spike
-		causes the charge to rise above a certain threshold, the neuron `fires'
-		producing an outgoing spike. Despite the simplicity of this model, large
-		neural networks such as Spaun~\cite{eliasmith12} -- built entirely from LIF
-		neurons -- exhibit complex behaviours such as fine motor control and
-		problem solving.
+		build up (\emph{integrated}) which over time, \emph{leaks} away. If an
+		incoming spike causes the charge to rise above a certain threshold, the
+		neuron `\emph{fires}' producing an outgoing spike. Despite the simplicity
+		of this model, large neural networks such as Spaun~\cite{eliasmith12} --
+		built entirely from LIF neurons -- exhibit complex behaviours such as fine
+		motor control and problem solving.
 		
 		The computational expense of large-scale neural simulations does not arise
 		from the cost of modelling neurons but instead from distributing spikes. In
@@ -49,9 +49,9 @@
 		network might produce $7\times10^8$~spikes per second. Because each neuron
 		connects to many others, this equates to $7\times10^{11}$ spikes being
 		received per second. If each spike were transmitted as a UDP datagram
-		containing a single \SI{32}{\bit} payload, the total network throughput
-		required for this simulation would be \SI{179.2}{\tera\bit\per\second}. At
-		the time of writing, this is more than double the bisection bandwidth (the
+		containing a \SI{32}{\bit} payload, the total network throughput required
+		for this simulation would be \SI{179.2}{\tera\bit\per\second}. At the time
+		of writing, this is more than double the bisection bandwidth (the
 		theoretical worst-case throughput) of the world's most powerful super
 		computer~\cite{dongarra16}.
 	
@@ -67,8 +67,8 @@
 		SpiNNaker's architectural target is to support real-time simulations of up
 		to one billion neurons. Since neural models such as LIF are inexpensive to
 		model and many neurons can be simulated independently in parallel,
-		SpiNNaker employs many small, energy efficient ARM processors
-		\cite{furber07}. To support the unusual communication requirements of
+		SpiNNaker employs many small, energy efficient general-purpose processors
+		\cite{furber07}.  To support the unusual communication requirements of
 		neural simulations, a bespoke interconnection network is used which is the
 		background to this thesis.
 		
@@ -111,19 +111,21 @@
 		Processor cores can communicate by sending and receiving network packets
 		forwarded by routers through the network. Since SpiNNaker's network is
 		designed to transmit neural spike events efficiently, individual network
-		packets are small, either \SI{40}{\bit} or \SI{72}{\bit} compared with tens
-		or hundreds of byte packets in typical network architectures.
+		packets are small, either 40~bits or 72~bits compared with tens or hundreds
+		of \emph{bytes} in typical network architectures.
 		
-		In a real-time simulation, the time at which a spike is produced is
-		implicitly indicated by the time it is received -- since at biological
-		timescales a computer network delivers packets `instantaneously'.
+		Since at biological
+		timescales a computer network delivers packets `instantaneously',
+		in a real-time simulation, the time at which a spike is produced is
+		implicitly indicated by the time it is received.
+		
 		Consequently, the only information which must be explicitly encoded is the
 		identity of the neuron which produced the spike. In SpiNNaker, a spike may
-		be encoded by using a single \SI{40}{\bit} `multicast packet' whose format
-		is illustrated in figure~\ref{fig:spinnaker-packet}.  The \SI{8}{\bit}
-		header is used by SpiNNaker's routers to determine the type of packet and
-		the \SI{32}{\bit} `routing key' is used to identify the neuron which
-		produced the packet. The routing key is also used by SpiNNaker's routers to
+		be represented by a single \SI{40}{\bit} `multicast packet' whose format is
+		illustrated in figure~\ref{fig:spinnaker-packet}.  The \SI{8}{\bit} header
+		is used by SpiNNaker's routers to determine the type of packet and the
+		\SI{32}{\bit} `routing key' is used to identify the neuron which produced
+		the packet. The routing key is also used by SpiNNaker's routers to
 		determine how the packet should be directed through the network.
 		
 		The optional \SI{32}{\bit} payload is not used by conventional spiking
@@ -134,14 +136,14 @@
 		
 		The SpiNNaker router employs an unconventional design which, despite its
 		compact size and small energy requirements, implements a flexible multicast
-		routing scheme. Unlike conventional routers which often employ hard-coded
-		routing rules~\cite[chapter~8]{dally04}, the SpiNNaker router uses a
-		programmable `routing table' to determine how packets should be forwarded.
-		In addition, to avoid deadlocks, SpiNNaker's router employs a simple,
-		timeout-based mechanism which exploits the ability of neural networks to
-		tolerate occasional missing packets. As we will see in chapter
+		routing mechanism. Unlike conventional routers which often employ
+		hard-coded routing rules~\cite[chapter~8]{dally04}, the SpiNNaker router
+		uses a programmable `routing table' to determine how packets should be
+		forwarded.  In addition, to avoid deadlocks, SpiNNaker's router employs a
+		simple, timeout-based mechanism which exploits the ability of neural
+		networks to tolerate occasional missing packets. As we will see in chapter
 		\ref{sec:routing}, this mechanism greatly simplifies the task of routing in
-		SpiNNaker's network. In this section we'll look at these features in
+		SpiNNaker's network. In this section we'll look at SpiNNaker's router in
 		greater detail.
 		
 		\subsection{Routing tables}
@@ -149,12 +151,12 @@
 			When a multicast packet arrives at a SpiNNaker router (either from a
 			local core or a neighbouring chip), the router looks up the routing key
 			in its routing table. This table consists of \num{1024} programmable
-			table entries, each specifying a routing key, bit pattern and mask to
+			table entries, each specifying a routing key bit pattern and mask to
 			match and a set of routes.  When a multicast packet's key is matched by a
-			routing entry the packet is forwarded along every route specified by that
-			entry, potentially duplicating the packet. This `multicast' technique
-			allows packets to be transmitted once but received in a number of places
-			while making efficient use of the network~\cite{navaridas12}.
+			routing entry, the packet is forwarded along every route specified by
+			that entry, potentially duplicating the packet. This `multicast'
+			technique allows packets to be transmitted once but received in a number
+			of places while making efficient use of the network~\cite{navaridas12}.
 			
 			Though routing table entries are in finite supply (\num{1024} entries per
 			router), it is still possible for many thousands of traffic flows to be
@@ -166,9 +168,8 @@
 			any entry in the routing table then the packet is `default routed' in a
 			straight line. For example if a packet with an unmatched key is received
 			from the chip to the left, the packet will be default routed to the chip
-			on the right. By assigning routing keys such that neurons whose spikes
-			are sent to similar destinations share a similar prefix, the number of
-			routing entries required by a simulation is greatly reduced
+			on the right. By assigning routing keys and defining routes carefully,
+			the number of routing entries required by a simulation is greatly reduced
 			\cite{davies12}.
 			
 			Consider the simplified example in figure~\ref{fig:routing-example} in
@@ -176,10 +177,10 @@
 			configured in the routers of a small SpiNNaker network. If a packet with
 			the routing key \texttt{1011} is transmitted by a core in the chip
 			labelled $(0, 0, 0)$, this will match the first routing table entry on
-			that chip and will be routed to chip $(1, 0, 0)$. On chip $(1, 0, 0)$,
+			that chip and will be routed to chip $(1, 0, 0)$. Here
 			the packet once again matches the first routing entry and is routed to
-			chip $(1, 0, -1)$. On $(1, 0, -1)$, no match is made so the packet is
-			default routed to $(1, 0, -2)$. On this chip, the packet matches a
+			chip $(2, 1, 0)$. No entries match on this chip so the packet is
+			default routed to $(3, 2, 0)$. On this chip, the packet matches a
 			routing entry which routes the packet to core~7. In this example, default
 			routing allows only three routing table entries to direct a packet
 			through four chips.
@@ -188,12 +189,12 @@
 			transmitted by a core on chip $(0, 0, 0)$, this key will be matched by
 			the second routing entry since \texttt{X}s in the table entry will match
 			both \texttt{1}s and \texttt{0}s in the corresponding bits of the routing
-			key. When the packet arrives at chip $(0, 0, -1)$ the matching routing
-			entry forwards the packet to both $(0, 1, -1)$ and $(1, 0, -1)$
-			simultaneously. The copy of the packet arriving at $(0, 1, -1)$ is routed
-			to core~5 on that chip.  Meanwhile, the copy forwarded to $(1, 0, -1)$ is
+			key. When the packet arrives at chip $(1, 1, 0)$ the matching routing
+			entry forwards the packet to both $(1, 2, 0)$ and $(2, 1, 0)$
+			simultaneously. The copy of the packet arriving at $(1, 2, 0)$ is routed
+			to core~5 on that chip.  Meanwhile, the copy forwarded to $(2, 1, 0)$ is
 			duplicated again with one copy being routed to core~11 and another being
-			routed to chip $(1, 0, -2)$. Here the packet is finally delivered to
+			routed to chip $(3, 2, 0)$. Here the packet is finally delivered to
 			core~6. In this example, the ability of the router to multicast
 			(duplicate) packets as they pass through the network meant that sending
 			one copy of the packet was sufficient to reach three destination cores.
@@ -208,7 +209,8 @@
 				\caption[Multicast routing example.]%
 				{Multicast routing example with \SI{4}{\bit} routing keys. Each
 				box represents a SpiNNaker chip whose router has been programmed with
-				the routing entries shown. Grey lines mark connections between chips.}
+				the routing entries shown. Grey lines mark connections between chips.
+				Coloured lines illustrate example routes.}
 				\label{fig:routing-example}
 			\end{figure}
 			
@@ -230,7 +232,7 @@
 			accepts one packet from the arbiter and routes a packet to one or several
 			output links. If any of the required output ports are busy then the
 			packet is not forwarded to any output link and the pipeline stalls. Once
-			a packet has been blocked for a programmable timeout, it is dropped
+			a packet has been blocked for a programmable timeout, it is `dropped'
 			(discarded) and routing continues as usual for next packet in the
 			pipeline. Links become blocked while transmitting packets or waiting for
 			the remote receiver to become ready. For example, a receiving processor
@@ -241,7 +243,7 @@
 				\center
 				\buildfig{figures/router-architecture.tex}
 				
-				\caption{SpiNNaker router architecture}
+				\caption{SpiNNaker router architecture.}
 				\label{fig:router-architecture}
 			\end{figure}
 			
@@ -256,7 +258,7 @@
 			biology, the loss of a single spike is unlikely to have a significant
 			impact on the behaviour of a neural model and therefore these simulations
 			are inherently tolerant of occasional dropped packets. During application
-			loading and other system tasks, a higher level, software-driven protocol
+			loading and other system tasks, a higher-level, software-driven protocol
 			based on acknowledgements and retransmissions is used to ensure
 			guaranteed delivery.
 			
@@ -275,10 +277,11 @@
 		network to reach their intended destination. In each hop, a packet may
 		advance one node along one of the three axes of the topology. For example,
 		a packet sent by the node labelled $\alpha$ (in the bottom-left corner) to
-		the node labelled $\beta$, might take the following sequence of hops:
-		X$^+$, X$^+$, Z$^-$. Packets sent from $\alpha$ to $\gamma$ might take the
-		route: X$^-$, X$^-$, Y$^+$, Y$^+$. The first hop of this route `wraps
-		around' from the bottom-left node to the bottom-right node in a single hop.
+		the node labelled $\beta$, might take a route with the following sequence
+		of hops: X$^+$, X$^+$, Z$^-$. Packets sent from $\alpha$ to $\gamma$ might
+		take the route: X$^-$, X$^-$, Y$^+$, Y$^+$. The first hop of this route
+		`wraps around' from the bottom-left node to the bottom-right node in a
+		single hop.
 		
 		\begin{figure}
 			\center
@@ -322,8 +325,8 @@
 		
 		The wrap around connections in the topology are what give it the `torus'
 		part of its name. Figure~\ref{fig:torus-3d-flat} shows a hexagonal torus
-		topology drawn flat. If the topology is rolled up into a tube such that the
-		top and bottom nodes become directly adjacent, a tube is formed as in
+		topology drawn flat. If the topology is rolled up such that the top and
+		bottom nodes become directly adjacent, a tube is formed as in
 		figure~\ref{fig:torus-3d-tube}. This tube can then be bent to bring
 		together the nodes at the ends of the tube to form a torus as shown in
 		figure~\ref{fig:torus-3d-torus}.
@@ -392,7 +395,7 @@
 		The 3D torus topology also requires six links per node but by connecting
 		the nodes differently achieves a bisection bandwidth of $8N$~links.  The 3D
 		torus topology, however, comes at a price -- when immersed into the
-		(approximately) 2D space provided by a large machine room or row of server
+		(approximately) 2D space provided by a large machine-room or row of server
 		cabinets, some connections require long cables. By contrast, the 2D and
 		hexagonal torus topologies are both inherently two dimensional and
 		consequently do not suffer from this effect. The hexagonal torus topology,
@@ -403,13 +406,13 @@
 		
 		Most torus topologies, including hexagonal, 2D and 3D toruses, have a
 		related `mesh' topology. These mesh topologies maintain the same general
-		connectivity structure as their torus topologies but omit wrap-around
-		links. In practice, this saves a small number of links at the expense of
-		halving the network's bisection bandwidth.  Because of their poorer
-		performance, mesh networks are rarely used as the basis of a network
-		architecture. Mesh networks, however, are occasionally formed when a
-		network is partitioned into several smaller sub-networks to allow multiple
-		users to share a system~\cite{spalloc16}.
+		connectivity structure as their toroidal counterparts but omit the
+		wrap-around links. In practice, this saves a small number of links at the
+		expense of halving the network's bisection bandwidth.  Because of their
+		poorer performance, mesh networks are rarely used as the basis of a network
+		architecture. Mesh networks, however, are occasionally formed when a torus
+		is partitioned into several smaller sub-networks to allow multiple users to
+		share a system~\cite{spalloc16}.
 		
 		\begin{figure}
 			\center

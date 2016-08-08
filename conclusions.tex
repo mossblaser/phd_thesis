@@ -7,7 +7,7 @@
 	hexagonal torus topology used by SpiNNaker was chosen to enable greater
 	performance while maintaining ease of construction and scalability compared
 	with conventional network topologies. SpiNNaker's router design centres
-	around packets mimicking the neural `spikes' signals they are designed to
+	around packets mimicking the neural `spike' signals they are designed to
 	convey by being small, multicast and not guaranteed to arrive at their
 	destination.  This novel design, though largely complete before this work
 	began, left a number of open problems which this thesis has attempted to
@@ -29,7 +29,7 @@
 		system with over half a million processor cores using the hexagonal torus
 		topology. The techniques shown are expected to enable a final SpiNNaker
 		machine of double this size to be built, filling a six metre long row of
-		machine room cabinets.
+		machine-room cabinets.
 		
 		Though SpiNNaker's processor-count places it amongst some of the world's
 		largest supercomputers (see figure \ref{fig:top500-num-processors} on page
@@ -90,20 +90,20 @@
 		working on circuit placement for chips and FPGAs are tackling similar
 		problems and working at scales as large, or larger than, those faced in
 		application placement. Based on this I developed a
-		simulated-annealing-based placement algorithm inspired by the techniques
+		simulated annealing based placement algorithm inspired by the techniques
 		used in circuit placement, with specific adaptations for use in application
 		placement and SpiNNaker's network topology.
 		
-		The simulated-annealing-based placement algorithm consistently outperforms
+		The simulated annealing based placement algorithm consistently outperforms
 		pre-existing placement algorithms included in benchmarks in terms of
-		placement quality.  In the case of one benchmark, simulated-annealing-based
+		placement quality.  In the case of one benchmark, simulated annealing based
 		placement made it possible to run that neural simulation in real-time for
 		the first time.  At larger scales, simulated annealing was also found to be
 		able to produce good quality placements in benchmarks containing over one
 		million processes -- the largest size supported by the SpiNNaker
 		architecture.
 		
-		The major shortcoming of simulated-annealing-based placement is its
+		The major shortcoming of simulated annealing based placement is its
 		execution speed. Though its execution time grows in proportion to the size
 		of the problem, the implementation used took over 12~hours to place a
 		synthetic problem for the largest planned SpiNNaker machine. Though
@@ -117,21 +117,22 @@
 		to fulfil this role. The placement problems faced by chip designers are
 		growing at roughly the same exponential rate as the size of super computers
 		but circuit designs hold the lead in terms of problem size. Consequently,
-		as approaches are retired by chip placement researchers they may find new
+		as approaches are retired by chip placement researchers, they may find new
 		life in the field of application placement.
 		
 	\section{Future research}
 		
-		This work has uncovered a number of new research areas warranting future
-		enquiry. Further, though the goals of this study have largely been met,
-		there also remain some important limitations which future work may hope to
-		address.  This section outlines a number of future lines of research.
+		Though the goals of this study have largely been met, there also remain
+		some important limitations which future work may hope to address.
+		Furthermore, this work has uncovered a number of new research areas
+		warranting future enquiry. This section outlines a number of future lines
+		of research.
 		
 		\subsection{Warehouse-scale cabling}
 			
 			In chapter~\ref{sec:building} I developed and implemented a number of
 			cabling schemes for the SpiNNaker architecture spanning up to a six metre
-			row of machine room cabinets -- a relatively small installation by
+			row of machine-room cabinets -- a relatively small installation by
 			current standards. In SpiNNaker, the cabling exists in a 2D plane (i.e.
 			across the faces of the cabinets) but as the system is scaled up, a
 			single row of cabinets will tend towards a 1D line. Since embedding a 2D
@@ -149,7 +150,7 @@
 			In conventional large-scale super computer installations, nodes are
 			installed in rows of cabinets as illustrated in
 			figure~\ref{fig:multi-row-cabling}.  From a `bird's-eye' view, the system
-			approximates a 2D space, spread across the floor of a machine room.
+			approximates a 2D space, spread across the floor of a machine-room.
 			Therefore, in principle, the folding and interleaving techniques
 			described in chapter~\ref{sec:building} still apply. Unfortunately for
 			SpiNNaker, cables connecting between rows of cabinets would be longer
@@ -165,7 +166,7 @@
 			
 			A secondary result of the construction of prototype SpiNNaker systems in
 			chapter~\ref{sec:building} was the use of real-time guidance and feedback
-			to assist cable installation. I am not aware of this technique's use for
+			to assist cable installation. I am not aware of this technique's use by
 			existing architectures and, following the success experienced in this
 			project, it is possible that the technique may also be useful in
 			conventional systems.
@@ -179,12 +180,12 @@
 			In many real-world network installations, units are less densely packed
 			than in SpiNNaker and so longer cables are often required. As a
 			consequence, cabling errors may become more likely as cabling patterns
-			are spread over a larger area. Like SpiNNaker, conventional networking
-			hardware is often equipped with a generous range of indicator LEDs and
-			diagnostic facilities which might be used to implement real-time
-			installation guidance. Future work could explore the use of this
-			technique in the construction of other large-scale networks, such as data
-			centres.
+			are spread over a larger area making them more difficult to visually
+			verify. Like SpiNNaker, conventional networking hardware is often
+			equipped with a generous range of indicator LEDs and diagnostic
+			facilities which might be used to implement real-time installation
+			guidance. Future work could explore the use of this technique in the
+			construction of other large-scale networks, such as data centres.
 		
 		\subsection{Congestion mitigation}
 			
@@ -220,8 +221,7 @@
 			in chapter~\ref{sec:routing}. When a route is generated between nodes on
 			opposite sides of a gap, the PGS repair process will produce a
 			shortest-path route around it. Since many routes may be blocked by a
-			single gap a hot-spot will potentially be created around the corners of
-			the gap.
+			single gap, a hot-spot may develop around the corners of the gap.
 			
 			In chapter~\ref{sec:placement}, the `CConv' benchmark application was
 			found to run correctly the majority of the time when placed by the
@@ -244,29 +244,29 @@
 				PGS repair to spread the routes it produces.
 				
 				An alternative approach would be to adapt the base routing algorithms
-				used prior to PGS repair to attempt, for example, alternative dimension
+				used prior to PGS repair to, for example, attempt alternative dimension
 				order routes which may avoid blockages due to faulty links.
 			
 			\subsubsection{Fault and irregularity aware placement}
 				
-				One of the shortcomings of the simulated-annealing-based placer
+				One of the shortcomings of the simulated annealing based placer
 				developed in chapter~\ref{sec:placement} is that it does not account
 				for network faults, or irregularities, when estimating the cost of
 				placement solutions.  Future work may exploit techniques used in
-				congestion-aware circuit placement techniques which could be adapted to
-				support application placement~\cite{viswanathan07}.
+				congestion-aware circuit placement which could be adapted for
+				application placement~\cite{viswanathan07}.
 		
 		\subsection{Reducing placement execution time}
 			
-			The simulated-annealing-based placer presented in
+			The simulated annealing based placer presented in
 			chapter~\ref{sec:placement} produced good quality placements but its
 			execution time limits its use beyond one million vertex placement
 			problems. Future work should explore possibilities for improving the
 			performance and scalability of this technique.
 			
 			In addition to considering alternative placement algorithms based on
-			other methods, a possible approach is to attempt to reduce the execution
-			time of simulated-annealing-based placement by shrinking the application
+			other methods, one possible approach is to attempt to reduce the execution
+			time of simulated annealing based placement by shrinking the application
 			graph being placed.
 			
 			For example, graph clustering~\cite{schaeffer07} may be used to group
@@ -287,16 +287,16 @@
 			placement problem sizes by an order of magnitude and, consequently,
 			reduce execution times by the same ratio. Preliminary experiments suggest
 			that this approach might result in little placement quality loss for
-			large placement problems while substantially reducing overall execution
+			large placement problems whilst substantially reducing overall execution
 			time.
 		
 		\subsection{Benchmarking}
 			
-			One of the most significant limitations of this study has been the lack
-			of available large-scale SpiNNaker applications for use as benchmarks. As
-			a consequence, much of the scalability experimentation performed in this
-			thesis has relied on simple synthetic benchmarks based on projections of
-			future application behaviour.
+			One of the most significant limitations of this study has been the
+			unavailability of large-scale SpiNNaker applications for use as
+			benchmarks. As a consequence, much of the scalability experimentation
+			performed has relied on simple synthetic benchmarks based on projections
+			of future application behaviour.
 			
 			In the short term, more sophisticated synthetic benchmark generation
 			techniques used by the circuit placement community~\cite{nam07} may offer
@@ -319,13 +319,13 @@
 		work built on much larger models such as Spaun, `the world's largest
 		functional brain model'~\cite{eliasmith12}.
 		
-		Outside the SpiNNaker project, the hexagonal torus topology has also been
+		Beyond the SpiNNaker project, the hexagonal torus topology has also been
 		validated as a scalable and practical candidate for future network
 		architectures. As super computers become ever larger, the physical
 		scalability afforded by the 2D nature of the hexagonal torus topology may
 		make it a compelling option. In addition, the finding that circuit
 		placement techniques can be adapted to support placement of SpiNNaker
-		software indicates that these algorithms may also be applicable in other
+		software indicates that these algorithms may also be applicable to other
 		applications. Indeed, if this is the case, circuit placement may offer a
 		long-term source of placement algorithms able to handle the demands of
 		future applications.
@@ -341,18 +341,18 @@
 		
 		Although this work stops short of demonstrating truly large-scale
 		neuroscientific simulations running at the scale of newly completed
-		SpiNNaker machines, largely because they do not yet exist, a number of
-		smaller scale neural simulations have been made possible for the first
-		time. The algorithms and techniques devised in this work have subsequently
-		been incorporated into various software libraries and tools now being used
-		by researchers building SpiNNaker applications, vindicating the efforts of
-		this thesis (see appendix~\ref{sec:software}). A successor to the SpiNNaker
-		architecture is also in the early stages of design and is building on
-		experience of the existing architecture. The current intention is to retain
-		the hexagonal torus topology used by SpiNNaker, a decision supported by the
-		findings of this thesis.
+		SpiNNaker machines (largely because such simulations do not yet exist) a
+		number of smaller-scale neural simulations have been made possible for the
+		first time. The algorithms and techniques devised in this work have
+		subsequently been incorporated into various software libraries and tools
+		now being used by researchers building SpiNNaker applications, vindicating
+		the efforts of this thesis (see appendix~\ref{sec:software}). A successor
+		to the SpiNNaker architecture is also in the early stages of design and is
+		building on experience of the existing architecture. The current intention
+		is to retain the hexagonal torus topology used by SpiNNaker, a decision
+		supported by the findings of this thesis.
 		
 		With SpiNNaker's hardware architecture now operating at scales close to its
-		architectural limits it is hoped that the contributions of this work will
+		architectural limits, it is hoped that the contributions of this work will
 		enable researchers to develop larger and more detailed neural models for
 		this unique architecture.

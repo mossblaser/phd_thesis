@@ -6,7 +6,7 @@
 	\pgfmathtruncatemacro{\widthh}{\width-1}
 	\pgfmathtruncatemacro{\heightt}{\height-1}
 	
-	\begin{scope}[thick,hexagonXYZ,scale=\scale,inner sep=0, minimum width=\scale*1cm]
+	\begin{scope}[hexagonXYZ,scale=\scale,inner sep=0, minimum width=\scale*1cm]
 		% Hexagons themselves
 		\foreach \y in {0,...,\heightt}{
 			\foreach \x in {0,...,\widthh}{

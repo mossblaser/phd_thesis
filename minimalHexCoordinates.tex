@@ -3,12 +3,12 @@
 	
 	As in non-hexagonal mesh and torus topologies, coordinates in a hexagonal
 	torus topology are given in terms of the offset of a point along each axis of
-	the topology from an arbitrary origin. Hexagonal topologies, however,
-	unusually are considered as having three, non-orthogonal axes. In a
-	conventional 2D topology, for example, moving along the X axis does not alter
-	your position on the Y axis because the X and Y axes are orthogonal. In a
-	hexagonal coordinate system, moving along any of the three axes results in
-	some movement in the other two.  A consequence of this is that multiple
+	the topology from an arbitrary origin. Hexagonal topologies, unusually, are
+	considered as having three, non-orthogonal axes. In a conventional 2D
+	topology, for example, moving along the X axis does not alter your position
+	on the Y axis because the X and Y axes are orthogonal. In a hexagonal
+	coordinate system, moving along any one of the three axes results in some
+	movement in the other two.  A consequence of this is that multiple
 	coordinates may exist for the same position.
 	
 	\begin{figure}
@@ -71,5 +71,5 @@
 	determine a unique coordinate for a given point. Given a vector of the form
 	$(x, y, z)$, subtracting $(z,z,z)$ will result in a vector of the form $(x',
 	y', 0)$. Because this form mimics the appearance of a standard 2D coordinate
-	system while uniquely identifying points, it is widely used as a convenient
+	system, while uniquely identifying points, it is widely used as a convenient
 	and intuitive addressing scheme by SpiNNaker's system software.

@@ -7,7 +7,7 @@
 	maintaining the hundreds of metres of network cables required.  For
 	conventional architectures and network topologies, techniques are well
 	understood and embodied by industry standards such as TAI-942~\cite{tia2006}.
-	SpiNNaker's use of the hexagonal torus topology render existing mappings
+	SpiNNaker's use of the hexagonal torus topology renders existing approaches
 	insufficient.
 	
 	In the first part of this chapter I extend existing techniques for mapping
@@ -22,7 +22,7 @@
 	The second part of this chapter uses SpiNNaker as a case study on the
 	suitability of the mappings introduced in this chapter.  In this case study I
 	consider various SpiNNaker systems ranging in size from desktop machines to
-	multi-cabinet machine room installations. As well as validating the cabling
+	multi-cabinet machine-room installations. As well as validating the cabling
 	schemes introduced in this chapter I also describe a new technique which
 	improves the efficiency of the cable installation process.  As a consequence
 	of SpiNNaker's fine-grained connectivity, the cabling is unusually dense,
@@ -65,10 +65,10 @@
 		In conventional torus topologies, the need for long cables is eliminated by
 		folding and interleaving units of the network~\cite[chapter~5]{dally04}.
 		This process is illustrated for a 1D torus topology (a ring network) in
-		\ref{fig:ring-folding}. A na\"ive arrangement of units in this topology
-		results in a long cable connecting the units at the ends of the ring
-		(figure~\ref{fig:ring-folding-row}).  To eliminate these long connections,
-		half of the units are `folded' on top of the others
+		figure~\ref{fig:ring-folding}. A na\"ive arrangement of units in this
+		topology results in a long cable connecting the units at the ends of the
+		ring (figure~\ref{fig:ring-folding-row}).  To eliminate these long
+		connections, half of the units are `folded' on top of the others
 		(figure~\ref{fig:ring-folding-folded}) and then this arrangement of units
 		is interleaved (figure~\ref{fig:ring-folding-interleaved}). This ordering
 		of units requires no long cables while still observing the physical
@@ -95,7 +95,7 @@
 				\label{fig:ring-folding-interleaved}
 			\end{subfigure}
 			
-			\caption[Folding and interleaving a ring network]%
+			\caption[Folding and interleaving a ring network.]%
 			{Folding and interleaving a ring network to reduce maximum cable
 			length.}
 			\label{fig:ring-folding}
@@ -139,11 +139,10 @@
 				\label{fig:failing-to-fold-hex-toruses-z}
 			\end{subfigure}
 			
-			\caption[Folding each axis of a hexagonal torus topology]%
-			{Schematics showing folding along each axis of a hexagonal
-			torus topology failing to eliminate wrap-around connections.  Same-shaped
-			and coloured dots show the endpoints of two example wrap-around
-			connections.}
+			\caption[Folding each axis of a hexagonal torus topology.]%
+			{Schematics showing folding along each axis of a hexagonal torus topology
+			failing to eliminate wrap-around connections.  Same-shaped-and-coloured
+			dots show the endpoints of two example wrap-around connections.}
 			\label{fig:failing-to-fold-hex-toruses}
 		\end{figure}
 	
@@ -163,7 +162,7 @@
 		between neighbouring partitions. In
 		figure~\ref{fig:parallelogram-partitioning}, for example, the partitions
 		above, below, left and right of the central partition are connected by
-		seven node-to-node connections each while the nodes above-right and
+		seven node-to-node connections each while the partitions above-right and
 		below-left are connected by just a single node each. To simplify assembly,
 		connections between all nodes in a pair of neighbouring partitions are
 		often made by a single cable. If connectivity requirements are imbalanced
@@ -172,7 +171,7 @@
 		
 		To avoid connectivity imbalance, SpiNNaker uses a `wrapped triple'
 		partitioning scheme~\cite{davidsonWiring}, as illustrated in
-		figure~\ref{fig:wrapped-triple-partitioning}, described in detail in
+		figure~\ref{fig:wrapped-triple-partitioning} and explained in detail in
 		appendix \ref{sec:partitioning}. In this partitioning scheme, the same
 		number of connections connect all six neighbouring units. As explained in
 		the appendix, a hexagonal torus topology is constructed from groups of
@@ -183,7 +182,7 @@
 			\begin{subfigure}[b]{0.32\textwidth}
 				\center
 				\buildfig{figures/hypercube-partitioning.tex}
-				\caption{2D Hypercube}
+				\caption{2D hypercube}
 				\label{fig:hypercube-partitioning}
 			\end{subfigure}
 			\begin{subfigure}[b]{0.32\textwidth}
@@ -206,21 +205,21 @@
 		\end{figure}
 		
 		For completeness, both parallelogram and wrapped triple partitioning are
-		considered even though SpiNNaker uses wrapped triple partitioning. The
-		parallelogram partitioning scheme may be more appropriate for architectures
-		where connections between nodes in neighbouring partitions do not share a
-		single connector. In addition, in architectures where a unit corresponds to
-		a single node, this can be treated as a $1 \times 1$ parallelogram
-		partition.  This special case occurs in coarse-grained architectures and
-		Networks on Chip (NoCs) where nodes are not grouped together into
-		multi-node units.
+		considered in this chapter even though SpiNNaker uses wrapped triple
+		partitioning. The parallelogram partitioning scheme may be more appropriate
+		for architectures where connections between nodes in neighbouring
+		partitions do not share a single connector. In addition, in architectures
+		where a unit corresponds to a single node, this can be treated as a $1
+		\times 1$ parallelogram partition.  This special case occurs in
+		coarse-grained architectures and Networks on Chip (NoCs) where nodes are
+		not grouped together into multi-node units.
 	
 	\section{Folding \& interleaving hexagonal toruses}
 		
 		To exploit the folding technique used by non-hexagonal topologies, the
 		units in a hexagonal torus topology must be mapped into a space with
 		orthogonal coordinates. The choice of transformation to an orthogonal
-		coordinate system can have an impact on physically how far apart logically
+		coordinate system can have an impact on how physically far apart logically
 		neighbouring units are in the final arrangement. A good mapping should
 		attempt to reduce `distortion' which moves adjacent units apart in the
 		final folded and interleaved arrangement.
@@ -229,8 +228,8 @@
 		arrangements of units into a 2D orthogonal coordinate space. The first
 		transformation, `shearing', is general purpose and introduces some
 		distortion. The second transformation, `slicing', is less general but can
-		introduce less distortion than shearing and thus may lead to shorter cable
-		lengths.
+		introduce less distortion than shearing and therefore may lead to shorter
+		cable lengths.
 		
 		Both the slicing and shearing transformations are carried out in two steps:
 		
@@ -474,8 +473,8 @@
 			ratio is $1:2$ when the pattern of wrap-around links is the same as a
 			shear-transformed network.
 			
-			When `square' networks (i.e. a $1:1$ aspect ratio) are sliced, the
-			network may be folded \emph{twice} along the Y axis as in
+			When `square' networks (i.e. those with a $1:1$ aspect ratio) are sliced,
+			the network must be folded \emph{twice} along the Y axis as in
 			figure~\ref{fig:folding-sliced} to eliminate the criss-crossing
 			wrap-around links. It is not possible to eliminate wrap-around links from
 			sliced networks with other aspect ratios by folding.
@@ -498,14 +497,14 @@
 			\pageref{fig:uncrinkling}), it is possible to calculate the overhead
 			introduced by each type of transformation.  For example, to compute the
 			overhead introduced by the slicing transformation when applied to units
-			composed of wrapped-triples we consider
+			composed of wrapped triples we consider
 			figure~\ref{fig:uncrinkling-sliced}. The uncrinkling pattern used to
-			transform this topology is a repeating pattern of two units. The units in
-			the pair have been labelled $1$ and $2$ respectively. Unit $1$ is
-			immediately surrounded by six units labelled $a$, $b$, $c$, $2$, $g$ and
-			$h$. Unit $2$ is surrounded by units $1$, $c$, $d$, $e$, $f$ and $g$.
-			Before the transformation, the distance between units is $1$; after the
-			transformation is applied this is not always the case. Folding and
+			transform this topology is a repeating pattern of two units, a pair of
+			which have been labelled $1$ and $2$ respectively. Unit $1$ is
+			immediately surrounded by the six units labelled $a$, $b$, $c$, $2$, $g$
+			and $h$. Unit $2$ is surrounded by the units $1$, $c$, $d$, $e$, $f$ and
+			$g$.  Before the transformation, the distance between units is $1$; after
+			the transformation is applied this is not always the case. Folding and
 			interleaving into $f_x$ columns and $f_y$ rows also introduces overhead.
 			For each pair of previously neighbouring units in the example, their
 			distances after folding may be computed as follows:
@@ -561,7 +560,7 @@
 					                                 & \footnotesize $D_\textrm{mean}\approx2.28 \quad D_\textrm{max}\approx2.83$
 					                                 & \footnotesize $D_\textrm{mean}\approx2.28 \quad D_\textrm{max}\approx2.83$\\
 					\addlinespace
-					\multirow{2}{*}{Wrapped-Triples} & \textbf{Slice}  & \textbf{Shear}\\
+					\multirow{2}{*}{Wrapped triples} & \textbf{Slice}  & \textbf{Shear}\\
 					                                 & \footnotesize $D_\textrm{mean}\approx2.28 \quad D_\textrm{max}\approx2.83$
 					                                 & \footnotesize $D_\textrm{mean}\approx3.00 \quad D_\textrm{max}\approx4.47$\\
 					\bottomrule
@@ -581,14 +580,14 @@
 		As the only known large-scale hexagonal torus-based architecture, SpiNNaker
 		is a good case study for the techniques described in this chapter.  Each
 		unit in a SpiNNaker machine is a 48-chip SpiNNaker board forming a
-		wrapped-triple partition. Systems of various sizes have been constructed
+		wrapped triple partition. Systems of various sizes have been constructed
 		using the techniques introduced in this chapter ranging from twenty-four
-		board `portable' systems to a five cabinet half-million core installation
+		board `portable' systems to a five cabinet, half-million core installation
 		with plans in place to build a machine of twice this size in the future.
 		
 		In this section I describe how the folded and interleaved arrangement of
 		units produced by the techniques in the previous chapter may be translated
-		into physical arrangements of SpiNNaker boards in a machine room. I then
+		into physical arrangements of SpiNNaker boards in a machine-room. I then
 		describe how the thousands of S-ATA cables are installed and report on the
 		maintainability and cooling impact of this cabling scheme in practice.
 		
@@ -702,17 +701,19 @@
 					\label{fig:bgWiringInstallation}
 				\end{subfigure}
 				
-				\caption{BlueGene/Q cable installation~\cite{cscs13}.}
+				\caption[BlueGene/Q cable installation.]%
+				        {BlueGene/Q cable installation~\cite{cscs13}.}
 				\label{fig:bgWiring}
 			\end{figure}
 			
 			In other large-scale architectures, the task of cable installation is
 			completed by a team of technicians aided by the use of standardised
-			labelling for cables and sockets~\cite{tia2006} as illustrated in
-			figure~\ref{fig:bgWiring}. In these architectures the cabling patterns
-			required are relatively straight forward, thanks to the coarseness of the
-			units used~\cite{lakner07} or they use network topologies whose cabling
-			centres around high-fan-in switches~\cite{cisco07,csernai15}.
+			labelling for cables and sockets as illustrated in
+			figure~\ref{fig:bgWiring}~\cite{tia2006}. In these architectures the
+			cabling patterns required are relatively straight forward, thanks to the
+			coarseness of the units used~\cite{lakner07} or they use network
+			topologies whose cabling centres around high-fan-in
+			switches~\cite{cisco07,csernai15}.
 			
 			It has been reported in the literature that when copper cables are used,
 			labour costs dominate~\cite{popa10} and while cable costs are expected to
@@ -758,12 +759,12 @@
 						\draw (screen.south west) rectangle (screen.north east);
 					\end{tikzpicture}
 					
-					\caption{GUI and text-to-speech indicate what type of cable to
+					\caption{A GUI and text-to-speech indicate what type of cable to
 					install.}
 					\label{fig:interactive-wiring-guide-gui}
 				\end{subfigure}
 				
-				\caption{Interactive wiring software guides cable installation.}
+				\caption{Interactive software guides cable installation.}
 				\label{fig:interactive-wiring-guide}
 			\end{figure}
 			
@@ -774,9 +775,9 @@
 			to guide technicians through the cable installation process. As shown in
 			figure~\ref{fig:interactive-wiring-guide}, diagnostic LEDs on each
 			SpiNNaker board are used to indicate which boards to interconnect. The
-			software also provides step-by-step cabling instructions via a graphical
-			user interface and audible instructions delivered via headphones.  These
-			instructions explicitly specify the length of cable to use for each
+			software also provides step-by-step cabling instructions via a Graphical
+			User Interface (GUI) and audible instructions delivered via headphones.
+			These instructions explicitly specify the length of cable to use for each
 			connection avoiding the common problem of technicians over-estimating the
 			cable length required~\cite{mazaris97}. Diagnostic registers in the
 			network hardware are then used to verify the correct installation of each
@@ -812,8 +813,8 @@
 			\end{figure}
 			
 			Table~\ref{tab:install-time} shows cable installation times for various
-			sizes of SpiNNaker system. All times reported do not include breaks and,
-			with the exception of the five cabinet system, all times reported are for
+			sizes of SpiNNaker system. The times reported do not include breaks and,
+			with the exception of the five cabinet system, are for
 			the one person working alone.  Figure~\ref{fig:install-histogram} shows
 			the histogram of cable installation times for the two cabinet machine.
 			These results confirm the observation by Mudigonda \emph{et al.} that
@@ -827,9 +828,9 @@
 			clearly be seen by comparing the installation times of the one and two
 			cabinet systems. Though double the size, the two cabinet machine was
 			built in half the time required to build the single cabinet machine.
-			While building the smaller machine real-time cable validation had not been
-			implemented and the installation process was interrupted for several
-			minutes every time a misplaced connection was discovered.
+			While building the smaller machine, real-time cable validation had not
+			yet been implemented and the installation process was interrupted for
+			several minutes every time a misplaced connection was discovered.
 			
 			In the three-person cable installation effort employed for the five
 			cabinet system, the guidance software was configured to assign each
@@ -849,8 +850,8 @@
 			\end{figure}
 			
 			The completed five cabinet system is photographed in
-			figure~\ref{fig:halfMillionCoreComplete}. A video showing the
-			construction and cable installation of this machine is available on
+			figure~\ref{fig:halfMillionCoreComplete}. A time-lapse video showing the
+			construction and cable installation of this machine is also available on
 			YouTube~\cite{heathcote16}.
 			
 		\subsection{Thermal implications}
@@ -883,7 +884,7 @@
 			commissioning a number of boards have been replaced by someone not
 			involved in the machine's installation. Informal measurements suggest
 			that boards near the centre of a frame (i.e. those most likely to be
-			obstructed by unrelated cables) take around ten minutes to replace,
+			blocked by unrelated cables) take around ten minutes to replace,
 			including time spent removing and replacing cables obstructing the board
 			being exchanged. By comparison boards at the edge of the machine take
 			around six minutes to replace. Though similar timing reports are
@@ -898,9 +899,10 @@
 		transformations, shearing and slicing, are presented which allow
 		conventional network folding techniques to be applied to hexagonal toruses
 		to eliminate long `wrap around' links. Though both techniques incur some
-		overhead in terms of mean and maximum cable length the maximum cable length
-		does not grow with the size of the network. This result makes hexagonal
-		torus topologies a practical and scalable choice for future systems.
+		overhead in terms of mean and maximum cable length, the maximum cable
+		length does not grow with the size of the network. This result makes
+		hexagonal torus topologies a practical and scalable choice for future
+		systems.
 		
 		The theoretical results presented in this chapter have been confirmed
 		through the successful construction of several large-scale SpiNNaker

@@ -26,7 +26,7 @@ d$cost_function <- factor(d$cost_function, levels=c(
 levels(d$cost_function) <- c(
 	"Star",
 	"$\\sqrt{n}\\times$HPWL$_{xy}$",
-	"$\\sqrt{n}\\times$Hexagonal HPWL~~~",
+	"$\\sqrt{n}\\times$hexagonal HPWL~~~",
 	"HPWL$_{xy}$",
 	"Hexagonal HPWL"
 )

@@ -19,18 +19,18 @@ cannot explain the brain and that understanding their connectivity is key
 \cite{eliasmith13,eliasmith14}. Experiments on real brains, however, are
 fraught with difficulty. In addition to ethical concerns, variations between
 individuals can be significant. Furthermore, it is only possible to record tens
-or hundreds of the brain's trillions of signals and even then only limited
-control is possible over which signals are recorded. Computer simulations of
-models of neural networks however, enable researchers to develop repeatable
-experiments and gain complete visibility of any signal and any neuron. Models
-such as Spaun~\cite{eliasmith12}, built from millions of simulated neurons,
-have shown great promise in expanding our understanding of higher-level brain
-functions such as memory and simple problem solving. Unfortunately these models
-are expensive to simulate due to their enormous implicit parallelism, requiring
-hours of serial compute time to simulate each second of neural activity. As
-well as being inconvenient, this precludes the use of robotics to immerse these
-models in real-world environments and also limits studies of long-term
-behaviours such as learning.
+or hundreds of the brain's trillions of signals at once and even then only
+limited control is possible over which signals are recorded. Computer
+simulations of models of neural networks, however, enable researchers to
+develop repeatable experiments and gain complete visibility of any signal and
+any neuron. Models such as Spaun~\cite{eliasmith12}, built from millions of
+simulated neurons, have shown great promise in expanding our understanding of
+higher-level brain functions such as memory and simple problem solving.
+Unfortunately these models are expensive to simulate due to their enormous
+implicit parallelism, requiring hours of serial compute time to simulate each
+second of neural activity. As well as being inconvenient, this precludes the
+use of robotics to immerse these models in real-world environments and also
+limits studies of long-term behaviours such as learning.
 
 SpiNNaker is designed to enable the real-time simulation of models containing
 up to one billion neurons -- approximately \SI{1}{\percent} of a human brain or
@@ -53,21 +53,21 @@ As in all super computers, SpiNNaker's network interconnects its processors in
 a particular network topology which defines how different processors may
 communicate with each other. Unlike the tree and $N$-dimensional torus
 topologies found in contemporary super computers \cite[chapter~3]{dally04},
-SpiNNaker employs a `hexagonal torus topology'. In this topology, nodes in
-SpiNNaker's network fit together in a honeycomb-like pattern where messages may
-`hop' from node to node to reach their destination. As we will see in
-chapter~\ref{sec:background}, the hexagonal torus topology, in theory, sits at
-a `sweet spot' in terms of network performance and practicality. As the first
-known large-scale installation of a hexagonal torus topology, however, there
-remain a number of practical challenges for large SpiNNaker machines.
+SpiNNaker employs a `hexagonal torus topology'. In this topology, nodes fit
+together in a honeycomb-like pattern where messages may `hop' from node to node
+to reach their destination. As we will see in chapter~\ref{sec:background}, the
+hexagonal torus topology, in theory, sits at a `sweet spot' in terms of network
+performance and practicality. As the first known large-scale installation of a
+hexagonal torus topology, however, there remain a number of practical
+challenges for large SpiNNaker machines.
 
-As super computer networks have grown in scale to millions of processors the
+As super computer networks have grown in scale to millions of processors, the
 task of dealing with previously rare faults has grown.  Though fault rates in
 networks remain consistently low, architectures such as SpiNNaker may have
 hundreds of thousands of links meaning that even fault rates of a fraction of a
 percent will impact tens or hundreds of links. To enable reliable operation,
-networks must be able to adapt the routes taken by messages through the network
-to avoid faulty links and nodes. The techniques employed are often closely tied
+networks must be able to adapt the routes taken by messages to avoid faulty
+links and nodes. The techniques conventionally employed are often closely tied
 to a particular network architecture and because of this SpiNNaker's novel
 network architecture demands its own approach.
 
@@ -126,7 +126,7 @@ torus topologies which enables arbitrarily large networks to be constructed
 using only short, inexpensive cables. This theoretical work is then evaluated
 through the construction of a range of prototype SpiNNaker systems. The largest
 of these prototypes contains over half a million processor cores and spans
-several machine room cabinets. In addition, I propose the use of built-in
+several machine-room cabinets. In addition, I propose the use of built-in
 diagnostic facilities to assist technicians performing network installation and
 maintenance. This technique was found to greatly reduce the effort required and
 the number of mistakes made.
@@ -144,7 +144,7 @@ routing algorithm for SpiNNaker which is able to avoid arbitrary static fault
 patterns with minimal performance overhead. A key finding of this chapter is
 that the flexibility afforded to fault tolerant routing algorithms by
 SpiNNaker's unconventional router architecture is what facilitates the low
-overheads reported in this chapter.
+overheads reported.
 
 Finally, in chapter~\ref{sec:placement}, I explore the problem of application
 placement in SpiNNaker's network. As in other networks and applications, neural

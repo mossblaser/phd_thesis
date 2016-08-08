@@ -30,7 +30,7 @@ dropped_packets <-
         plot_theme +
         theme(axis.title.x = element_blank()) +
         theme(axis.text.x=element_text(angle=25,hjust=1,vjust=1)) +
-        theme(plot.margin=unit(c(0,0,0.3,0), "lines")) +
+        theme(plot.margin=unit(c(0.2,0,0.3,0), "lines")) +
         labs( x="Placement Algorithm"
             , y="Dropped ($10^6$ packets/s)"
             )

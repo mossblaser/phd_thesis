@@ -2,16 +2,16 @@
 	\begin{axis}[ ybar
 	            , ymin=0
 	            , xmin=0
-	            , xmax=0.75
+	            , xmax=75
 	            , width=\textwidth
 	            , height=6cm
-	            , xlabel=Connector distance (\si{\meter})
+	            , xlabel=Connector distance (\si{\centi\meter})
 	            , ylabel=Count
 	            , tick align=inside
 	            ]
 		\addplot +[ hist={ bins=25
-		                 , data min=0.0
-		                 , data max=0.75
+		                 , data min=0
+		                 , data max=75
 		                 }
 		          , white
 		          , fill=gray!50!white
@@ -23,7 +23,7 @@
 			\coordinate (lastxpos) at (rel axis cs: 0,0);
 			\coordinate (ypos) at (rel axis cs: 0,0.8);
 			\pgfplotsinvokeforeach{15,30,50,70}{
-				\coordinate (xpos) at (axis cs: #1 / 100 - 0.05,0);
+				\coordinate (xpos) at (axis cs: #1 - 5,0);
 				\coordinate (toppos) at (rel axis cs:0,1);
 				\draw (xpos) -- (xpos |- toppos);
 				

@@ -78,7 +78,7 @@
 			\pgfmathtruncatemacro{\xx}{\x+1}
 			\pgfmathtruncatemacro{\yy}{\y+1}
 			
-			\pgfmathtruncatemacro{\parity}{Mod(\y+\x,2)}
+			\pgfmathtruncatemacro{\parity}{Mod(\y+\facesY-1+\x,2)}
 			\ifthenelse{\parity = 0}{
 				\draw [fill=white,fill opacity=\sheetOpacity]
 				      (px\x y\y) -- (px\xx y\y) -- (px\xx y\yy) -- (px\x y\yy) -- cycle;

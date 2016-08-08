@@ -1,10 +1,9 @@
-\begin{tikzpicture}[thick, hexagonXYZ, scale=4.0, font=\footnotesize]
+\begin{tikzpicture}[thick, hexagonXYZ, scale=4.0, font=\footnotesize,line cap=round]
 	
 	\tikzstyle{router node}=[ draw
 	                        , rectangle
 	                        , minimum height=2.5cm
 	                        , text width=2.5cm
-	                        , fill=white
 	                        ]
 	
 	\clip (-0.75, -0.5, 0) rectangle (3.75, 2.5, 0);
@@ -18,11 +17,18 @@
 				\draw (\x, \y, 0) -- ++(0, 0, 1);
 			}
 		}
+		% Fill in gaps where nodes will be drawn
+		\foreach \x in {-1,...,4}{
+			\foreach \y in {-1,...,4}{
+				\node at (\x, \y, 0) [router node, draw=none, fill=white] {};
+			}
+		}
 	\end{scope}
 	
 	% #1 Coordinates
 	% #2 Text
 	\newcommand{\router}[2]{
+		\node at (#1) [router node, fill=white, opacity=0.8] {};
 		\node (router) at (#1)
 		      [router node] {
 			#2
@@ -36,41 +42,63 @@
 	\newcommand{\link}[1]{%
 		\begin{tikzpicture}[baseline=-0.25em]
 			% Pad to make all arrows the same height
-			\draw [<->, white](60: -0.5em) -- (60: 0.5em);
+			\draw [<->, white, opacity=0](60: -0.5em) -- (60: 0.5em);
+			 % The white contour
+			\draw [white,line width=3.0pt] (#1 * 60: -0.5em) -- (#1 * 60: 0.5em)
+			                               +(#1 * 60 - 135: 0.3em) --
+			                               +(0, 0) --
+			                               +(#1 * 60 + 135: 0.3em)
+			                               ;
 			 % The actual arrow
-			\draw [->] (#1 * 60: -0.5em) -- (#1 * 60: 0.5em);
+			\draw  (#1 * 60: -0.5em) -- (#1 * 60: 0.5em)
+			       +(#1 * 60 - 135: 0.3em) --
+			       +(0, 0) --
+			       +(#1 * 60 + 135: 0.3em)
+			       ;
 		\end{tikzpicture}%
 	}
 	% #1 core no
 	\newcommand{\core}[1]{%
-		$C_{#1}$%
+		\contour{white}{$C_{#1}$}%
 	}
 	
+	% Draw on routes
+	\tikzstyle{route path}=[line width=0.25em, inner sep=0.25em, rounded corners=1.5em]
+	
+	\draw [route path, cb3class0]
+	      (.2, .0, 0) -- (1.05, 0, 0) -- (2.05, 1, 0) -- (3.05, 2, .2) node [fill, circle] {};
+	
+	\draw [route path, cb3class1]
+	      (.2, .2, 0) -- (1, 1, 0) -- (1.95, 1, 0) -- (2.95, 2, .2) node [fill, circle] {}
+	      (.2, .2, 0) -- (1, 1, 0) -- (1.85, 1, 0) -- (1.75, 0.85, 0) node [fill, circle] {}
+	      (.2, .2, 0) -- (1, 1, 0) -- (1, 1.8, 0) node [fill, circle] {};
+	
+	% Draw routers/tables
 	\router{0, 0, 0}{
-		\texttt{1011}:~\{\link{0}\}\\
-		\texttt{00XX}:~\{\link{1}\}\\
+		{\color{cb3class0}\contour{white}{\texttt{1011}:}~\link{0}}\\
+		{\color{cb3class1}\contour{white}{\texttt{00XX}:}~\link{1}}\\
 	}
 	\router{1, 0, 0}{
-		\texttt{1011}:~\{\link{1}\}\\
+		{\color{cb3class0}\contour{white}{\texttt{1011}:}~\link{1}}\\
 	}
 	\router{2, 0, 0}{}
 	
 	\router{0, 1, 0}{}
-	\router{0, 0, -1}{
-		\texttt{00XX}:~\{\link{2}, \link{0}\}\\
+	\router{1, 1, 0}{
+		{\color{cb3class1}\contour{white}{\texttt{00XX}:}~\link{2}, \link{0}}\\
 	}
-	\router{1, 0, -1}{
-		\texttt{00XX}:~\{\core{11}, \link{1}\}\\
+	\router{2, 1, 0}{
+		{\color{cb3class1}\contour{white}{\texttt{00XX}:}~\core{11}, \link{1}}\\
 	}
-	\router{2, 0, -1}{}
+	\router{3, 1, 0}{}
 	
-	\router{0, 1, -1}{
-		\texttt{00XX}:~\{\core{5}\}\\
+	\router{1, 2, 0}{
+		{\color{cb3class1}\contour{white}{\texttt{00XX}:}~\core{5}}\\
 	}
-	\router{0, 0, -2}{}
-	\router{1, 0, -2}{
-		\texttt{1011}:~\{\core{7}\}\\
-		\texttt{00XX}:~\{\core{6}\}\\
+	\router{2, 2, 0}{}
+	\router{3, 2, 0}{
+		{\color{cb3class0}\contour{white}{\texttt{1011}:}~\core{7}}\\
+		{\color{cb3class1}\contour{white}{\texttt{00XX}:}~\core{6}}\\
 	}
 	
 \end{tikzpicture}
