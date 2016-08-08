@@ -24,6 +24,7 @@ render_diagram <- function (plot, filename, width=5.4, height=5.4) {
 	sink("plot.tex")
 	cat("\\documentclass[12pt]{standalone}")
 	cat("\\usepackage{tikz}")
+	cat("\\usepackage[bitstream-charter]{mathdesign}")
 	cat("\\usepackage{siunitx}")
 	cat("\\begin{document}")
 	tikz(width=width, height=height, console=TRUE,
