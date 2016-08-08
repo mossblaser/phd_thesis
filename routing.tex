@@ -7,8 +7,9 @@
 	as the basis for many routing algorithms, notably including all published
 	SpiNNaker-specific algorithms. These routing algorithms, however, do not
 	tolerate faults which are a typical hazard in any large-scale system. In this
-	chapter, I introduce a post-processing step for existing routing algorithms
-	which ensures that the generated routes avoid faulty links and nodes.
+	chapter, I introduce PGS repair, a post-processing step for existing routing
+	algorithms which employs graph search to alter fault-afflicted routes in
+	order to avoid faulty links and nodes.
 	
 	In SpiNNaker, the vast majority of network faults are the result of
 	manufacturing defects which are static and known of before routing time.
@@ -47,14 +48,14 @@
 		\subsection{Multicast routing in SpiNNaker}
 			
 			Various non-fault-tolerant multicast routing algorithms have been
-			proposed and evaluated specifically in the context of SpiNNaker's
-			hexagonal torus network.
+			proposed and evaluated specifically in the context of the SpiNNaker
+			architecture.
 			
 			In 2012, Davies \emph{et al.} evaluated the use of three common torus
 			routing algorithms in SpiNNaker~\cite{davies12}. In each of the
 			algorithms considered, multicast routes were constructed by merging
 			together unicast routes from the source to each sink. The following
-			underlying unicast routing algorithms were considered:
+			unicast routing algorithms were considered:
 			
 			\begin{description}
 				
@@ -221,16 +222,6 @@
 			rules~\cite{rodrigo09}, these may still ultimately not tolerate all
 			faults.
 			
-			\begin{figure}
-				\center
-				\buildfig{figures/lamb-nodes.tex}
-				
-				\caption[Avoiding faults using `lamb' nodes and DOR.]%
-				{`Lamb' nodes may be disabled to ensure DOR will never
-				encounter a fault.}
-				\label{fig:lamb-nodes}
-			\end{figure}
-			
 			The 3D torus based BlueGene/L supercomputer~\cite{adiga02} notably makes
 			use of DOR to ensure deadlock freedom while implementing fault tolerance
 			by disabling so-called `lamb' nodes. Lamb nodes are nodes which, though
@@ -247,6 +238,16 @@
 			SpiNNaker, such fine-grained replacement of nodes is impractical since
 			each chip constitutes a node and therefore a whole board of 48 chips must
 			be replaced to repair a single fault.
+			
+			\begin{figure}
+				\center
+				\buildfig{figures/lamb-nodes.tex}
+				
+				\caption[Avoiding faults using `lamb' nodes and DOR.]%
+				{`Lamb' nodes may be disabled to ensure DOR will never
+				encounter a fault.}
+				\label{fig:lamb-nodes}
+			\end{figure}
 			
 			Other routing algorithms proposed for BlueGene attempt to avoid the need
 			for lamb nodes by generating routes which reach their destination via a
@@ -418,18 +419,6 @@
 			Two standard benchmark multicast traffic patterns are considered which
 			have been used in previous research into SpiNNaker's network:
 			
-			\begin{figure}
-				\center
-				\buildfig{figures/traffic-distribution-centroids.tex}
-				
-				\caption[An example of a 3-centroid traffic distribution.]%
-				{An example of a 3-centroid traffic distribution. Traffic is
-				sent by the node at the position marked with an {\color{red}$\times$}
-				to nodes chosen randomly with nodes in lighter areas being selected
-				with a higher probability.}
-				\label{fig:traffic-distribution-centroids}
-			\end{figure}
-			
 			\begin{description}
 				
 				\item[Uniform] Destinations are chosen with uniform probability
@@ -449,6 +438,18 @@
 				for~\cite{navaridas14}.
 				
 			\end{description}
+			
+			\begin{figure}
+				\center
+				\buildfig{figures/traffic-distribution-centroids.tex}
+				
+				\caption[An example of a 3-centroid traffic distribution.]%
+				{An example of a 3-centroid traffic distribution. Traffic is
+				sent by the node at the position marked with an {\color{red}$\times$}
+				to nodes chosen randomly with nodes in lighter areas being selected
+				with a higher probability.}
+				\label{fig:traffic-distribution-centroids}
+			\end{figure}
 			
 			There is little consensus on the `fan out' of routes in real SpiNNaker
 			applications. As we will see in the next chapter
@@ -558,11 +559,11 @@
 				\label{fig:routing-runtimes}
 			\end{figure}
 			
-			Figure~\ref{fig:routing-runtimes} shows the average execution times
-			recorded for both the NER and PGS repair algorithms. In fault-free
-			networks the PGS repair post-processing step is not required and incurs
-			no penalty. As the fault rate increases the execution time of the
-			algorithm grows proportionally for both fault and traffic models.
+			Figure~\ref{fig:routing-runtimes} shows the mean execution times for both
+			the NER and PGS repair algorithms. In fault-free networks the PGS repair
+			post-processing step is not required and incurs no penalty. As the fault
+			rate increases the execution time of the algorithm grows proportionally
+			for both fault and traffic models.
 			
 			The HSS fault model results in longer execution times for the PGS repair
 			process compared with an equivalent fault-density of uniform faults.

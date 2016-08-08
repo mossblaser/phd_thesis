@@ -58,11 +58,11 @@
 	\section{Network architecture}
 		
 		Architectures such as IBM's Blue Gene~\cite{chiu11} and Cray's
-		XK7~\cite{ornl16} employ powerful compute nodes connected together using
-		networks designed to transfer multi-kilobyte blocks of data between nodes.
-		Since neural models have relatively light computational requirements and
-		communications are based on small pieces of data (spikes), this type of
-		architecture is poorly suited to the task.
+		XK7~\cite{ornl16} employ powerful compute nodes interconnected by networks
+		designed to transfer multi-kilobyte blocks of data.  Since neural
+		simulations have relatively light computational requirements and
+		communicate only small pieces of data (spikes), this type of architecture
+		is poorly suited to the task.
 		
 		SpiNNaker's architectural target is to support real-time simulations of up
 		to one billion neurons. Since neural models such as LIF are inexpensive to
@@ -324,22 +324,21 @@
 		\end{figure}
 		
 		The wrap around connections in the topology are what give it the `torus'
-		part of its name. Figure~\ref{fig:torus-3d-flat} shows a hexagonal torus
-		topology drawn flat. If the topology is rolled up such that the top and
-		bottom nodes become directly adjacent, a tube is formed as in
-		figure~\ref{fig:torus-3d-tube}. This tube can then be bent to bring
-		together the nodes at the ends of the tube to form a torus as shown in
-		figure~\ref{fig:torus-3d-torus}.
+		part of its name. Laid out as a sheet (figure~\ref{fig:torus-3d-flat}) the
+		topology may be rolled up such that the top and bottom nodes become
+		adjacent, forming a tube (figure~\ref{fig:torus-3d-tube}). This tube can
+		then be bent to bring together the nodes at the ends of the tube to form a
+		torus as shown in figure~\ref{fig:torus-3d-torus}.
 		
 		A hexagonal torus topology is typically defined in terms of its width and
-		height along the X and Y axes respectively. For example,
-		figure~\ref{fig:hexagonalTorusTopology} shows a $10\times10$ hexagonal
-		torus.  The nodes in a hexagonal torus topology are addressed using
-		hexagonal coordinates of the form $(x, y, z)$~\cite{patel15}. The bottom
-		left node (labelled $\alpha$ in the figure) has the coordinate $(0, 0, 0)$
-		and other nodes are assigned coordinates according to the number of hops
-		along each dimension from $(0, 0, 0)$, for example node $\beta$ has the
-		coordinate $(2, 0, -1)$. Because the hexagonal torus topology's axes are
+		height along the X and Y axes respectively. For example, the hexagonal
+		torus in figure~\ref{fig:hexagonalTorusTopology} is $10\times10$.  The
+		nodes in a hexagonal torus topology are addressed using hexagonal
+		coordinates of the form $(x, y, z)$~\cite{patel15}. The bottom left node
+		(labelled $\alpha$ in the figure) has the coordinate $(0, 0, 0)$ and other
+		nodes are assigned coordinates according to the number of hops along each
+		dimension from $(0, 0, 0)$, for example node $\beta$ has the coordinate
+		$(2, 0, -1)$. Because the hexagonal torus topology's axes are
 		non-orthogonal, it is possible to define several coordinates for the same
 		location. For example $(3, 1, 0)$ and $(1, -1, -2)$ are also valid
 		coordinates for node $\beta$. These dual coordinates emerge from the fact
@@ -441,13 +440,12 @@
 		\label{sec:hex-vs-h-torus}
 		
 		The hexagonal torus topology is not to be confused with the `H-torus'
-		topology. This topology also uses a hexagonal tiling of nodes and even
-		wraps this tiling into a torus-like topology~\cite{zhao08}. However,
-		H-torus topologies have very different characteristics to the hexagonal
-		torus topology and are related to `twisted torus'
-		topologies~\cite{camara10}. For example, figure~\ref{fig:topo-compare}
-		illustrates one major difference in the way paths wrap around the
-		peripheries of both topologies.
+		topology. The H-torus also uses a hexagonal tiling of nodes and even wraps
+		this tiling into a torus-like topology~\cite{zhao08}. However, H-toruses
+		have very different characteristics to the hexagonal torus topology and
+		bares similarities to the `twisted torus' topology~\cite{camara10}.
+		Figure~\ref{fig:topo-compare} illustrates one difference in the way paths
+		wrap around the peripheries of both topologies.
 	
 	\section{Scaling-up SpiNNaker machines}
 		
