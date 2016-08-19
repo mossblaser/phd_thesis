@@ -32,28 +32,28 @@
 		Leaky Integrate-and-Fire (LIF) model can be implemented in just a handful
 		of CPU instructions~\cite{vainbrand11}. Figure~\ref{fig:lif-neuron}
 		illustrates a simple LIF neuron in which incoming spikes cause charge to
-		build up (\emph{integrated}) which over time, \emph{leaks} away. If an
-		incoming spike causes the charge to rise above a certain threshold, the
-		neuron `\emph{fires}' producing an outgoing spike. Despite the simplicity
-		of this model, large neural networks such as Spaun~\cite{eliasmith12} --
-		built entirely from LIF neurons -- exhibit complex behaviours such as fine
-		motor control and problem solving.
+		build up (integrated) which over time, `leaks' away. If an incoming spike
+		causes the charge to rise above a certain threshold, the neuron `fires'
+		producing an outgoing spike. Despite the simplicity of this model, large
+		neural networks such as Spaun~\cite{eliasmith12}, built entirely from LIF
+		neurons, exhibit complex behaviours such as fine motor control and problem
+		solving.
 		
-		The computational expense of large-scale neural simulations does not arise
-		from the cost of modelling neurons but instead from distributing spikes. In
-		biology, neurons produce spikes at an average rate of \SI{10}{\hertz} and
-		synapses connect each neuron's output to (order) \num{1000}~neurons
-		\cite{navaridas09}. Consider an example neural model with $7\times10^7$
-		neurons, approximately the number in a house mouse and
-		$\nicefrac{1}{10}^\textrm{th}$ of the design target of SpiNNaker. This
-		network might produce $7\times10^8$~spikes per second. Because each neuron
-		connects to many others, this equates to $7\times10^{11}$ spikes being
-		received per second. If each spike were transmitted as a UDP datagram
-		containing a \SI{32}{\bit} payload, the total network throughput required
-		for this simulation would be \SI{179.2}{\tera\bit\per\second}. At the time
-		of writing, this is more than double the bisection bandwidth (the
-		theoretical worst-case throughput) of the world's most powerful super
-		computer~\cite{dongarra16}.
+		The computational expense of large-scale simulations of networks of
+		LIF-like neurons does not arise from the cost of modelling neurons but
+		instead from distributing spikes. In biology, neurons produce spikes at an
+		average rate of \SI{10}{\hertz} and synapses connect each neuron's output
+		to (order) \num{1000}~neurons \cite{navaridas09}. Consider an example
+		neural model with $7\times10^7$ neurons, approximately the number in a
+		house mouse and $\nicefrac{1}{10}^\textrm{th}$ of the design target of
+		SpiNNaker. This network might produce $7\times10^8$~spikes per second.
+		Because each neuron connects to many others, this equates to
+		$7\times10^{11}$ spikes being received per second. If each spike were
+		transmitted as a UDP datagram containing a \SI{32}{\bit} payload, the total
+		network throughput required for this simulation would be
+		\SI{179.2}{\tera\bit\per\second}. At the time of writing, this is more than
+		double the bisection bandwidth (the theoretical worst-case throughput) of
+		the world's most powerful supercomputer~\cite{dongarra16}.
 	
 	\section{Network architecture}
 		
@@ -64,13 +64,13 @@
 		communicate only small pieces of data (spikes), this type of architecture
 		is poorly suited to the task.
 		
-		SpiNNaker's architectural target is to support real-time simulations of up
-		to one billion neurons. Since neural models such as LIF are inexpensive to
-		model and many neurons can be simulated independently in parallel,
-		SpiNNaker employs many small, energy efficient general-purpose processors
-		\cite{furber07}.  To support the unusual communication requirements of
-		neural simulations, a bespoke interconnection network is used which is the
-		background to this thesis.
+		SpiNNaker's architectural target is to support real-time simulations of
+		models containing up to one billion neurons. Since neural models such as
+		LIF are inexpensive to model and many neurons can be simulated
+		independently in parallel, SpiNNaker employs many small, energy efficient
+		general-purpose processors \cite{furber07}.  To support the unusual
+		communication requirements of neural simulations, a bespoke interconnection
+		network is used which is the background to this thesis.
 		
 	%   * SpiNNaker chip
 	%     * Cores
@@ -80,24 +80,56 @@
 		
 		\begin{figure}
 			\center
-			%\includegraphics[width=19mm]{figures/spinnakerChip.jpg}
 			\buildfig{figures/hex-chips.tex}
 			
 			\caption[SpiNNaker chips connected to their six neighbours.]%
 			{SpiNNaker chips (actual size) connected to their six neighbours.}
-			\label{fig:spinnakerChip}
+			\label{fig:hex-chips}
+		%\end{figure}
+		%
+		%\begin{figure}
+			\vspace*{1.5cm}
+			
+			\center
+			\buildfig{figures/spinnaker-chip.tex}
+			
+			\caption{Block diagram of a SpiNNaker chip.}
+			\label{fig:spinnaker-chip}
 		\end{figure}
 		
 		The fundamental building block of the SpiNNaker architecture is the
-		SpiNNaker chip (figure~\ref{fig:spinnakerChip})~\cite{furber13}. Each chip
-		contains eighteen low power ARM~968 processor cores each capable of
-		simulating between \num{200} and \num{2000} LIF neurons in real-time
-		\cite{mundy15}.  Each core has a total of \SI{96}{\kilo\byte} of private
-		Tightly-Coupled Memory (TCM) and shares access to \SI{128}{\mega\byte} of
-		on-chip SDRAM with other cores on the same chip. Finally, each chip
-		contains a programmable router which routes network packets to and from the
-		local cores and six neighbouring SpiNNaker chips. SpiNNaker machines are
-		constructed by combining many SpiNNaker chips.
+		SpiNNaker chip (figures~\ref{fig:hex-chips} and
+		\ref{fig:spinnaker-chip})~\cite{furber13}. Each chip contains eighteen low
+		power ARM968 processor cores each capable of simulating between \num{200}
+		and \num{2000} LIF neurons in real-time \cite{mundy15}.  Each core has a
+		total of \SI{96}{\kilo\byte} of private Tightly-Coupled Memory (TCM) and
+		shares access to \SI{128}{\mega\byte} of on-chip SDRAM with other cores on
+		the same chip. Finally, each chip contains a programmable router which
+		routes network packets to and from the local cores and six neighbouring
+		SpiNNaker chips. SpiNNaker machines are constructed by combining many
+		SpiNNaker chips.
+		
+		Processor cores can communicate by sending and receiving network packets
+		forwarded by routers through the network. Since SpiNNaker's network is
+		designed to transmit neural spike events efficiently, individual network
+		packets are small, either 40~bits or 72~bits compared with tens or hundreds
+		of bytes in typical network architectures.
+		
+		Since at biological timescales a computer network delivers packets
+		`instantaneously', in a real-time simulation the time at which a spike is
+		produced is implicitly indicated by the time it is received.
+		
+		Consequently, the only information which must be explicitly encoded is the
+		identity of the neuron which produced the spike. In SpiNNaker, a spike may
+		be represented by a single 40 or \SI{72}{\bit} `multicast packet' whose
+		format is illustrated in figure~\ref{fig:spinnaker-packet}.  The
+		\SI{8}{\bit} header is used by SpiNNaker's routers to determine the type of
+		packet and the \SI{32}{\bit} `routing key' is used to identify the neuron
+		which produced the packet. The routing key is also used by SpiNNaker's
+		routers to determine how the packet should be directed through the network.
+		The optional \SI{32}{\bit} payload is not used by conventional spiking
+		neural simulations~\cite{galluppi10} but has been exploited to enable more
+		efficient simulation of a particular class of neural models~\cite{mundy15}.
 		
 		\begin{figure}
 			\center
@@ -107,44 +139,20 @@
 			format.}
 			\label{fig:spinnaker-packet}
 		\end{figure}
-		
-		Processor cores can communicate by sending and receiving network packets
-		forwarded by routers through the network. Since SpiNNaker's network is
-		designed to transmit neural spike events efficiently, individual network
-		packets are small, either 40~bits or 72~bits compared with tens or hundreds
-		of \emph{bytes} in typical network architectures.
-		
-		Since at biological
-		timescales a computer network delivers packets `instantaneously',
-		in a real-time simulation, the time at which a spike is produced is
-		implicitly indicated by the time it is received.
-		
-		Consequently, the only information which must be explicitly encoded is the
-		identity of the neuron which produced the spike. In SpiNNaker, a spike may
-		be represented by a single \SI{40}{\bit} `multicast packet' whose format is
-		illustrated in figure~\ref{fig:spinnaker-packet}.  The \SI{8}{\bit} header
-		is used by SpiNNaker's routers to determine the type of packet and the
-		\SI{32}{\bit} `routing key' is used to identify the neuron which produced
-		the packet. The routing key is also used by SpiNNaker's routers to
-		determine how the packet should be directed through the network.
-		
-		The optional \SI{32}{\bit} payload is not used by conventional spiking
-		neural simulations~\cite{galluppi10} but has been exploited to enable more
-		efficient simulation of a particular class of neural models~\cite{mundy15}.
 	
 	\section{The SpiNNaker router}
 		
 		The SpiNNaker router employs an unconventional design which, despite its
 		compact size and small energy requirements, implements a flexible multicast
-		routing mechanism. Unlike conventional routers which often employ
-		hard-coded routing rules~\cite[chapter~8]{dally04}, the SpiNNaker router
-		uses a programmable `routing table' to determine how packets should be
-		forwarded.  In addition, to avoid deadlocks, SpiNNaker's router employs a
-		simple, timeout-based mechanism which exploits the ability of neural
-		networks to tolerate occasional missing packets. As we will see in chapter
-		\ref{sec:routing}, this mechanism greatly simplifies the task of routing in
-		SpiNNaker's network. In this section we'll look at SpiNNaker's router in
-		greater detail.
+		routing mechanism. Unlike some routers which employ hard-coded routing
+		rules~\cite[chapter~8]{dally04}, the SpiNNaker router uses a programmable
+		`routing table' to determine how packets should be forwarded. In addition,
+		to avoid deadlocks, SpiNNaker's router employs a simple, timeout-based
+		mechanism which exploits the ability of neural networks to tolerate
+		occasional missing packets. As we will see in chapter \ref{sec:routing},
+		this mechanism greatly simplifies the task of routing in SpiNNaker's
+		network. In this section we'll look at SpiNNaker's router in greater
+		detail.
 		
 		\subsection{Routing tables}
 		
@@ -216,7 +224,7 @@
 			
 			In spite of these mechanisms, it is still possible for an application to
 			run out of routing table entries. As we will see in
-			chapter~\ref{sec:placement} by arranging applications appropriately
+			chapter~\ref{sec:placement}, by arranging applications appropriately
 			within SpiNNaker's network, routing table usage can be reduced. In
 			addition, other behaviours of SpiNNaker's router may be exploited to
 			compress an application's routing tables further~\cite{mundy16}, however
@@ -229,11 +237,11 @@
 			figure~\ref{fig:router-architecture}, the router is fed packets by an
 			arbiter which serialises packets arriving from other chips and local
 			cores. Every (\SI{100}{\mega\hertz}) clock cycle, the router pipeline
-			accepts one packet from the arbiter and routes a packet to one or several
+			accepts one packet from the arbiter and routes a packet to one or more
 			output links. If any of the required output ports are busy then the
 			packet is not forwarded to any output link and the pipeline stalls. Once
 			a packet has been blocked for a programmable timeout, it is `dropped'
-			(discarded) and routing continues as usual for next packet in the
+			(discarded) and routing continues as usual for the next packet in the
 			pipeline. Links become blocked while transmitting packets or waiting for
 			the remote receiver to become ready. For example, a receiving processor
 			core may be busy performing some computation or a receiving router may be
@@ -258,7 +266,7 @@
 			biology, the loss of a single spike is unlikely to have a significant
 			impact on the behaviour of a neural model and therefore these simulations
 			are inherently tolerant of occasional dropped packets. During application
-			loading and other system tasks, a higher-level, software-driven protocol
+			loading and other system tasks a higher-level, software-driven protocol
 			based on acknowledgements and retransmissions is used to ensure
 			guaranteed delivery.
 			
@@ -394,7 +402,7 @@
 		The 3D torus topology also requires six links per node but by connecting
 		the nodes differently achieves a bisection bandwidth of $8N$~links.  The 3D
 		torus topology, however, comes at a price -- when immersed into the
-		(approximately) 2D space provided by a large machine-room or row of server
+		(approximately) 2D space provided by a large machine room or row of server
 		cabinets, some connections require long cables. By contrast, the 2D and
 		hexagonal torus topologies are both inherently two dimensional and
 		consequently do not suffer from this effect. The hexagonal torus topology,
@@ -443,24 +451,23 @@
 		topology. The H-torus also uses a hexagonal tiling of nodes and even wraps
 		this tiling into a torus-like topology~\cite{zhao08}. However, H-toruses
 		have very different characteristics to the hexagonal torus topology and
-		bares similarities to the `twisted torus' topology~\cite{camara10}.
+		bear similarities to the `twisted torus' topology~\cite{camara10}.
 		Figure~\ref{fig:topo-compare} illustrates one difference in the way paths
 		wrap around the peripheries of both topologies.
 	
 	\section{Scaling-up SpiNNaker machines}
 		
-		To build large SpiNNaker systems comprising tens of thousands of
-		SpiNNaker chips, groups of forty-eight chips are mounted onto circuit
-		boards as illustrated in figure~\ref{fig:spinnakerBoard}. These boards may
-		be connected together to form larger systems.  Figure~\ref{fig:threeboard}
-		shows a prototype three board system. Though the chips are
-		\emph{physically} arranged in a (nearly) $7\times7$ grid on each SpiNNaker
-		board, they logically form a hexagonal `wrapped
-		triple'~\cite{davidsonWiring} (see appendix~\ref{sec:partitioning}) which
-		logically fit together as illustrated in
-		figure~\ref{fig:threeboard-separate}. The labelled exposed corners of the
-		three forty-eight chip boards connect together to form a $12\times12$
-		hexagonal torus topology as illustrated in
+		To build large SpiNNaker systems comprising tens of thousands of SpiNNaker
+		chips, groups of forty-eight chips are mounted onto circuit boards as
+		illustrated in figure~\ref{fig:spinnakerBoard}. These boards may be
+		connected together to form larger systems.  Figure~\ref{fig:threeboard}
+		shows a prototype three board system. Though the chips are physically
+		arranged in a (nearly) $7\times7$ grid on each SpiNNaker board, they
+		logically form a hexagonal `wrapped triple'~\cite{davidsonWiring} (see
+		appendix~\ref{sec:partitioning}) which logically fit together as
+		illustrated in figure~\ref{fig:threeboard-separate}. The labelled exposed
+		corners of the three forty-eight chip boards connect together to form a
+		$12\times12$ hexagonal torus topology as illustrated in
 		figure~\ref{fig:threeboard-wrapped}. Larger SpiNNaker machines are
 		assembled by combining more boards.
 		
@@ -509,7 +516,7 @@
 		requiring sixteen wires each.  If this link technology were used to connect
 		chips on neighbouring boards, each pair of boards would need to be
 		connected with a 128~wire cable.  Cables and connectors supporting this
-		many signals are expensive, unreliable and physically large. Instead,
+		many signals are expensive, less reliable and physically large. Instead,
 		chip-to-chip connections between boards are multiplexed and demultiplexed
 		onto a single High-Speed Serial (HSS) link~\cite{athavale05} carried via
 		commodity S-ATA cables which are often used to connect hard disks in

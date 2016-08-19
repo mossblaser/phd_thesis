@@ -1,42 +1,115 @@
 \begin{tikzpicture}[thick]
 	
-	\pgfmathtruncatemacro{\numcores}{18}
+	\pgfmathtruncatemacro{\numcores}{5}
+	\pgfmathtruncatemacro{\skippedCore}{4}
+	
+	\pgfmathtruncatemacro{\numlinks}{6}
 	
 	\coordinate (last);
 	
 	% Cores
+	\begin{scope}[ rectangle
+	             , align=center
+	             , text width=1.3cm
+	             , minimum height=3.0em
+	             , minimum width=3.0em
+	             , inner sep=0]
+		\foreach \n in {1,...,\numcores}{
+			\ifthenelse{\n = \skippedCore}{
+				\node [right=1ex of last]
+				      (core\n)
+				      {\ldots};
+			}{
+				\ifthenelse{\n = \numcores}{
+					\pgfmathtruncatemacro{\nn}{17}
+				}{
+					\pgfmathtruncatemacro{\nn}{\n-1}
+				}
+				\node [draw, right=1ex of last]
+				      (core\n)
+				      {Core\\\nn};
+			}
+			\coordinate (last) at (core\n.east);
+		}
+	\end{scope}
+	
+	% SDRAM
+	\node [ above=0.8cm of $(core1.north)!0.5!(core\numcores.north)$
+	      , inner sep=0.5em
+	      ]
+	      (sdram)
+	      {SDRAM};
+	\draw (core1.west |- sdram.south)
+	      rectangle
+	      (core\numcores.east |- sdram.north);
+	\coordinate (topleft) at (core1.west |- sdram.north);
+	\coordinate (topright) at (core\numcores.east |- sdram.north);
+	
+	% Links to SDRAM
 	\foreach \n in {1,...,\numcores}{
-		\node [ draw
-		      , rectangle
-		      , right=1ex of last
-		      ]
-		      (core\n)
-		      {C};
-		\coordinate (last) at (core\n.east);
+		\ifthenelse{\n = \skippedCore}{
+		}{
+			\draw [<->]
+			      (core\n.north)
+			      --
+			      (core\n.north |- sdram.south);
+		}
 	}
 	
 	% Router
-	\node [ below= 2cm of $(core1)!0.5!(core\numcores)$
+	\node [ below= 1.2cm of $(core1.south)!0.5!(core\numcores.south)$
 	      , draw
 	      , rectangle
-	      , inner sep=2em
-	      , minimum width=8cm
+	      , minimum width=2.5cm
+	      , minimum height=2.0cm
 	      ]
 	      (router)
-	      {Network Router};
+	      {Router};
 	
 	
 	% Wires between cores and router
-	\pgfmathsetmacro{\prop}{0.7}
+	\pgfmathsetmacro{\prop}{0.5}
 	\foreach \n in {1,...,\numcores}{
-		\pgfmathsetmacro{\perc}{((\n/\numcores) * \prop) + ((1-\prop)/2)}
-		\draw [<->]
-		      (core\n.south)
-		      .. controls +(0, -2em) and +(0, +2em) ..
-		      ($(router.north west)!\perc!(router.north east)$);
+		\ifthenelse{\n = \skippedCore}{
+		}{
+			\pgfmathsetmacro{\perc}{(((\n-1)/(\numcores-1)) * \prop) + ((1-\prop)/2)}
+			\draw [<->]
+			      (core\n.south)
+			      .. controls +(0, -2em) and +(0, +2em) ..
+			      ($(router.north west)!\perc!(router.north east)$);
+		}
 	}
 	
-	% SDRAM
+	% Inter-chip Links
+	\pgfmathsetmacro{\prop}{0.8}
+	\foreach [count=\n] \name in {E,NE,N,W,SW,S}{
+		\pgfmathsetmacro{\perc}{(((\n-1)/(\numlinks-1)) * \prop) + ((1-\prop)/2)}
+		\coordinate (left)  at ($(router.north west)!\perc!(router.south west)$);
+		\coordinate (right) at ($(router.north east)!\perc!(router.south east)$);
+		\draw [<-]
+		      (left)
+		      --
+		      ([xshift=-2em] left -| core1.west)
+		      coordinate (left link \n);
+		\draw [->]
+		      (right)
+		      --
+		      ([xshift=2em] right -| core\numcores.east)
+		      coordinate (right link \n);
+	}
+	\begin{scope}[font=\footnotesize, text width=1.7cm]
+		\node at ($(right link 1)!0.5!(right link \numlinks)$)
+		      [anchor=west]
+		      {Links to neighbours};
+		\node at ($(left link 1)!0.5!(left link \numlinks)$)
+		      [anchor=east]
+		      {Links from neighbours};
+	\end{scope}
 	
+	% Outer box
+	\draw [ultra thick]
+	      ([shift={(-1em, -1em)}]topleft |- router.south)
+	      rectangle
+	      ([shift={(+1em, +1em)}]topright);
 	
 \end{tikzpicture}

@@ -29,25 +29,25 @@
 		system with over half a million processor cores using the hexagonal torus
 		topology. The techniques shown are expected to enable a final SpiNNaker
 		machine of double this size to be built, filling a six metre long row of
-		machine-room cabinets.
+		machine room cabinets.
 		
-		Though SpiNNaker's processor-count places it amongst some of the world's
+		Though SpiNNaker's processor count places it amongst some of the world's
 		largest supercomputers (see figure \ref{fig:top500-num-processors}, page
 		\pageref{fig:top500-num-processors}), it is comparatively compact, filling
 		one row of cabinets compared with commercial, warehouse-scale
 		installations. In spite of this, the techniques described allow hexagonal
-		torus topologies to scale arbitrarily without cables which span the
+		torus topologies to scale arbitrarily without needing cables to span the
 		machine.
 		
 		Chapter~\ref{sec:shortestPaths} described an efficient and general
-		technique for finding, and enumerating shortest path vectors in hexagonal
+		technique for finding and enumerating shortest path vectors in hexagonal
 		torus topologies. These developments bring the hexagonal torus topology in
 		line with other topologies by enabling routing algorithms to exploit all
-		possible paths in a network. Further, chapter~\ref{sec:placement}
+		possible paths in a network. Furthermore, chapter~\ref{sec:placement}
 		demonstrated that placement algorithms are also adaptable to hexagonal
 		torus topologies thanks to their similarity to 2D toruses.
 		
-		Though, as this thesis highlights, hexagonal toruses lack many of the
+		Although, as this thesis highlights, hexagonal toruses lack many of the
 		intuitive properties enjoyed by other topologies, it is still possible to
 		reason about them with only limited computational effort.  Now that the
 		practicality and scalability of the topology has also been demonstrated in
@@ -58,7 +58,7 @@
 		
 		SpiNNaker's unconventional use of packet dropping to avoid deadlocks
 		greatly simplifies the router architecture, part of the motivation for this
-		design. In chapter~\ref{sec:routing} this feature is used to the advantage
+		design. In chapter~\ref{sec:routing}, this feature is used to the advantage
 		of PGS repair to add fault tolerance to existing routing algorithms.
 		Compared with the often complex and wasteful methods used to tolerate
 		faults in other networks, PGS repair incurs very little performance
@@ -88,11 +88,11 @@
 		approaches to the problem of placing applications with irregular
 		communication patterns into network topologies. I observed that researchers
 		working on circuit placement for chips and FPGAs are tackling similar
-		problems and working at scales as large, or larger than, those faced in
-		application placement. Based on this I developed a
-		simulated annealing based placement algorithm inspired by the techniques
-		used in circuit placement, with specific adaptations for use in application
-		placement and SpiNNaker's network topology.
+		problems and working at scales as large as, or larger than, those faced in
+		application placement. Based on this I developed a simulated annealing
+		based placement algorithm inspired by the techniques used in circuit
+		placement, with specific adaptations for use in application placement and
+		SpiNNaker's network topology.
 		
 		The simulated annealing based placement algorithm consistently outperforms
 		pre-existing placement algorithms included in benchmarks in terms of
@@ -107,15 +107,15 @@
 		execution speed. Though its execution time grows in proportion to the size
 		of the problem, the implementation used took over 12~hours to place a
 		synthetic problem for the largest planned SpiNNaker machine. Though
-		tractable -- particularly given the relative output quality compared with
-		the prior state-of-the-art -- the algorithm is unlikely to function
-		comfortably as-is on larger problems.
+		tractable, particularly given the relative output quality compared with the
+		prior state of the art, the algorithm is unlikely to function comfortably
+		as-is on larger problems.
 		
 		The conclusion to be drawn from this result, however, is not just that
 		simulated annealing is a good solution for today's placement problems but
 		that circuit placement techniques in general could be successfully adapted
 		to fulfil this role. The placement problems faced by chip designers are
-		growing at roughly the same exponential rate as the size of super computers
+		growing at roughly the same exponential rate as the size of supercomputers
 		but circuit designs hold the lead in terms of problem size. Consequently,
 		as approaches are retired by chip placement researchers, they may find new
 		life in the field of application placement.
@@ -132,7 +132,7 @@
 			
 			In chapter~\ref{sec:building} I developed and implemented a number of
 			cabling schemes for the SpiNNaker architecture spanning up to a six metre
-			row of machine-room cabinets -- a relatively small installation by
+			row of machine room cabinets -- a relatively small installation by
 			current standards. In SpiNNaker, the cabling exists in a 2D plane (i.e.
 			across the faces of the cabinets) but as the system is scaled up, a
 			single row of cabinets will tend towards a 1D line. Since embedding a 2D
@@ -147,10 +147,10 @@
 				\label{fig:multi-row-cabling}
 			\end{figure}
 			
-			In conventional large-scale super computer installations, nodes are
+			In conventional large-scale supercomputer installations, nodes are
 			installed in rows of cabinets as illustrated in
 			figure~\ref{fig:multi-row-cabling}.  From a `bird's-eye' view, the system
-			approximates a 2D space, spread across the floor of a machine-room.
+			approximates a 2D space, spread across the floor of a machine room.
 			Therefore, in principle, the folding and interleaving techniques
 			described in chapter~\ref{sec:building} still apply. Unfortunately for
 			SpiNNaker, cables connecting between rows of cabinets would be longer
@@ -210,7 +210,7 @@
 				\buildfig{figures/spalloc-mesh.tex}
 				
 				\caption[Irregular edges of a partitioned SpiNNaker system.]%
-				{Irregular edges in a SpiNNaker system comprised of 24~boards
+				{Irregular edges in a SpiNNaker system comprising 24~boards
 				partitioned from a larger machine.  Each hexagon represents a SpiNNaker
 				chip. No wrap-around connections are present.}
 				\label{fig:spalloc-mesh}
@@ -251,7 +251,7 @@
 				
 				One of the shortcomings of the simulated annealing based placer
 				developed in chapter~\ref{sec:placement} is that it does not account
-				for network faults, or irregularities, when estimating the cost of
+				for network faults or irregularities when estimating the cost of
 				placement solutions.  Future work may exploit techniques used in
 				congestion-aware circuit placement which could be adapted for
 				application placement~\cite{viswanathan07}.
@@ -272,14 +272,14 @@
 			For example, graph clustering~\cite{schaeffer07} may be used to group
 			together strongly connected vertices which would then be placed as a
 			single unit.  Unfortunately, clustering can suffer from the same problems
-			as graph-partitioning-based placement: vertices may be grouped together
+			as graph partitioning based placement: vertices may be grouped together
 			in ways which, in practice, cannot be packed together into a given portion
 			of a machine.  A possible solution to this problem is to use a two-phase
 			placement approach~\cite{kahng11}. In a `global' placement phase,
 			solutions are permitted which can slightly over-allocate resources but
 			overall achieve good placement quality. In the `detailed' placement phase
 			which follows, the solution is `legalised' by making small changes to the
-			global placement to eliminate over allocation.
+			global placement to eliminate over-allocation.
 			
 			An alternative approach suited to SpiNNaker could be to limit the
 			clustering process to clusters which fit on a single SpiNNaker chip. In
@@ -301,17 +301,17 @@
 			In the short term, more sophisticated synthetic benchmark generation
 			techniques used by the circuit placement community~\cite{nam07} may offer
 			alternative benchmarks for future work. In the longer term, however, it
-			is hoped that the availability of large SpiNNaker systems -- and
-			placement and routing algorithms better suited to exploit them -- will
-			lead to larger scale applications being developed. Hopefully these
-			applications will lead to more interesting and representative benchmarks
-			for use in future work.
+			is hoped that the availability of large SpiNNaker systems, and placement
+			and routing algorithms better suited to exploit them, will lead to larger
+			scale applications being developed. Hopefully these applications will
+			lead to more interesting and representative benchmarks for use in future
+			work.
 	
 	\section{Closing remarks}
 		
 		One of the primary outcomes of this work is that a number of the practical
 		challenges faced in scaling up the SpiNNaker architecture have been
-		addressed leading to the construction of large-scale SpiNNaker machines.
+		addressed, leading to the construction of large-scale SpiNNaker machines.
 		The development of an effective placement algorithm for SpiNNaker
 		applications has been shown to enable some neural simulations to exploit
 		SpiNNaker's architecture for the first time. The availability of larger
@@ -321,7 +321,7 @@
 		
 		Beyond the SpiNNaker project, the hexagonal torus topology has also been
 		validated as a scalable and practical candidate for future network
-		architectures. As super computers become ever larger, the physical
+		architectures. As supercomputers become ever larger, the physical
 		scalability afforded by the 2D nature of the hexagonal torus topology may
 		make it a compelling option. In addition, the finding that circuit
 		placement techniques can be adapted to support placement of SpiNNaker
@@ -334,7 +334,7 @@
 		% scaling up the unconventional SpiNNaker architecture. Along the way I have
 		% demonstrated that the hexagonal torus topology may be a practical choice in
 		% future applications which can scale up to the physical dimensions expected
-		% of future super computers. I have also developed new efficient and
+		% of future supercomputers. I have also developed new efficient and
 		% effective methods of placing and routing neural simulation software on
 		% SpiNNaker which -- it is hoped -- will enable a new generation of large
 		% scale neural simulations on spinnaker.

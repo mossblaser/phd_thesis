@@ -10,6 +10,17 @@
 	      (router)
 	      {Router};
 	
+	% Router clock
+	\draw (router.south)
+	      -- ++(0, -1.5em)
+	      node [anchor=north, font=\footnotesize]
+	      {\SI{100}{\mega\hertz} clock};
+	\draw [thin]
+	      (router.south)
+	      +(-0.7ex, 0) --
+	      +(0, 0.7ex) --
+	      +(+0.7ex, 0);
+	
 	% Router in pipe
 	\draw [<-]
 	      (router.west)
@@ -26,6 +37,9 @@
 	      coordinate (arb btm)
 	      -- ++(0.75cm, 0.5cm)
 	      -- cycle;
+	\coordinate (arb left) at ($(arb top)!0.5!(arb btm)$);
+	\coordinate (arb center) at ($(arb left)!0.5!(router in)$);
+	\node at (arb center) [rotate=-90] {Arbiter};
 	
 	% Inputs
 	\foreach \n in {1,...,24}{

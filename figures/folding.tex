@@ -248,9 +248,9 @@
 	\ifthenelse{\equal{\exampleHighlightStart}{}}{
 		% Don't draw highlighted wire if none given...
 	}{
-		\draw [ultra thick] (\exampleHighlightStart) -- (\exampleHighlightEnd);
-		\fill [] (\exampleHighlightStart) circle (0.4em);
-		\fill [] (\exampleHighlightEnd) circle (0.4em);
+		\draw [ultra thick, red] (\exampleHighlightStart) -- (\exampleHighlightEnd);
+		\fill [red] (\exampleHighlightStart) circle (0.4em);
+		\fill [red] (\exampleHighlightEnd) circle (0.4em);
 	}
 }
 
