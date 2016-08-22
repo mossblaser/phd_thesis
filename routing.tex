@@ -61,7 +61,7 @@
 				
 				\item[Dimension Order Routing (DOR)] Packets are routed along each
 				dimension (e.g. $X$, $Y$ and $Z$) in turn until no further hops are
-				available in that direction.  The order in which the dimensions are
+				available in that dimension.  The order in which the dimensions are
 				traversed is fixed.
 				
 				\item[Right Turn Only Routing (RTOR)] As in DOR except the dimension
@@ -111,7 +111,7 @@
 			
 			In 2014, Navaridas \emph{et al.} introduced two new algorithms, `Enhanced
 			Shortest Path Routing' (ESPR) and `Neighbourhood Exploring Routing' (NER)
-			which are explicitly designed to generate multicast
+			which are explicitly designed to generate efficient multicast
 			routes~\cite{navaridas14}.
 			
 			In both ESPR and NER, the algorithm considers each sink vertex in turn,
@@ -157,9 +157,9 @@
 			figure~\ref{fig:search-regions-ner}.
 			
 			The NER algorithm was found to produce higher quality multicast routes
-			for larger SpiNNaker machines than both ESPR and the simpler algorithms
-			described in previous work. Unfortunately, as in previous work, this
-			algorithm cannot tolerate faults.
+			than both ESPR and the simpler algorithms described in earlier work.
+			Unfortunately, as in previous work, this algorithm cannot tolerate
+			faults.
 			
 		\subsection{Fault tolerant routing}
 			
@@ -182,11 +182,11 @@
 				\label{fig:ring-deadlock}
 			\end{figure}
 			
-			Deadlocks occur in a network when a cyclic dependency on any resource in
-			the network develops. For example, as illustrated in
-			figure~\ref{fig:ring-deadlock}, in a ring network a deadlock may occur
-			when every node is waiting for the next node to accept a packet before
-			accepting new packets from the previous node.
+			Deadlocks occur in a network when a cyclic dependency on any resource
+			develops. For example, as illustrated in figure~\ref{fig:ring-deadlock},
+			in a ring network a deadlock may occur when every node is waiting for the
+			next node to accept a packet before accepting new packets from the
+			previous node.
 			
 			To prevent deadlocks, combinations of router microarchitectural features
 			and routing restrictions are often employed. For example, a simple
@@ -294,8 +294,8 @@
 			poor fit for SpiNNaker. IP networks, for example, must contend with a
 			dynamic and irregular network topology and so the trade-offs made in
 			their routing algorithms are a poor match for the applications considered
-			here.  Similarly work focusing on other architectures whose topology
-			differs significantly from a torus, for example data centre
+			here.  Similarly work focusing on architectures whose topologies differ
+			significantly from a torus, for example data centre
 			networks~\cite{guo08,liao12}, are not general enough to be of use.
 			
 			%% XXX: Include remark about circuit routing? Probably not since there
@@ -400,7 +400,7 @@
 		
 		Because SpiNNaker's network architecture ensures deadlock freedom for any
 		routing pattern, the graph search algorithm is free to use any route to
-		avoid a dead link, reducing the overhead introduced by avoiding faults.
+		avoid dead links, reducing the overhead introduced by avoiding faults.
 		
 	\section{Evaluation and results}
 		
@@ -460,7 +460,7 @@
 			simplified this evaluation by only considering routes with a single
 			source node and sixteen sink nodes.
 		
-		\subsection{Fault model}
+		\subsection{Fault models}
 			
 			\begin{figure}
 				\center

@@ -72,11 +72,11 @@ to a particular network architecture and because of this SpiNNaker's novel
 network architecture demands its own approach.
 
 Another challenge introduced by the growing scale of supercomputers is making
-\emph{efficient} use of network resources. Communicating processes should be
-located on logically `nearby' nodes to reduce network load. The neural models
-for which SpiNNaker is designed are often described abstractly, rather than
+efficient use of network resources. Communicating processes should be located
+on logically `nearby' nodes to reduce network load. The neural models for which
+SpiNNaker is designed are often described abstractly, rather than
 geometrically, using modelling languages such as PyNN~\cite{davison08} and
-Nengo~\cite{eliasmith04}.  Consequently, communication requirements can be
+Nengo~\cite{bekolay13b}.  Consequently, communication requirements can be
 irregular making finding `good' placements of neurons onto processors
 non-trivial.
 
@@ -121,13 +121,13 @@ architecture in a real-world setting summarised by these research questions:
 Chapter~\ref{sec:background} introduces the SpiNNaker architecture and, in
 particular, describes its hexagonal torus topology and network architecture.
 
-In chapter~\ref{sec:building}, I develop a cabling scheme for large hexagonal
-torus topologies which enables arbitrarily large networks to be constructed
-using only short, inexpensive cables. This theoretical work is then evaluated
-through the construction of a range of prototype SpiNNaker systems. The largest
-of these prototypes contains over half a million processor cores and spans
-several machine room cabinets. In addition, I propose the use of built-in
-diagnostic facilities to assist technicians performing network installation and
+In chapter~\ref{sec:building}, I develop a cabling scheme for hexagonal torus
+topologies which enables arbitrarily large networks to be constructed using
+only short, inexpensive cables. This theoretical work is then evaluated through
+the construction of a range of prototype SpiNNaker systems. The largest of
+these prototypes contains over half a million processor cores and spans several
+machine room cabinets. In addition, I propose the use of built-in diagnostic
+facilities to assist technicians performing network installation and
 maintenance. This technique was found to greatly reduce the effort required and
 the number of mistakes made.
 

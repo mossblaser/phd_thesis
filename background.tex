@@ -1,5 +1,5 @@
-\chapter{The SpiNNaker Architecture}
-	
+\chapter{The SpiNNaker architecture}
+
 	\label{sec:background}
 	
 	SpiNNaker is a massively parallel computer architecture designed to simulate
@@ -17,7 +17,7 @@
 		Human brains contain billions of neurons connected together by trillions of
 		`synapses'. Neurons communicate by transmitting and receiving `spikes'
 		through their synapses. Each spike is `valueless' in that a spike's only
-		significant features are when it arrives and where it has come from.
+		significant features are when it arrived and where it came from.
 		
 		\begin{figure}
 			\center
@@ -32,7 +32,7 @@
 		Leaky Integrate-and-Fire (LIF) model can be implemented in just a handful
 		of CPU instructions~\cite{vainbrand11}. Figure~\ref{fig:lif-neuron}
 		illustrates a simple LIF neuron in which incoming spikes cause charge to
-		build up (integrated) which over time, `leaks' away. If an incoming spike
+		build up (integrated) which, over time, `leaks' away. If an incoming spike
 		causes the charge to rise above a certain threshold, the neuron `fires'
 		producing an outgoing spike. Despite the simplicity of this model, large
 		neural networks such as Spaun~\cite{eliasmith12}, built entirely from LIF
@@ -40,7 +40,7 @@
 		solving.
 		
 		The computational expense of large-scale simulations of networks of
-		LIF-like neurons does not arise from the cost of modelling neurons but
+		LIF-like neurons does not arise from the cost of modelling the neurons but
 		instead from distributing spikes. In biology, neurons produce spikes at an
 		average rate of \SI{10}{\hertz} and synapses connect each neuron's output
 		to (order) \num{1000}~neurons \cite{navaridas09}. Consider an example
@@ -66,7 +66,7 @@
 		
 		SpiNNaker's architectural target is to support real-time simulations of
 		models containing up to one billion neurons. Since neural models such as
-		LIF are inexpensive to model and many neurons can be simulated
+		LIF are inexpensive to compute and many neurons can be simulated
 		independently in parallel, SpiNNaker employs many small, energy efficient
 		general-purpose processors \cite{furber07}.  To support the unusual
 		communication requirements of neural simulations, a bespoke interconnection
@@ -116,8 +116,8 @@
 		of bytes in typical network architectures.
 		
 		Since at biological timescales a computer network delivers packets
-		`instantaneously', in a real-time simulation the time at which a spike is
-		produced is implicitly indicated by the time it is received.
+		`instantaneously', the time at which a spike is produced is implicitly
+		indicated by the time it is received in a real-time simulation.
 		
 		Consequently, the only information which must be explicitly encoded is the
 		identity of the neuron which produced the spike. In SpiNNaker, a spike may
@@ -159,25 +159,25 @@
 			When a multicast packet arrives at a SpiNNaker router (either from a
 			local core or a neighbouring chip), the router looks up the routing key
 			in its routing table. This table consists of \num{1024} programmable
-			table entries, each specifying a routing key bit pattern and mask to
-			match and a set of routes.  When a multicast packet's key is matched by a
-			routing entry, the packet is forwarded along every route specified by
-			that entry, potentially duplicating the packet. This `multicast'
-			technique allows packets to be transmitted once but received in a number
-			of places while making efficient use of the network~\cite{navaridas12}.
+			table entries, each specifying a routing key and mask to match and a set
+			of routes.  If a multicast packet's key is matched by a routing entry,
+			the packet is forwarded along every route specified by that entry,
+			potentially duplicating the packet. This `multicast' technique allows
+			packets to be transmitted once but received in a number of places while
+			making efficient use of the network~\cite{navaridas12}.
 			
 			Though routing table entries are in finite supply (\num{1024} entries per
 			router), it is still possible for many thousands of traffic flows to be
-			routed through a single router. The bit pattern and mask in each routing
-			entry matches against the 32~bits of a routing key as either
-			`\texttt{1}', `\texttt{0}' or `\texttt{X}' (`don't care').  This means
-			that a single routing entry may, for example, be used to match all
-			routing keys with a certain prefix. If a routing key is not matched by
-			any entry in the routing table then the packet is `default routed' in a
-			straight line. For example if a packet with an unmatched key is received
-			from the chip to the left, the packet will be default routed to the chip
-			on the right. By assigning routing keys and defining routes carefully,
-			the number of routing entries required by a simulation is greatly reduced
+			routed through a single router. The key and mask in each routing entry
+			matches against the 32~bits of a routing key as either `\texttt{1}',
+			`\texttt{0}' or `\texttt{X}' (`don't care').  This means that a single
+			routing entry may, for example, be used to match all routing keys with a
+			certain prefix. If a routing key is not matched by any entry in the
+			routing table then the packet is `default routed' in a straight line. For
+			example if a packet with an unmatched key is received from the chip to
+			the left, the packet will be default routed to the chip on the right. By
+			assigning routing keys and defining routes carefully, the number of
+			routing entries required by a simulation is greatly reduced
 			\cite{davies12}.
 			
 			Consider the simplified example in figure~\ref{fig:routing-example} in
@@ -356,15 +356,15 @@
 		phenomena will be discussed in chapter~\ref{sec:shortestPaths}.
 		
 		The hexagonal torus topology was chosen over a more conventional network
-		topology -- such as a 2D or 3D torus (sometimes known as a 2-ary $N$-cube
-		or 3-ary $N$-cube respectively)~\cite[chapters~3~and~5]{dally04} -- due to
-		its balance of theoretical performance and practicality. The bisection
+		topology -- such as a 2D or 3D torus (sometimes known as a 2-ary N-cube or
+		3-ary N-cube respectively)~\cite[chapters~3~and~5]{dally04} -- due to its
+		balance of theoretical performance and practicality. The bisection
 		bandwidth of a topology indicates the theoretical worst-case total
 		throughput the network is able to sustain~\cite[chapter~1]{dally04}.  In
 		networks with homogeneous link throughput, bisection bandwidth is
 		determined by the number of links cut by a balanced bisection of the
-		network.  Figure~\ref{fig:bisection-bandwidth} illustrates the bisections
-		of several torus topologies.
+		network.  Figure~\ref{fig:bisection-bandwidth} illustrates bisections of
+		several torus topologies.
 		
 		\begin{figure}
 			\center
@@ -396,7 +396,7 @@
 			\label{fig:bisection-bandwidth}
 		\end{figure}
 		
-		In a $N \times N$ 2D torus topology, the bisection bandwidth is $2N$~links
+		In an $N \times N$ 2D torus topology, the bisection bandwidth is $2N$~links
 		and each node requires four links. The hexagonal torus topology requires
 		six links per node but provides double bisection bandwidth ($4N$~links).
 		The 3D torus topology also requires six links per node but by connecting
@@ -464,10 +464,10 @@
 		shows a prototype three board system. Though the chips are physically
 		arranged in a (nearly) $7\times7$ grid on each SpiNNaker board, they
 		logically form a hexagonal `wrapped triple'~\cite{davidsonWiring} (see
-		appendix~\ref{sec:partitioning}) which logically fit together as
-		illustrated in figure~\ref{fig:threeboard-separate}. The labelled exposed
-		corners of the three forty-eight chip boards connect together to form a
-		$12\times12$ hexagonal torus topology as illustrated in
+		appendix~\ref{sec:partitioning}) which fit together as illustrated in
+		figure~\ref{fig:threeboard-separate}. The labelled exposed corners of the
+		three forty-eight chip boards connect together to form a $12\times12$
+		hexagonal torus topology as illustrated in
 		figure~\ref{fig:threeboard-wrapped}. Larger SpiNNaker machines are
 		assembled by combining more boards.
 		

@@ -226,7 +226,7 @@
 		
 		In this section I propose two transformations which map hexagonal
 		arrangements of units into a 2D orthogonal coordinate space. The first
-		transformation, `shearing', is general purpose and introduces some
+		transformation, `shearing', is general purpose but introduces some
 		distortion. The second transformation, `slicing', is less general but can
 		introduce less distortion than shearing and therefore may lead to shorter
 		cable lengths.
@@ -367,7 +367,7 @@
 			the matching gap on the opposite side as illustrated in figures
 			\ref{fig:hex-to-plane-node-slice} and \ref{fig:hex-to-plane-slice}. This
 			transformation does not introduce any distortion but changes the pattern
-			of wrap-around connections. Connections from left-to-right remain while
+			of wrap-around connections. Connections from left to right remain while
 			the connections between the top and bottom units now criss-cross
 			(figure~\ref{fig:slicing-examples}).  The proportion of connections going
 			from bottom-left to top-right and from bottom-right to top-left varies
@@ -466,7 +466,7 @@
 			Once a regular 2D grid of units has been formed, this may be folded in
 			the conventional way as illustrated in figure~\ref{fig:folding-sheared}.
 			Folding once along each axis eliminates long connections crossing from
-			left-to-right, top-to-bottom and from the bottom-left corner to the
+			left to right, top to bottom and from the bottom-left corner to the
 			top-right corner. Any shear-transformed network may be folded this way
 			since its wrap-around connections always follow this pattern.
 			Slice-transformed networks may only be folded like this when their aspect
@@ -618,7 +618,7 @@
 				{Mapping from the abstract folded and interleaved 2D grid
 				layout into physical cabinet and frame positions. Arrows indicate the
 				order in which units (boards) are mapped into each frame, from
-				left-to-right.}
+				left to right.}
 				\label{fig:cabinetisation}
 			\end{figure}
 			
@@ -646,7 +646,7 @@
 			Conventional cable management techniques (e.g. cable trays) are not
 			practical. To ensure the reliability and maintainability of SpiNNaker's
 			wiring, cable slack must be carefully controlled.  If cables are too
-			tight, cables, connectors and SpiNNaker boards can become damaged. When
+			tight cables, connectors and SpiNNaker boards can become damaged. When
 			cables are too slack, the excess obstructs access to the machine and can
 			easily become tangled \cite{cisco07}.
 			
@@ -765,7 +765,7 @@
 					\label{fig:interactive-wiring-guide-gui}
 				\end{subfigure}
 				
-				\caption{Interactive software guides cable installation.}
+				\caption{Interactive software guiding cable installation.}
 				\label{fig:interactive-wiring-guide}
 			\end{figure}
 			
@@ -860,7 +860,7 @@
 			In large SpiNNaker machines, each 24 board frame contains a fan tray
 			which pulls cool air from the front of the frame, between the SpiNNaker
 			boards. The warmed air is then ejected out of the rear of the frame where
-			ducting directs it into industrial air chillers. Conventional guidance on
+			ducting directs it into industrial chillers. Conventional guidance on
 			data centre design suggests that routing cables in the path of the
 			system's airflow can have a serious impact on cooling
 			performance~\cite{cisco07}.  To determine what effect the cabling

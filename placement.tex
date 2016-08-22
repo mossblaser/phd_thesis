@@ -31,7 +31,7 @@
 	at all. Using larger scale synthetic benchmarks I have also demonstrated that
 	my proof of concept simulated annealing based placement algorithm scales up
 	to placement problems containing over one million vertices while achieving
-	placement quality similar to an ideal placement.
+	placement quality similar to an optimal placement solution.
 	
 	I also build upon the work on hexagonal torus topologies earlier in this
 	thesis to develop an efficient placement cost estimation function for use in
@@ -42,7 +42,7 @@
 		Attempts to address the problem of placing applications in supercomputer
 		networks have utilised a variety of approaches ranging from simple greedy
 		algorithms to sophisticated combinatorial optimisation
-		algorithms~\cite{jeannot14}. In the parallel field of digital circuit
+		techniques~\cite{jeannot14}. In the parallel field of digital circuit
 		placement for chip and FPGA design, placement algorithms have also received
 		intense study.  In this section I survey the work carried out on
 		application placement before exploring chip design techniques to see what
@@ -145,7 +145,7 @@
 					\center
 					\buildrplot{figures/space_filling_curves_comparison.R}
 					
-					\caption[Relationship between space filling curve offset and 2D space.]%
+					\caption[Relationship between space filling curve offset and 2D distance.]%
 					{Relationship between distance along a space filling curve
 					and between the 2D positions assigned. Results shown for
 					Manhattan distances in a $32\times32$ 2D mesh.}
@@ -403,7 +403,7 @@
 				graph partitioning software such as METIS~\cite{karypis98} is used to
 				partition the circuits but since the target topology is the 2D surface
 				of a chip, simple geometric partitioning is used to divide the surface
-				of the chip. Modern partitioning based placers such as
+				of the chip. More recent partitioning based placers such as
 				Capo~\cite{roy05} employ additional heuristics such as `terminal
 				propagation' where connections between adjacent partitions are
 				considered to attempt to align components on either side of a cut.
@@ -537,7 +537,7 @@
 		for the SpiNNaker architecture. Compared with previous simulated annealing
 		algorithms for application placement, this algorithm is intended to cope
 		with much larger problem instances and draws inspiration from the
-		techniques used by circuit placement annealing algorithms.
+		techniques used by circuit placement algorithms.
 		
 		In contrast with circuit placement algorithms built on simulated annealing,
 		my implementation represents the problem differently to handle the nuances
@@ -655,8 +655,8 @@
 						\center
 						\buildfig{figures/sa-swap-commit.tex}
 						\caption{Vertex $v_a$ is swapped with vertices $v_b$ and $v_c$ if
-						there is room. If there isn't enough room $v_a$, $v_b$ and $v_c$
-						are returned to their original locations and the swap is aborted.}
+						there is room. If there is not enough room the vertices are
+						returned to their original locations and the swap is aborted.}
 						\label{fig:sa-swap-commit}
 					\end{subfigure}
 					
@@ -796,7 +796,7 @@
 				the grounds that it produces the least accurate cost estimates. Though
 				the $\sqrt{n}$-scaled hexagonal HPWL cost function produces the
 				smallest error in general, its execution time is three times greater
-				than the $\sqrt{n}$-scaled HPWL$_{xy}$ whose accuracy is very similar.
+				than $\sqrt{n}$-scaled HPWL$_{xy}$ whose accuracy is very similar.
 				Since the execution speed of the cost function has a significant impact
 				on the execution time of the simulated annealing algorithm, I have used
 				the $\sqrt{n}$-scaled HPWL$_{xy}$ net cost function as a trade-off
@@ -1086,8 +1086,8 @@
 				algorithms are comparatively simplistic greedy algorithms. In all
 				applications considered, however, the execution time of the simulated
 				annealing placement algorithm is multiple orders of magnitude shorter
-				than other processes involved in configuring and loading the simulation
-				onto SpiNNaker.
+				than other processes involved in loading executing the simulation on
+				SpiNNaker.
 				
 				The `Microcircuit' benchmark is notable in that all of the placement
 				algorithms take a long time to execute compared with the other
@@ -1109,7 +1109,8 @@
 				
 				It is anticipated that future models built on PyNN SpiNNaker will grow
 				in size and, unlike the Microcircuit model, not feature all-to-all
-				connectivity and begin to benefit from good quality placement.
+				connectivity and therefore begin to benefit from good quality
+				placement.
 			
 			\subsubsection{Impact of placement on `Nengo SpiNNaker'}
 				
@@ -1180,16 +1181,6 @@
 				operation and functions correctly when placed by all four placement
 				algorithms.
 				
-				\begin{figure}
-					\center
-					\buildrplot{figures/mu0-saturation.R}
-					
-					\caption[Packet dropping in circuit simulator simulations.]%
-					{Simulation speeds at which the circuit simulator begins to
-					drop packets.}
-					\label{fig:mu0-saturation}
-				\end{figure}
-				
 				The circuit simulator may be configured to run at higher speeds,
 				directly increasing the density of network traffic generated. To judge
 				the relative quality of all four placement algorithms the simulation
@@ -1199,7 +1190,7 @@
 				
 				When placed by the simulated annealing algorithm, at 400$\times$ the
 				default simulation speed, the simulator becomes CPU bound but
-				SpiNNaker's network does not become saturated and drop packets. By
+				SpiNNaker's network does not become saturated or drop packets. By
 				contrast, when placed by the baseline algorithms, the application
 				saturates the network and drops packets before becoming CPU bound.
 				Figure~\ref{fig:mu0-saturation} shows the distribution of simulation
@@ -1207,6 +1198,16 @@
 				placer. As in many of the other benchmarks, the Hilbert placer performs
 				better than the Random and RCM placers with the RCM placer producing
 				the placements which induced the greatest congestion.
+				
+				\begin{figure}
+					\center
+					\buildrplot{figures/mu0-saturation.R}
+					
+					\caption[Packet dropping in circuit simulator simulations.]%
+					{Simulation speeds at which the circuit simulator begins to
+					drop packets.}
+					\label{fig:mu0-saturation}
+				\end{figure}
 			
 		\subsection{Scalability}
 			
