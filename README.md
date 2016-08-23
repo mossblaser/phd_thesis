@@ -1,12 +1,13 @@
 PhD Thesis LaTeX source, raw result data and figures
 ====================================================
 
-This repository contains just the files required to build my thesis which
-includes raw results data and the scripts to process this data and build all
-plots and figures. These scripts are all called as part of the LaTeX
-compilation process. This repository does *not* contain the software used in
-experiments. There are next to no good reasons why you should want to look at
-this repository. Doing so will probably negatively affect your mental health.
+This repository contains the files required to build my thesis which includes
+raw results data and the scripts to process this data and build all plots and
+figures. These scripts are all called as part of the LaTeX compilation process.
+This repository does *not* contain the software used in experiments.
+
+There are next to no good reasons why you should want to look at this
+repository. Doing so will probably negatively affect your mental health.
 
 **Be warned**, compiling this document is not for the faint hearted: it takes
 ten minutes to build from a cold start and in the process calls scripts written
