@@ -24,6 +24,7 @@ _minted*/
 
 # Compiled output files
 thesis.pdf
+looseAbstract.pdf
 
 # Random Python junk...
 *.pyc

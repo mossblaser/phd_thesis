@@ -1,0 +1,31 @@
+\documentclass[12pt,a4paper]{report}
+
+\input{thesis.h}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Set up document options
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Set up all packages
+\input{thesis-env}
+
+% Used in place of \chapter for preface sections. Prevents numbering but
+% includes the chapter in the ToC
+\newcommand{\prefacesection}[1]{
+	\chapter*{#1}
+	\addcontentsline{toc}{chapter}{#1}
+}
+
+% Remove page number
+\pagenumbering{gobble}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Document body
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+	
+	% Abstract
+	\input{abstract}
+	
+\end{document}
+

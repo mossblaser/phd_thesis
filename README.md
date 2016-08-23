@@ -74,6 +74,12 @@ while all the raw result data is crunched and the figures are generated.
 Subsequent builds take about a minute as most of this stuff is cached in later
 runs.
 
+The loose abstract page can be produced using:
+
+    $ pdflatex -shell-escape looseAbstract
+    $ pdflatex -shell-escape looseAbstract
+    $ pdflatex -shell-escape looseAbstract
+
 Implementation notes (yes, implementation...)
 ---------------------------------------------
 
