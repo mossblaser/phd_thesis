@@ -38,7 +38,7 @@
 		neural networks such as Spaun~\cite{eliasmith12}, built entirely from LIF
 		neurons, exhibit complex behaviours such as fine motor control and problem
 		solving.
-		
+	
 		The computational expense of large-scale simulations of networks of
 		LIF-like neurons does not arise from the cost of modelling the neurons but
 		instead from distributing spikes. In biology, neurons produce spikes at an
@@ -55,14 +55,50 @@
 		double the bisection bandwidth (the theoretical worst-case throughput) of
 		the world's most powerful supercomputer~\cite{dongarra16}.
 	
-	\section{Network architecture}
+	\section{Alternative neural simulation solutions}
 		
 		Architectures such as IBM's Blue Gene~\cite{chiu11} and Cray's
 		XK7~\cite{ornl16} employ powerful compute nodes interconnected by networks
-		designed to transfer multi-kilobyte blocks of data.  Since neural
+		designed to transfer multi-kilobyte blocks of data. Since neural
 		simulations have relatively light computational requirements and
 		communicate only small pieces of data (spikes), this type of architecture
-		is poorly suited to the task.
+		is poorly suited to the task. In spite of this, neural simulators such as
+		NEST~\cite{gewaltig07}, have been developed and used with some success. To
+		reduce the overhead of transmitting spikes in supercomputer networks, NEST
+		groups spikes into batches which are transmitted in a single network
+		packet. This approach is possible because spikes are often modelled as
+		taking some number of milliseconds to reach their destination and so
+		buffering delays can be incorporated into the simulation. Unfortunately,
+		neural models with smaller transmission delays still suffer a loss of
+		efficiency. Further, due to the unusually light computational requirements
+		of many neural models with respect to communication needs, neural
+		simulations can be less energy efficient as many system components may be
+		left under-utilised. Knight \emph{et al.}~\cite{knight16} found that a Cray
+		XC-30 supercomputer uses around $45\times$ more power than SpiNNaker when
+		simulating an identical neural network.
+		
+		SpiNNaker is not the only alternative to conventional supercomputer
+		architectures aimed at neural simulations. Numerous researchers have
+		created a range of custom silicon solutions for neural
+		simulation~\cite{misra10}. These so-called `neuromorphic' devices implement
+		neuron models directly in silicon. The BrainScaleS~\cite{schemmel10} and
+		Neurogrid~\cite{benjamin14} projects, for example, have built a neural
+		simulators composed of large arrays of analogue neuron models with
+		programmable interconnect. Analogue neuron models can be very energy
+		efficient but suffer from problems of environmental sensitivity and
+		calibration difficulties making them difficult to use in practice. Fully
+		digital neural simulators like Bluehive~\cite{moore12} avoid these problems
+		at the expense of some energy efficiency and can be much easier to use.
+		
+		By fixing their neural models in hardware, these architectures become
+		restricted to simulating only specific classes of neuron models. This
+		limitation is most significant to researchers exploring the learning
+		behaviour of neural networks who regularly develop new hypotheses and
+		models of neuron behaviour. By allowing neuroscientists to define their
+		models in software SpiNNaker, SpiNNaker may be configured to simulate any
+		neural behaviour.
+	
+	\section{Network architecture}
 		
 		SpiNNaker's architectural target is to support real-time simulations of
 		models containing up to one billion neurons. Since neural models such as
