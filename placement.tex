@@ -1120,8 +1120,12 @@
 				algorithms under test. For each run, the number of packets dropped by
 				SpiNNaker during the application's execution was recorded and the
 				results are presented in figure~\ref{fig:nengo-dropped-packets}.
-				Unfortunately the `Card Sorting' neural model was not available for
-				comparison in these experiments.
+				Because the traffic produced by these simulations is multicast, it is
+				not possible to sensibly normalise these packet counts against the rate
+				of packets being produced\footnote{For example, one packet may be
+				dropped in several places on its way to its many destinations.} and so
+				absolute numbers are given. Unfortunately the `Card Sorting' neural
+				model was not available for comparison in these experiments.
 				
 				\begin{figure}
 					\center
