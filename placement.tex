@@ -37,6 +37,57 @@
 	thesis to develop an efficient placement cost estimation function for use in
 	the kernel of the annealing algorithm.
 	
+	\section{Placing neural simulations}
+		
+		At its most abstract, the application placement problem is that of finding
+		a mapping from an application graph to a machine communication graph. Each
+		vertex in the machine communication graph represents a node in the
+		machine's network (e.g. a SpiNNaker chip) and each edge represents a
+		physical connection between two vertices. Each vertex in the application
+		graph represents some process which must be placed onto a vertex in the
+		machine communication graph. (Multi-)edges between vertices in the
+		application graph represent communication between those vertices (e.g. a
+		flow of multicast network packets from one vertex to a number of others).
+		
+		To give a more concrete explanation, consider the following example of how
+		a typical neural model defined using the PyNN or Nengo modelling tools
+		might be expressed as an application graph. PyNN and Nengo define models in
+		terms of `populations' of neurons.  A population may contain many thousands
+		of neurons whose parameters are drawn from a user-defined distribution. The
+		connectivity between neurons are coarsely defined in terms of `projections'
+		between populations and not on a neuron-by-neuron basis. The precise
+		neuron-level connectivity is once again defined by a user-defined
+		distribution.
+		
+		To simulate a neural model as defined above, populations of neurons are
+		automatically partitioned into `subpopulations' containing a few hundred
+		neurons such that each subpopulation's computational needs can be met by an
+		individual SpiNNaker core. Spikes are transmitted via multicast packets
+		which are multicast to every neuron targeted by a projection and must be
+		filtered on arrival for their relevance to neurons in a given
+		subpopulation. This process simplifies network routing since only one set
+		of routing entries is required per projection.
+		
+		This type of application is represented by an application graph in which
+		each vertex represents a core responsible for simulating the neurons in a
+		particular subpopulation. Projections are represented by edges between the
+		subpopulations they connect in the application graph.
+		
+		A good placement algorithm will assign subpopulations (vertices in the
+		application graph) to chips (vertices in the machine communication graph)
+		such that no chip's cores or SDRAM are over-allocated. A placement
+		algorithm may also try to ensure that projections (edges in the application
+		graph) are kept as short as possible within the machine to reduce the
+		load on the network.
+		
+		In principle it is possible to place neural simulations at a finer
+		granularity. For example, populations could be broken into individual
+		neurons and edges might connect on a neuron-by-neuron basis. Though the
+		finer granularity might allow more efficient packing of neurons into
+		SpiNNaker's network it dramatically increases the problem size. As is shown
+		later in this chapter, increased problem sizes could lead to much longer
+		placement algorithm runtimes.
+	
 	\section{Related work}
 		
 		Attempts to address the problem of placing applications in supercomputer
