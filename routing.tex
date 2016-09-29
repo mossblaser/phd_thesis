@@ -11,13 +11,17 @@
 	algorithms which employs graph search to alter fault-afflicted routes in
 	order to avoid faulty links and nodes.
 	
-	In SpiNNaker, the vast majority of network faults are the result of
+	In SpiNNaker, the vast majority of network faults appear to be the result of
 	manufacturing defects which are static and known of before routing time.
 	Though transient faults can occur and new faults may develop as the hardware
-	ages, informal experiments suggest that such faults are unlikely, even during
-	application runs lasting on the order of a day at a time. As a consequence,
-	for many short and medium duration applications, static fault tolerance
-	measures such as those described in this chapter are expected to be
+	ages. Because the large SpiNNaker prototype system constructed in
+	chapter~\ref{sec:building} is still undergoing initial commissioning, only
+	limited data is available on its reliability in practice. During my own
+	previous experimental work on the $\nicefrac{1}{10}^\textrm{th}$ scale
+	SpiNNaker prototype with \num{5760}~chips (\num{103680}~cores), test programs
+	executing over the course of two to three days did not encounter any
+	transient network faults.  As a consequence, for many short and medium
+	duration applications, static fault tolerance measures alone may be
 	sufficient.
 	
 	Numerous heuristic-based fault tolerant routing algorithms exist which target
