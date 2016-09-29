@@ -198,13 +198,15 @@
 			mandates the use of DOR~\cite[chapter~14]{dally04}. Packets travelling in
 			a positive direction along each axis take priority over those travelling
 			in a negative direction. Packets travelling along the X axis take
-			priority over those travelling along the Y axis. Given these rules
-			it is possible to define a total ordering on all hops in the network.
+			priority over those travelling along the Y axis. Given these rules it is
+			possible to define a total ordering on all hops in the network.
 			Figure~\ref{fig:deadlock-free-dor} illustrates a $3\times3$ mesh network
 			whose hops have been numbered according to the total ordering defined
 			above.  Any `X-then-Y' DOR route through this network results in the use
 			of hops labelled with strictly increasing numbers. As a result, no cyclic
-			dependencies (and thus no deadlocks) may occur.
+			dependencies (and thus no deadlocks) may occur. So long as incoming
+			packets destined for a node are accepted from the network upon arrival,
+			forward progress can always be made and thus deadlock is prevented.
 			
 			\begin{figure}
 				\center
