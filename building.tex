@@ -907,17 +907,16 @@
 			The real-time cabling verification process ensures that each board is
 			connected correctly to its neighbours according to the cabling pattern
 			described in this chapter. To verify that this pattern actually
-			implements the desired hexagonal torus topology the boot process of
-			SpiNNaker's system software was upgraded to allow it to verify the
-			correctness of the network topology.
+			implements the desired hexagonal torus topology, SpiNNaker's system
+			software was upgraded to check the correctness of the network topology
+			during boot.
 			
 			When the system is first booted a single chip is assigned the coordinate
 			$(0, 0, 0)$. From this, its six neighbouring chips may in turn discover
-			their own locations in the topology and so on, eventually leading to
-			every chip in the network knowing their location. If the cabling scheme
-			does not form a valid hexagonal torus topology, some chips will be
-			assigned conflicting coordinates or the network's overall dimensions may
-			be under or over estimated, causing a boot error.
+			their own locations in the topology, followed by their neighbours and so
+			on. Eventually every chip knows its location. If the cabling scheme does
+			not form a valid hexagonal torus topology, some chips will be assigned
+			conflicting coordinates, causing a boot error.
 			
 			All of the SpiNNaker machines constructed were found to have the correct
 			network topology. Furthermore, the machines constructed have been used

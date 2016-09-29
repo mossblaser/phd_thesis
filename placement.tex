@@ -63,8 +63,8 @@
 		automatically partitioned into `subpopulations' containing a few hundred
 		neurons such that each subpopulation's computational needs can be met by an
 		individual SpiNNaker core. Spikes are transmitted via multicast packets
-		which are multicast to every neuron targeted by a projection and must be
-		filtered on arrival for their relevance to neurons in a given
+		which are multicast to every subpopulation targeted by a projection. Spikes
+		are filtered on arrival for their relevance to neurons in a given
 		subpopulation. This process simplifies network routing since only one set
 		of routing entries is required per projection.
 		
@@ -73,12 +73,12 @@
 		particular subpopulation. Projections are represented by edges between the
 		subpopulations they connect in the application graph.
 		
-		A good placement algorithm will assign subpopulations (vertices in the
+		A placement algorithm must assign subpopulations (vertices in the
 		application graph) to chips (vertices in the machine communication graph)
 		such that no chip's cores or SDRAM are over-allocated. A placement
 		algorithm may also try to ensure that projections (edges in the application
-		graph) are kept as short as possible within the machine to reduce the
-		load on the network.
+		graph) are kept as short as possible within the machine to reduce the load
+		on the network.
 		
 		In principle it is possible to place neural simulations at a finer
 		granularity. For example, populations could be broken into individual

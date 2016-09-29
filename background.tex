@@ -70,12 +70,11 @@
 		taking some number of milliseconds to reach their destination and so
 		buffering delays can be incorporated into the simulation. Unfortunately,
 		neural models with smaller transmission delays still suffer a loss of
-		efficiency. Further, due to the unusually light computational requirements
-		of many neural models with respect to communication needs, neural
-		simulations can be less energy efficient as many system components may be
-		left under-utilised. Knight \emph{et al.}~\cite{knight16} found that a Cray
-		XC-30 supercomputer uses around $45\times$ more power than SpiNNaker when
-		simulating an identical neural network.
+		efficiency. Further, due to the mismatch of computational and communication
+		needs, neural simulations can be wasteful of supercomputer resources.
+		Knight \emph{et al.}~\cite{knight16} found that a Cray XC-30 supercomputer
+		uses around $45\times$ more power than SpiNNaker when simulating an
+		identical neural network.
 		
 		SpiNNaker is not the only alternative to conventional supercomputer
 		architectures aimed at neural simulations. Numerous researchers have
@@ -85,18 +84,16 @@
 		Neurogrid~\cite{benjamin14} projects, for example, have built a neural
 		simulators composed of large arrays of analogue neuron models with
 		programmable interconnect. Analogue neuron models can be very energy
-		efficient but suffer from problems of environmental sensitivity and
-		calibration difficulties making them difficult to use in practice. Fully
-		digital neural simulators like Bluehive~\cite{moore12} avoid these problems
-		at the expense of some energy efficiency and can be much easier to use.
+		efficient but suffer from environmental sensitivity and calibration
+		difficulties making them difficult to use in practice. Fully digital neural
+		simulators like Bluehive~\cite{moore12} avoid these problems at the expense
+		of some energy efficiency and can be much easier to use.
 		
-		By fixing their neural models in hardware, these architectures become
-		restricted to simulating only specific classes of neuron models. This
-		limitation is most significant to researchers exploring the learning
-		behaviour of neural networks who regularly develop new hypotheses and
-		models of neuron behaviour. By allowing neuroscientists to define their
-		models in software SpiNNaker, SpiNNaker may be configured to simulate any
-		neural behaviour.
+		Though hardware implementations of neural models can be fast and energy
+		efficient, these architectures become restricted to simulating only
+		specific classes of neuron models making them unsuitable for many
+		researchers. SpiNNaker, by contrast, uses software to implement its neural
+		models allowing it to cater to a much wider range of models.
 	
 	\section{Network architecture}
 		
