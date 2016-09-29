@@ -386,9 +386,9 @@
 		Each subtree is then assigned a unique `colour', as illustrated in
 		figure~\ref{fig:pgs-repair-colouring}. From each disconnected subtree's
 		root in turn, a graph search is performed to find a short, fault-free route
-		to a subtree of any other colour. Once a subtree has been found, the route
-		discovered by the graph search is added and the subtree coloured to match
-		the tree to which it has been connected.
+		to a subtree of any other colour. Once another subtree has been found, the
+		route discovered by the graph search is added and the subtree is coloured
+		to match the tree from which the graph search started from.
 		
 		For example in figure~\ref{fig:pgs-repair-colouring-fix1}, a path from the
 		root of the subtree containing nodes E and F is found which connects it to
@@ -404,9 +404,10 @@
 		tree remains which connects every node in the original routing tree
 		resulting in a multicast route not obstructed by faults.
 		
-		Because SpiNNaker's network architecture ensures deadlock freedom for any
-		routing pattern, the graph search algorithm is free to use any route to
-		avoid dead links, reducing the overhead introduced by avoiding faults.
+		Because SpiNNaker's network architecture ensures deadlock freedom
+		regardless of the routing pattern used, the graph search algorithm is free
+		to use any route to avoid dead links, reducing the overhead introduced by
+		avoiding faults.
 		
 	\section{Evaluation and results}
 		

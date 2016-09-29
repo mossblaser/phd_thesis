@@ -423,9 +423,9 @@
 			
 			\begin{description}
 				
-				\item[Partitioning-based] As in application placement, these algorithms
-				function by recursively partitioning the circuit to assign
-				related components to areas of a chip.
+				\item[Partitioning-based] As in application placement, the circuit is
+				recursively partitioned to assign related components to areas of a
+				chip.
 				
 				\item[Analytical] These algorithms approximate the placement problem as
 				a simpler problem to which exact solutions can be computed
@@ -827,12 +827,11 @@
 					\label{fig:cost-function-error}
 				\end{figure}
 				
-				These plots confirm that the error introduced is consistently
-				overestimated by the star model and underestimated by both the
-				hexagonal HPWL and HPWL${_{xy}}$ cost models. The error in cost
-				estimates produced by the star model grew more quickly than both HPWL
-				variants, Both hexagonal HPWL and HPWL$_{xy}$ perform similarly though,
-				as expected, hexagonal HPWL is more accurate for low fan out nets.
+				These plots confirm that the cost is overestimated by the star model
+				and underestimated by both the hexagonal HPWL and HPWL${_{xy}}$ models.
+				The error for the star model grew more quickly than both HPWL variants.
+				Both hexagonal HPWL and HPWL$_{xy}$ perform similarly though, as
+				expected, hexagonal HPWL is more accurate for low fan out nets.
 				
 				To attempt to compensate for the theoretical $\sqrt{n}$ error in the
 				HPWL cost, the Hexagonal HPWL and HPWL$_{xy}$ scaled by $\sqrt{n}$ are
@@ -957,7 +956,7 @@
 		\subsection{Baseline algorithms}
 			
 			To provide a baseline against which to compare my simulated annealing
-			based placement algorithm, the following three placement algorithms are
+			based placement algorithm, three other placement algorithms are
 			considered:
 			
 			\begin{description}

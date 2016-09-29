@@ -445,6 +445,16 @@
 		
 		\subsection{Folding}
 			
+			Once a regular 2D grid of units has been formed, this may be folded in
+			the conventional way as illustrated in figure~\ref{fig:folding-sheared}.
+			Folding once along each axis eliminates long connections crossing from
+			left to right, top to bottom and from the bottom-left corner to the
+			top-right corner. Any shear-transformed network may be folded this way
+			since its wrap-around connections always follow this pattern.
+			Slice-transformed networks may only be folded like this when their aspect
+			ratio is $1:2$ when the pattern of wrap-around links is the same as a
+			shear-transformed network.
+			
 			\begin{figure}
 				\begin{subfigure}{\linewidth}
 					\center
@@ -469,16 +479,6 @@
 				\label{fig:folding}
 			\end{figure}
 			
-			Once a regular 2D grid of units has been formed, this may be folded in
-			the conventional way as illustrated in figure~\ref{fig:folding-sheared}.
-			Folding once along each axis eliminates long connections crossing from
-			left to right, top to bottom and from the bottom-left corner to the
-			top-right corner. Any shear-transformed network may be folded this way
-			since its wrap-around connections always follow this pattern.
-			Slice-transformed networks may only be folded like this when their aspect
-			ratio is $1:2$ when the pattern of wrap-around links is the same as a
-			shear-transformed network.
-			
 			When `square' networks (i.e. those with a $1:1$ aspect ratio) are sliced,
 			the network must be folded \emph{twice} along the Y axis as in
 			figure~\ref{fig:folding-sliced} to eliminate the criss-crossing
@@ -499,11 +499,10 @@
 			When designing a system, the transformation with the least distortion
 			should be used to minimise the average length of the cables required.
 			
-			By referring to figure~\ref{fig:uncrinkling} (page
-			\pageref{fig:uncrinkling}), it is possible to calculate the overhead
-			introduced by each type of transformation.  For example, to compute the
-			overhead introduced by the slicing transformation when applied to units
-			composed of wrapped triples we consider
+			By referring to figure~\ref{fig:uncrinkling} again, it is possible to
+			calculate the overhead introduced by each type of transformation.  For
+			example, to compute the overhead introduced by the slicing transformation
+			when applied to units composed of wrapped triples we consider
 			figure~\ref{fig:uncrinkling-sliced}. The uncrinkling pattern used to
 			transform this topology is a repeating pattern of two units, a pair of
 			which have been labelled $1$ and $2$ respectively. Unit $1$ is
