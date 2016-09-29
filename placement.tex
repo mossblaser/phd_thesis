@@ -865,14 +865,14 @@
 				
 				Towards the end of placement, the solution is likely to be close to the
 				(ideally global) minimum cost. In already-good solutions it is likely
-				that swapping vertices over long distances will result in large cost
-				increases. As a result, towards the end of the anneal, swaps are only
-				considered over a limited distance, $D_\textrm{limit}$. By limiting the
-				distance over which swaps occur, the proportion of swaps which are
-				likely to be accepted is also increased. $D_\textrm{limit}$ is
-				initially set such that all possible swaps are considered. It is then
-				updated according to the following formula at the end of each round of
-				swaps:
+				that swapping vertices between nodes which are far apart in the network
+				will result in large cost increases. As a result, towards the end of
+				the anneal, swaps are only considered over a limited distance,
+				$D_\textrm{limit}$. By limiting the distance over which swaps occur,
+				the proportion of swaps which are likely to be accepted is also
+				increased. $D_\textrm{limit}$ is initially set such that all possible
+				swaps are considered. It is then updated according to the following
+				formula at the end of each round of swaps:
 				%
 				\[ D_\textrm{limit}^\textrm{new} = \textrm{max}(1,\quad
 				D_\textrm{limit}^\textrm{old}(1-0.44 + R_\textrm{accept})) \]
