@@ -462,10 +462,9 @@
 			applications. As we will see in the next chapter
 			(\S\ref{sec:existing-applications}), fan outs in existing applications
 			vary between unicast routes and multicast routes with almost one hundred
-			sinks. Since informal experimentation has suggested that fan out does not
-			have a significant impact on the performance of PGS repair, I have
-			simplified this evaluation by only considering routes with a single
-			source node and sixteen sink nodes.
+			sinks. Fan out does not have a significant impact on the performance of
+			PGS repair and so I have simplified this evaluation by only considering
+			routes with a single source node and sixteen sink nodes.
 		
 		\subsection{Fault models}
 			
@@ -553,8 +552,9 @@
 			recorded.
 			
 			The NER and PGS repair algorithms were written in C and compiled with GCC
-			4.8.3 with \verb|-O2| level optimisations and executed on a cluster of
-			idle workstations with 3.10 GHz Intel Core-i5-2400 CPUs.
+			4.8.3 with \verb|-O2| level optimisations and instances of the
+			experiments were spread across a cluster of idle workstations with 3.10
+			GHz Intel Core-i5-2400 CPUs.
 			
 			\begin{figure}
 				\center
