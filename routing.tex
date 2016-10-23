@@ -460,11 +460,13 @@
 			
 			There is little consensus on the `fan out' of routes in real SpiNNaker
 			applications. As we will see in the next chapter
-			(\S\ref{sec:existing-applications}), fan outs in existing applications
-			vary between unicast routes and multicast routes with almost one hundred
-			sinks. Fan out does not have a significant impact on the performance of
-			PGS repair and so I have simplified this evaluation by only considering
-			routes with a single source node and sixteen sink nodes.
+			(\S\ref{sec:existing-applications}), the fan outs of existing
+			applications vary between unicast routes and multicast routes with almost
+			one hundred sinks. Fan out does not have a significant impact on the
+			performance of PGS repair and so I have simplified this evaluation by
+			only considering routes with a single source node and sixteen sink nodes.
+			This choice ensures that generated routes feature multicast branching
+			ensuring PGS repair is suitable for multicast routing.
 		
 		\subsection{Fault models}
 			
